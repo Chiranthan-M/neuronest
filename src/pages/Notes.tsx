@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useNotes } from "@/contexts/NotesContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { NoteCard } from "@/components/notes/NoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { Note, NoteSortBy } from "@/types/note";
@@ -17,6 +18,7 @@ import {
 
 export default function Notes() {
   const { notes } = useNotes();
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<NoteSortBy>("newest");
@@ -24,7 +26,6 @@ export default function Notes() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
 
-  // Open editor if ?new=true
   useState(() => {
     if (searchParams.get("new") === "true") {
       setEditorOpen(true);
@@ -32,9 +33,15 @@ export default function Notes() {
     }
   });
 
+  const sortLabels: Record<NoteSortBy, string> = {
+    newest: t("newest"),
+    oldest: t("oldest"),
+    updated: t("updated"),
+    title: t("title"),
+  };
+
   const activeNotes = useMemo(() => {
     let filtered = notes.filter((n) => !n.isTrashed && !n.isArchived);
-
     if (search) {
       const q = search.toLowerCase();
       filtered = filtered.filter(
@@ -44,15 +51,11 @@ export default function Notes() {
           n.tags.some((t) => t.includes(q))
       );
     }
-
     if (selectedTag) {
       filtered = filtered.filter((n) => n.tags.includes(selectedTag));
     }
-
-    // Pinned first, then sort
     const pinned = filtered.filter((n) => n.isPinned);
     const unpinned = filtered.filter((n) => !n.isPinned);
-
     const sortFn = (a: Note, b: Note) => {
       switch (sortBy) {
         case "oldest": return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
@@ -61,7 +64,6 @@ export default function Notes() {
         default: return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       }
     };
-
     return [...pinned.sort(sortFn), ...unpinned.sort(sortFn)];
   }, [notes, search, sortBy, selectedTag]);
 
@@ -69,27 +71,25 @@ export default function Notes() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">All Notes</h1>
-          <p className="text-sm text-muted-foreground mt-1">{activeNotes.length} notes</p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("allNotes")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{activeNotes.length} {t("notes")}</p>
         </div>
         <Button
           onClick={() => { setEditingNote(null); setEditorOpen(true); }}
           className="gradient-primary text-primary-foreground shadow-glass"
         >
           <Plus className="w-4 h-4 mr-2" />
-          New Note
+          {t("newNote")}
         </Button>
       </div>
 
-      {/* Search & Filter Bar */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search notes..."
+            placeholder={t("searchNotes")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 bg-secondary/30 border-border/50"
@@ -104,14 +104,13 @@ export default function Notes() {
           <DropdownMenuContent align="end" className="glass">
             {(["newest", "oldest", "updated", "title"] as NoteSortBy[]).map((s) => (
               <DropdownMenuItem key={s} onClick={() => setSortBy(s)} className={sortBy === s ? "text-primary" : ""}>
-                {s.charAt(0).toUpperCase() + s.slice(1)}
+                {sortLabels[s]}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
-      {/* Tags Filter */}
       {allTags.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           <button
@@ -120,7 +119,7 @@ export default function Notes() {
               !selectedTag ? "gradient-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
             }`}
           >
-            All
+            {t("all")}
           </button>
           {allTags.map((tag) => (
             <button
@@ -136,22 +135,17 @@ export default function Notes() {
         </div>
       )}
 
-      {/* Notes Grid */}
       <AnimatePresence mode="popLayout">
         {activeNotes.length > 0 ? (
           <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {activeNotes.map((note) => (
-              <NoteCard
-                key={note.id}
-                note={note}
-                onClick={() => { setEditingNote(note); setEditorOpen(true); }}
-              />
+              <NoteCard key={note.id} note={note} onClick={() => { setEditingNote(note); setEditorOpen(true); }} />
             ))}
           </motion.div>
         ) : (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
             <p className="text-muted-foreground text-sm">
-              {search ? "No notes match your search" : "No notes yet. Create your first note!"}
+              {search ? t("noNotesMatch") : t("noNotesCreate")}
             </p>
           </motion.div>
         )}

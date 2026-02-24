@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   LayoutDashboard,
   FileText,
@@ -10,18 +10,19 @@ import {
   Sun,
   Brain,
   ChevronLeft,
-  Search,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
-
-const navItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "All Notes", url: "/notes", icon: FileText },
-  { title: "Archive", url: "/archive", icon: Archive },
-  { title: "Trash", url: "/trash", icon: Trash2 },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Language, languageNames } from "@/i18n/translations";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -31,6 +32,14 @@ export function AppSidebar() {
     }
     return false;
   });
+  const { t, language, setLanguage } = useLanguage();
+
+  const navItems = [
+    { title: t("dashboard"), url: "/", icon: LayoutDashboard },
+    { title: t("allNotes"), url: "/notes", icon: FileText },
+    { title: t("archive"), url: "/archive", icon: Archive },
+    { title: t("trash"), url: "/trash", icon: Trash2 },
+  ];
 
   useEffect(() => {
     if (darkMode) {
@@ -55,7 +64,7 @@ export function AppSidebar() {
         {!collapsed && (
           <div className="animate-fade-in">
             <h1 className="font-bold text-sm tracking-tight">NeuroNest</h1>
-            <p className="text-[10px] text-muted-foreground">Smart Knowledge Hub</p>
+            <p className="text-[10px] text-muted-foreground">{t("smartKnowledgeHub")}</p>
           </div>
         )}
         <button
@@ -77,7 +86,7 @@ export function AppSidebar() {
             size={collapsed ? "icon" : "default"}
           >
             <Plus className="w-4 h-4" />
-            {!collapsed && <span className="ml-2">New Note</span>}
+            {!collapsed && <span className="ml-2">{t("newNote")}</span>}
           </Button>
         </Link>
       </div>
@@ -104,6 +113,33 @@ export function AppSidebar() {
 
       {/* Footer */}
       <div className="px-3 pb-4 space-y-1">
+        {/* Language Switcher */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200",
+                "text-muted-foreground hover:text-foreground hover:bg-secondary/80",
+                collapsed && "justify-center px-0"
+              )}
+            >
+              <Globe className="w-4 h-4" />
+              {!collapsed && <span>{languageNames[language]}</span>}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="glass">
+            {(Object.keys(languageNames) as Language[]).map((lang) => (
+              <DropdownMenuItem
+                key={lang}
+                onClick={() => setLanguage(lang)}
+                className={language === lang ? "text-primary font-semibold" : ""}
+              >
+                {languageNames[lang]}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <button
           onClick={() => setDarkMode(!darkMode)}
           className={cn(
@@ -113,7 +149,7 @@ export function AppSidebar() {
           )}
         >
           {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          {!collapsed && <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>}
+          {!collapsed && <span>{darkMode ? t("lightMode") : t("darkMode")}</span>}
         </button>
       </div>
     </aside>

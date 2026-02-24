@@ -1,4 +1,5 @@
 import { useNotes } from "@/contexts/NotesContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { FileText, Pin, Archive, Tag, TrendingUp, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -14,6 +15,7 @@ const item = {
 
 export default function Dashboard() {
   const { notes } = useNotes();
+  const { t } = useLanguage();
 
   const activeNotes = notes.filter((n) => !n.isTrashed);
   const pinnedCount = activeNotes.filter((n) => n.isPinned).length;
@@ -25,10 +27,10 @@ export default function Dashboard() {
     .slice(0, 5);
 
   const stats = [
-    { label: "Total Notes", value: activeNotes.length, icon: FileText, color: "text-primary" },
-    { label: "Pinned", value: pinnedCount, icon: Pin, color: "text-accent" },
-    { label: "Archived", value: archivedCount, icon: Archive, color: "text-muted-foreground" },
-    { label: "Tags Used", value: allTags.length, icon: Tag, color: "text-primary" },
+    { label: t("totalNotes"), value: activeNotes.length, icon: FileText, color: "text-primary" },
+    { label: t("pinned"), value: pinnedCount, icon: Pin, color: "text-accent" },
+    { label: t("archived"), value: archivedCount, icon: Archive, color: "text-muted-foreground" },
+    { label: t("tagsUsed"), value: allTags.length, icon: Tag, color: "text-primary" },
   ];
 
   const formatDate = (d: string) =>
@@ -36,13 +38,11 @@ export default function Dashboard() {
 
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-8">
-      {/* Header */}
       <motion.div variants={item}>
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Welcome back to your knowledge hub</p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("dashboard")}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t("welcomeBack")}</p>
       </motion.div>
 
-      {/* Stats */}
       <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s) => (
           <div key={s.label} className="stat-card">
@@ -56,15 +56,14 @@ export default function Dashboard() {
         ))}
       </motion.div>
 
-      {/* Recent Notes */}
       <motion.div variants={item}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-muted-foreground" />
-            <h2 className="font-semibold text-sm">Recently Edited</h2>
+            <h2 className="font-semibold text-sm">{t("recentlyEdited")}</h2>
           </div>
           <Link to="/notes" className="text-xs text-primary hover:underline font-medium">
-            View all →
+            {t("viewAll")}
           </Link>
         </div>
         <div className="space-y-2">
@@ -94,17 +93,16 @@ export default function Dashboard() {
             </Link>
           ))}
           {recentNotes.length === 0 && (
-            <p className="text-sm text-muted-foreground text-center py-8">No notes yet. Create your first note!</p>
+            <p className="text-sm text-muted-foreground text-center py-8">{t("noNotesYet")}</p>
           )}
         </div>
       </motion.div>
 
-      {/* Tags Cloud */}
       {allTags.length > 0 && (
         <motion.div variants={item}>
           <h2 className="font-semibold text-sm mb-3 flex items-center gap-2">
             <Tag className="w-4 h-4 text-muted-foreground" />
-            Your Tags
+            {t("yourTags")}
           </h2>
           <div className="flex flex-wrap gap-2">
             {allTags.map((tag) => (

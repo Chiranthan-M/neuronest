@@ -1,6 +1,7 @@
 import { Note } from "@/types/note";
 import { Pin, Archive, Trash2, MoreHorizontal } from "lucide-react";
 import { useNotes } from "@/contexts/NotesContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
@@ -18,6 +19,7 @@ interface NoteCardProps {
 
 export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
   const { togglePin, toggleArchive, trashNote, restoreNote, permanentlyDelete } = useNotes();
+  const { t } = useLanguage();
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
@@ -34,7 +36,6 @@ export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
       className={cn("note-card group relative", note.isPinned && "ring-1 ring-primary/20")}
       onClick={onClick}
     >
-      {/* Actions */}
       <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
         <DropdownMenu>
           <DropdownMenuTrigger
@@ -47,31 +48,31 @@ export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
             {showRestore ? (
               <>
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); restoreNote(note.id); }}>
-                  Restore
+                  {t("restore")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={(e) => { e.stopPropagation(); permanentlyDelete(note.id); }}
                   className="text-destructive"
                 >
-                  Delete Forever
+                  {t("deleteForever")}
                 </DropdownMenuItem>
               </>
             ) : (
               <>
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); togglePin(note.id); }}>
                   <Pin className="w-3.5 h-3.5 mr-2" />
-                  {note.isPinned ? "Unpin" : "Pin"}
+                  {note.isPinned ? t("unpin") : t("pin")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toggleArchive(note.id); }}>
                   <Archive className="w-3.5 h-3.5 mr-2" />
-                  {note.isArchived ? "Unarchive" : "Archive"}
+                  {note.isArchived ? t("unarchive") : t("archive")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={(e) => { e.stopPropagation(); trashNote(note.id); }}
                   className="text-destructive"
                 >
                   <Trash2 className="w-3.5 h-3.5 mr-2" />
-                  Trash
+                  {t("trash")}
                 </DropdownMenuItem>
               </>
             )}
@@ -79,12 +80,10 @@ export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
         </DropdownMenu>
       </div>
 
-      {/* Pin indicator */}
       {note.isPinned && (
         <Pin className="w-3.5 h-3.5 text-primary absolute top-3 left-4" />
       )}
 
-      {/* Content */}
       <div className={cn(note.isPinned && "mt-4")}>
         <h3 className="font-semibold text-sm mb-1.5 line-clamp-1 pr-8">{note.title}</h3>
         <p className="text-xs text-muted-foreground line-clamp-3 mb-3 leading-relaxed">
@@ -92,14 +91,10 @@ export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
         </p>
       </div>
 
-      {/* Footer */}
       <div className="flex items-center justify-between">
         <div className="flex flex-wrap gap-1">
           {note.tags.slice(0, 2).map((tag) => (
-            <span
-              key={tag}
-              className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium"
-            >
+            <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
               {tag}
             </span>
           ))}
