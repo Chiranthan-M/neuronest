@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Note } from "@/types/note";
 import { useNotes } from "@/contexts/NotesContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Dialog,
   DialogContent,
@@ -18,10 +19,12 @@ interface NoteEditorProps {
   onClose: () => void;
 }
 
-const categories = ["General", "Programming", "Computer Science", "Projects", "Personal", "Work"];
+const categoryKeys = ["general", "programming", "computerScience", "projects", "personal", "work"] as const;
+const categoryValues = ["General", "Programming", "Computer Science", "Projects", "Personal", "Work"];
 
 export function NoteEditor({ note, open, onClose }: NoteEditorProps) {
   const { addNote, updateNote } = useNotes();
+  const { t } = useLanguage();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -54,15 +57,15 @@ export function NoteEditor({ note, open, onClose }: NoteEditorProps) {
   };
 
   const addTag = () => {
-    const t = tagInput.trim().toLowerCase();
-    if (t && !tags.includes(t)) {
-      setTags([...tags, t]);
+    const tVal = tagInput.trim().toLowerCase();
+    if (tVal && !tags.includes(tVal)) {
+      setTags([...tags, tVal]);
     }
     setTagInput("");
   };
 
   const removeTag = (tag: string) => {
-    setTags(tags.filter((t) => t !== tag));
+    setTags(tags.filter((tVal) => tVal !== tag));
   };
 
   return (
@@ -70,48 +73,46 @@ export function NoteEditor({ note, open, onClose }: NoteEditorProps) {
       <DialogContent className="glass sm:max-w-[600px] max-h-[85vh] overflow-auto">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            {note ? "Edit Note" : "Create Note"}
+            {note ? t("editNote") : t("createNote")}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
           <Input
-            placeholder="Note title..."
+            placeholder={t("noteTitle")}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="text-base font-medium border-border/50 bg-secondary/30 focus-visible:ring-primary/30"
           />
 
           <Textarea
-            placeholder="Start writing..."
+            placeholder={t("startWriting")}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="min-h-[200px] resize-none border-border/50 bg-secondary/30 focus-visible:ring-primary/30 leading-relaxed"
           />
 
-          {/* Category */}
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Category</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("category")}</label>
             <div className="flex flex-wrap gap-1.5">
-              {categories.map((cat) => (
+              {categoryKeys.map((key, i) => (
                 <button
-                  key={cat}
-                  onClick={() => setCategory(cat)}
+                  key={key}
+                  onClick={() => setCategory(categoryValues[i])}
                   className={`text-xs px-3 py-1.5 rounded-full transition-all ${
-                    category === cat
+                    category === categoryValues[i]
                       ? "gradient-primary text-primary-foreground"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   }`}
                 >
-                  {cat}
+                  {t(key)}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Tags */}
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Tags</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("tags")}</label>
             <div className="flex flex-wrap gap-1.5 mb-2">
               {tags.map((tag) => (
                 <span
@@ -127,7 +128,7 @@ export function NoteEditor({ note, open, onClose }: NoteEditorProps) {
             </div>
             <div className="flex gap-2">
               <Input
-                placeholder="Add tag..."
+                placeholder={t("addTag")}
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
@@ -141,10 +142,10 @@ export function NoteEditor({ note, open, onClose }: NoteEditorProps) {
 
           <div className="flex justify-end gap-2 pt-2">
             <Button variant="ghost" onClick={onClose}>
-              Cancel
+              {t("cancel")}
             </Button>
             <Button onClick={handleSave} className="gradient-primary text-primary-foreground">
-              {note ? "Save Changes" : "Create Note"}
+              {note ? t("saveChanges") : t("createNote")}
             </Button>
           </div>
         </div>
