@@ -4,6 +4,7 @@ import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { NoteCard } from "@/components/notes/NoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
+import { ProductivityAnalytics } from "@/components/notes/ProductivityAnalytics";
 import { Note, NoteSortBy } from "@/types/note";
 import { Search, Plus, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -71,18 +72,21 @@ export default function Notes() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{t("allNotes")}</h1>
           <p className="text-sm text-muted-foreground mt-1">{activeNotes.length} {t("notes")}</p>
         </div>
-        <Button
-          onClick={() => { setEditingNote(null); setEditorOpen(true); }}
-          className="gradient-primary text-primary-foreground shadow-glass"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          {t("newNote")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <ProductivityAnalytics />
+          <Button
+            onClick={() => { setEditingNote(null); setEditorOpen(true); }}
+            className="gradient-primary text-primary-foreground shadow-glass"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {t("newNote")}
+          </Button>
+        </div>
       </div>
 
       <div className="flex items-center gap-3">
