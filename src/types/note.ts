@@ -7,6 +7,7 @@ export interface Note {
   isPinned: boolean;
   isArchived: boolean;
   isTrashed: boolean;
+  isPrivate?: boolean;
   createdAt: string;
   updatedAt: string;
 }

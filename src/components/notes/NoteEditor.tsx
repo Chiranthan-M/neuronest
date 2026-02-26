@@ -19,12 +19,13 @@ interface NoteEditorProps {
   note?: Note | null;
   open: boolean;
   onClose: () => void;
+  isPrivate?: boolean;
 }
 
 const categoryKeys = ["general", "programming", "computerScience", "projects", "personal", "work"] as const;
 const categoryValues = ["General", "Programming", "Computer Science", "Projects", "Personal", "Work"];
 
-export function NoteEditor({ note, open, onClose }: NoteEditorProps) {
+export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEditorProps) {
   const { addNote, updateNote } = useNotes();
   const { t } = useLanguage();
   const { isListening, startListening, stopListening, isSupported } = useVoiceToText();
@@ -56,7 +57,7 @@ export function NoteEditor({ note, open, onClose }: NoteEditorProps) {
     if (note) {
       updateNote(note.id, { title, content, tags, category });
     } else {
-      addNote({ title, content, tags, category, isPinned: false, isArchived: false });
+      addNote({ title, content, tags, category, isPinned: false, isArchived: false, isPrivate });
     }
     onClose();
   };
