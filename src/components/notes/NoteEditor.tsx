@@ -25,7 +25,7 @@ interface NoteEditorProps {
 const categoryKeys = ["general", "programming", "computerScience", "projects", "personal", "work"] as const;
 const categoryValues = ["General", "Programming", "Computer Science", "Projects", "Personal", "Work"];
 
-export function NoteEditor({ note, open, onClose }: NoteEditorProps) {
+export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEditorProps) {
   const { addNote, updateNote } = useNotes();
   const { t } = useLanguage();
   const { isListening, startListening, stopListening, isSupported } = useVoiceToText();
