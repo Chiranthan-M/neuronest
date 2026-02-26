@@ -21,19 +21,22 @@ const App = () => (
     <TooltipProvider>
       <LanguageProvider>
         <NotesProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AppLayout>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/notes" element={<Notes />} />
-                <Route path="/archive" element={<ArchivePage />} />
-                <Route path="/trash" element={<TrashPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </AppLayout>
-          </BrowserRouter>
+          <PrivacyProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <AppLayout>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/notes" element={<Notes />} />
+                  <Route path="/archive" element={<ArchivePage />} />
+                  <Route path="/trash" element={<TrashPage />} />
+                  <Route path="/private" element={<PrivatePage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </AppLayout>
+            </BrowserRouter>
+          </PrivacyProvider>
         </NotesProvider>
       </LanguageProvider>
     </TooltipProvider>

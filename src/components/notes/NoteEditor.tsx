@@ -57,7 +57,7 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
     if (note) {
       updateNote(note.id, { title, content, tags, category });
     } else {
-      addNote({ title, content, tags, category, isPinned: false, isArchived: false });
+      addNote({ title, content, tags, category, isPinned: false, isArchived: false, isPrivate });
     }
     onClose();
   };

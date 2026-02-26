@@ -97,9 +97,7 @@ export default function PrivatePage() {
             <NoteCard
               key={note.id}
               note={note}
-              onEdit={(n) => { setEditNote(n); setShowEditor(true); }}
-              onTogglePin={togglePin}
-              onTrash={trashNote}
+              onClick={() => { setEditNote(note); setShowEditor(true); }}
             />
           ))}
         </div>
