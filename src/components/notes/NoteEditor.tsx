@@ -19,6 +19,7 @@ interface NoteEditorProps {
   note?: Note | null;
   open: boolean;
   onClose: () => void;
+  isPrivate?: boolean;
 }
 
 const categoryKeys = ["general", "programming", "computerScience", "projects", "personal", "work"] as const;
