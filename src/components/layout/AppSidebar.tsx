@@ -5,6 +5,7 @@ import {
   FileText,
   Archive,
   Trash2,
+  Lock,
   Plus,
   Moon,
   Sun,
