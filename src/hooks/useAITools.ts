@@ -8,7 +8,8 @@ export type AITool =
   | "change_tone"
   | "plagiarism_check"
   | "smart_tags"
-  | "productivity_analytics";
+  | "productivity_analytics"
+  | "translate";
 
 export function useAITools() {
   const [loading, setLoading] = useState(false);
@@ -17,13 +18,13 @@ export function useAITools() {
   const runTool = async (
     tool: AITool,
     content: string,
-    options?: { tone?: string; notesData?: any }
+    options?: { tone?: string; notesData?: any; targetLang?: string }
   ) => {
     setLoading(true);
     setResult(null);
     try {
       const { data, error } = await supabase.functions.invoke("ai-tools", {
-        body: { tool, content, tone: options?.tone, notesData: options?.notesData },
+        body: { tool, content, tone: options?.tone, notesData: options?.notesData, targetLang: options?.targetLang },
       });
 
       if (error) throw error;
