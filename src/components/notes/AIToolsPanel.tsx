@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAITools, AITool } from "@/hooks/useAITools";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Sparkles,
   FileText,
@@ -12,6 +13,7 @@ import {
   X,
   Copy,
   Check,
+  Languages,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import {
@@ -29,12 +31,29 @@ interface AIToolsPanelProps {
 }
 
 const tones = ["Professional", "Casual", "Academic", "Friendly", "Formal", "Creative"];
+const translateLangs = [
+  { code: "en", name: "English" },
+  { code: "hi", name: "Hindi" },
+  { code: "kn", name: "Kannada" },
+  { code: "te", name: "Telugu" },
+  { code: "ta", name: "Tamil" },
+  { code: "es", name: "Spanish" },
+  { code: "fr", name: "French" },
+  { code: "de", name: "German" },
+  { code: "ar", name: "Arabic" },
+  { code: "ja", name: "Japanese" },
+  { code: "zh", name: "Chinese" },
+  { code: "ko", name: "Korean" },
+  { code: "pt", name: "Portuguese" },
+  { code: "ru", name: "Russian" },
+];
 
 export function AIToolsPanel({ content, onApply, onApplyTags }: AIToolsPanelProps) {
   const { runTool, loading, result, setResult } = useAITools();
   const { t } = useLanguage();
   const [activeTool, setActiveTool] = useState<AITool | null>(null);
   const [selectedTone, setSelectedTone] = useState("Professional");
+  const [targetLang, setTargetLang] = useState("en");
   const [copied, setCopied] = useState(false);
 
   const tools = [
@@ -43,12 +62,16 @@ export function AIToolsPanel({ content, onApply, onApplyTags }: AIToolsPanelProp
     { id: "change_tone" as AITool, icon: Paintbrush, label: t("aiTone") },
     { id: "plagiarism_check" as AITool, icon: ShieldCheck, label: t("aiPlagiarism") },
     { id: "smart_tags" as AITool, icon: Tag, label: t("aiSmartTags") },
+    { id: "translate" as AITool, icon: Languages, label: t("aiTranslate") },
   ];
 
   const handleRun = async (tool: AITool) => {
     if (!content.trim()) return;
     setActiveTool(tool);
-    const res = await runTool(tool, content, { tone: tool === "change_tone" ? selectedTone : undefined });
+    const opts: any = {};
+    if (tool === "change_tone") opts.tone = selectedTone;
+    if (tool === "translate") opts.targetLang = targetLang;
+    const res = await runTool(tool, content, opts);
     if (tool === "smart_tags" && res) {
       try {
         const parsed = JSON.parse(res);
@@ -115,6 +138,21 @@ export function AIToolsPanel({ content, onApply, onApplyTags }: AIToolsPanelProp
             {tones.map((t) => (
               <SelectItem key={t} value={t} className="text-xs">
                 {t}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+
+      {activeTool === "translate" && !result && (
+        <Select value={targetLang} onValueChange={setTargetLang}>
+          <SelectTrigger className="w-full h-8 text-xs bg-secondary/30">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {translateLangs.map((l) => (
+              <SelectItem key={l.code} value={l.code} className="text-xs">
+                {l.name}
               </SelectItem>
             ))}
           </SelectContent>

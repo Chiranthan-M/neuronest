@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Note } from "@/types/note";
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Plus, Mic, MicOff } from "lucide-react";
+import { X, Plus, Mic, MicOff, Paperclip, Loader2 } from "lucide-react";
 import { AIToolsPanel } from "./AIToolsPanel";
 
 interface NoteEditorProps {
@@ -26,15 +26,18 @@ const categoryKeys = ["general", "programming", "computerScience", "projects", "
 const categoryValues = ["General", "Programming", "Computer Science", "Projects", "Personal", "Work"];
 
 export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEditorProps) {
-  const { addNote, updateNote } = useNotes();
+  const { addNote, updateNote, uploadAttachment } = useNotes();
   const { t } = useLanguage();
   const { isListening, startListening, stopListening, isSupported } = useVoiceToText();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [category, setCategory] = useState("General");
   const [showAI, setShowAI] = useState(false);
+  const [attachments, setAttachments] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (note) {
@@ -42,22 +45,24 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
       setContent(note.content);
       setTags(note.tags);
       setCategory(note.category);
+      setAttachments(note.attachments || []);
     } else {
       setTitle("");
       setContent("");
       setTags([]);
       setTagInput("");
       setCategory("General");
+      setAttachments([]);
     }
     setShowAI(false);
   }, [note, open]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!title.trim()) return;
     if (note) {
-      updateNote(note.id, { title, content, tags, category });
+      await updateNote(note.id, { title, content, tags, category });
     } else {
-      addNote({ title, content, tags, category, isPinned: false, isArchived: false, isPrivate });
+      await addNote({ title, content, tags, category, isPinned: false, isArchived: false, isPrivate });
     }
     onClose();
   };
@@ -84,6 +89,18 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || !note) return;
+    setUploading(true);
+    for (const file of Array.from(files)) {
+      const url = await uploadAttachment(note.id, file);
+      if (url) setAttachments((prev) => [...prev, url]);
+    }
+    setUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="glass sm:max-w-[650px] max-h-[90vh] overflow-auto">
@@ -108,24 +125,59 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               onChange={(e) => setContent(e.target.value)}
               className="min-h-[180px] resize-none border-border/50 bg-secondary/30 focus-visible:ring-primary/30 leading-relaxed pr-12"
             />
-            {isSupported && (
-              <Button
-                type="button"
-                size="sm"
-                variant={isListening ? "destructive" : "secondary"}
-                className="absolute bottom-2 right-2 h-8 w-8 p-0"
-                onClick={handleVoice}
-                title={isListening ? t("voiceStop") : t("voiceStart")}
-              >
-                {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
-              </Button>
-            )}
+            <div className="absolute bottom-2 right-2 flex gap-1">
+              {note && (
+                <>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    className="hidden"
+                    accept="image/*,.pdf,.doc,.docx,.txt"
+                    onChange={handleFileUpload}
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    className="h-8 w-8 p-0"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                  >
+                    {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Paperclip className="w-3.5 h-3.5" />}
+                  </Button>
+                </>
+              )}
+              {isSupported && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={isListening ? "destructive" : "secondary"}
+                  className="h-8 w-8 p-0"
+                  onClick={handleVoice}
+                  title={isListening ? t("voiceStop") : t("voiceStart")}
+                >
+                  {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                </Button>
+              )}
+            </div>
           </div>
 
           {isListening && (
             <div className="flex items-center gap-2 text-xs text-destructive">
               <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
               {t("voiceListening")}
+            </div>
+          )}
+
+          {/* Attachments preview */}
+          {attachments.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {attachments.map((url, i) => (
+                <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary underline truncate max-w-[200px]">
+                  {url.split("/").pop()}
+                </a>
+              ))}
             </div>
           )}
 

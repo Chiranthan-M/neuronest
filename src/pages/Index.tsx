@@ -1,6 +1,6 @@
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { FileText, Pin, Archive, Tag, TrendingUp, Clock } from "lucide-react";
+import { FileText, Pin, Archive, Tag, TrendingUp, Clock, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
@@ -14,8 +14,16 @@ const item = {
 };
 
 export default function Dashboard() {
-  const { notes } = useNotes();
+  const { notes, loading } = useNotes();
   const { t } = useLanguage();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   const activeNotes = notes.filter((n) => !n.isTrashed);
   const pinnedCount = activeNotes.filter((n) => n.isPinned).length;

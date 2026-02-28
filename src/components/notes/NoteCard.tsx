@@ -1,5 +1,5 @@
 import { Note } from "@/types/note";
-import { Pin, Archive, Trash2, MoreHorizontal } from "lucide-react";
+import { Pin, Archive, Trash2, MoreHorizontal, Lock, LockOpen, Paperclip } from "lucide-react";
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
@@ -18,7 +18,7 @@ interface NoteCardProps {
 }
 
 export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
-  const { togglePin, toggleArchive, trashNote, restoreNote, permanentlyDelete } = useNotes();
+  const { togglePin, toggleArchive, trashNote, restoreNote, permanentlyDelete, togglePrivate } = useNotes();
   const { t } = useLanguage();
 
   const formatDate = (dateStr: string) => {
@@ -67,6 +67,10 @@ export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
                   <Archive className="w-3.5 h-3.5 mr-2" />
                   {note.isArchived ? t("unarchive") : t("archive")}
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); togglePrivate(note.id); }}>
+                  {note.isPrivate ? <LockOpen className="w-3.5 h-3.5 mr-2" /> : <Lock className="w-3.5 h-3.5 mr-2" />}
+                  {note.isPrivate ? t("moveToPublic") : t("moveToPrivate")}
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={(e) => { e.stopPropagation(); trashNote(note.id); }}
                   className="text-destructive"
@@ -80,11 +84,13 @@ export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
         </DropdownMenu>
       </div>
 
-      {note.isPinned && (
-        <Pin className="w-3.5 h-3.5 text-primary absolute top-3 left-4" />
-      )}
+      <div className="flex items-center gap-1.5 mb-1">
+        {note.isPinned && <Pin className="w-3.5 h-3.5 text-primary" />}
+        {note.isPrivate && <Lock className="w-3 h-3 text-muted-foreground" />}
+        {note.attachments && note.attachments.length > 0 && <Paperclip className="w-3 h-3 text-muted-foreground" />}
+      </div>
 
-      <div className={cn(note.isPinned && "mt-4")}>
+      <div>
         <h3 className="font-semibold text-sm mb-1.5 line-clamp-1 pr-8">{note.title}</h3>
         <p className="text-xs text-muted-foreground line-clamp-3 mb-3 leading-relaxed">
           {note.content}

@@ -6,7 +6,7 @@ import { NoteCard } from "@/components/notes/NoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { ProductivityAnalytics } from "@/components/notes/ProductivityAnalytics";
 import { Note, NoteSortBy } from "@/types/note";
-import { Search, Plus, SlidersHorizontal } from "lucide-react";
+import { Search, Plus, SlidersHorizontal, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function Notes() {
-  const { notes } = useNotes();
+  const { notes, loading } = useNotes();
   const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
@@ -42,7 +42,7 @@ export default function Notes() {
   };
 
   const activeNotes = useMemo(() => {
-    let filtered = notes.filter((n) => !n.isTrashed && !n.isArchived);
+    let filtered = notes.filter((n) => !n.isTrashed && !n.isArchived && !n.isPrivate);
     if (search) {
       const q = search.toLowerCase();
       filtered = filtered.filter(
@@ -68,7 +68,15 @@ export default function Notes() {
     return [...pinned.sort(sortFn), ...unpinned.sort(sortFn)];
   }, [notes, search, sortBy, selectedTag]);
 
-  const allTags = [...new Set(notes.filter((n) => !n.isTrashed && !n.isArchived).flatMap((n) => n.tags))];
+  const allTags = [...new Set(notes.filter((n) => !n.isTrashed && !n.isArchived && !n.isPrivate).flatMap((n) => n.tags))];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

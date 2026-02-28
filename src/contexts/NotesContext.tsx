@@ -1,154 +1,148 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { Note } from "@/types/note";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
 
 interface NotesContextType {
   notes: Note[];
-  addNote: (note: Omit<Note, "id" | "createdAt" | "updatedAt" | "isTrashed">) => void;
-  updateNote: (id: string, updates: Partial<Note>) => void;
+  loading: boolean;
+  addNote: (note: Omit<Note, "id" | "createdAt" | "updatedAt" | "isTrashed">) => Promise<void>;
+  updateNote: (id: string, updates: Partial<Note>) => Promise<void>;
   deleteNote: (id: string) => void;
   trashNote: (id: string) => void;
   restoreNote: (id: string) => void;
   permanentlyDelete: (id: string) => void;
   togglePin: (id: string) => void;
   toggleArchive: (id: string) => void;
+  togglePrivate: (id: string) => void;
+  uploadAttachment: (noteId: string, file: File) => Promise<string | null>;
 }
 
 const NotesContext = createContext<NotesContextType | undefined>(undefined);
 
-const STORAGE_KEY = "neuronest_notes";
-
-const defaultNotes: Note[] = [
-  {
-    id: "1",
-    title: "Getting Started with NeuroNest",
-    content: "Welcome to NeuroNest! This is your smart knowledge hub. You can create, organize, and manage your notes efficiently.\n\n**Features:**\n- Pin important notes\n- Archive old notes\n- Tag and categorize\n- Search instantly",
-    tags: ["welcome", "guide"],
-    category: "General",
-    isPinned: true,
-    isArchived: false,
-    isTrashed: false,
-    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-    updatedAt: new Date(Date.now() - 86400000).toISOString(),
-  },
-  {
-    id: "2",
-    title: "React Hooks Deep Dive",
-    content: "useState, useEffect, useCallback, useMemo, useRef - understanding when and how to use each hook effectively in React applications.\n\nKey takeaways:\n- useState for simple state\n- useReducer for complex state\n- useEffect for side effects\n- useMemo for expensive computations",
-    tags: ["react", "hooks", "javascript"],
-    category: "Programming",
-    isPinned: false,
-    isArchived: false,
-    isTrashed: false,
-    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
-    updatedAt: new Date(Date.now() - 86400000 * 3).toISOString(),
-  },
-  {
-    id: "3",
-    title: "Database Design Patterns",
-    content: "Exploring different database design patterns for scalable applications.\n\n1. Normalization vs Denormalization\n2. Indexing strategies\n3. Sharding approaches\n4. CQRS pattern",
-    tags: ["database", "architecture"],
-    category: "Computer Science",
-    isPinned: false,
-    isArchived: false,
-    isTrashed: false,
-    createdAt: new Date(Date.now() - 86400000 * 7).toISOString(),
-    updatedAt: new Date(Date.now() - 86400000 * 4).toISOString(),
-  },
-  {
-    id: "4",
-    title: "Project Ideas for Portfolio",
-    content: "- AI-powered chatbot\n- Real-time collaboration tool\n- E-commerce platform\n- Social media analytics dashboard\n- IoT monitoring system",
-    tags: ["ideas", "portfolio"],
-    category: "Projects",
-    isPinned: true,
-    isArchived: false,
-    isTrashed: false,
-    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
-    updatedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-  },
-  {
-    id: "5",
-    title: "Machine Learning Notes",
-    content: "Supervised vs Unsupervised learning. Key algorithms: Linear Regression, Decision Trees, Random Forest, Neural Networks.\n\nImportant concepts:\n- Bias-Variance tradeoff\n- Overfitting prevention\n- Feature engineering\n- Cross-validation",
-    tags: ["ml", "ai", "data-science"],
-    category: "Computer Science",
-    isPinned: false,
-    isArchived: false,
-    isTrashed: false,
-    createdAt: new Date(Date.now() - 86400000 * 10).toISOString(),
-    updatedAt: new Date(Date.now() - 86400000 * 6).toISOString(),
-  },
-];
-
 export function NotesProvider({ children }: { children: React.ReactNode }) {
-  const [notes, setNotes] = useState<Note[]>(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : defaultNotes;
-    } catch {
-      return defaultNotes;
+  const { user } = useAuth();
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchNotes = useCallback(async () => {
+    if (!user) { setNotes([]); setLoading(false); return; }
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("notes")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      setNotes(
+        (data || []).map((n: any) => ({
+          id: n.id,
+          title: n.title,
+          content: n.content,
+          tags: n.tags || [],
+          category: n.category,
+          isPinned: n.is_pinned,
+          isArchived: n.is_archived,
+          isTrashed: n.is_trashed,
+          isPrivate: n.is_private,
+          attachments: n.attachments || [],
+          createdAt: n.created_at,
+          updatedAt: n.updated_at,
+        }))
+      );
     }
-  });
+    setLoading(false);
+  }, [user]);
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
-  }, [notes]);
+  useEffect(() => { fetchNotes(); }, [fetchNotes]);
 
-  const addNote = useCallback((note: Omit<Note, "id" | "createdAt" | "updatedAt" | "isTrashed">) => {
-    const now = new Date().toISOString();
-    setNotes((prev) => [
-      {
-        ...note,
-        id: crypto.randomUUID(),
-        isTrashed: false,
-        createdAt: now,
-        updatedAt: now,
-      },
-      ...prev,
-    ]);
-  }, []);
+  const addNote = useCallback(async (note: Omit<Note, "id" | "createdAt" | "updatedAt" | "isTrashed">) => {
+    if (!user) return;
+    const { error } = await supabase.from("notes").insert({
+      user_id: user.id,
+      title: note.title,
+      content: note.content,
+      tags: note.tags,
+      category: note.category,
+      is_pinned: note.isPinned,
+      is_archived: note.isArchived,
+      is_private: note.isPrivate || false,
+    });
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      await fetchNotes();
+    }
+  }, [user, fetchNotes]);
 
-  const updateNote = useCallback((id: string, updates: Partial<Note>) => {
-    setNotes((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, ...updates, updatedAt: new Date().toISOString() } : n))
-    );
-  }, []);
+  const updateNote = useCallback(async (id: string, updates: Partial<Note>) => {
+    const dbUpdates: any = {};
+    if (updates.title !== undefined) dbUpdates.title = updates.title;
+    if (updates.content !== undefined) dbUpdates.content = updates.content;
+    if (updates.tags !== undefined) dbUpdates.tags = updates.tags;
+    if (updates.category !== undefined) dbUpdates.category = updates.category;
+    if (updates.isPinned !== undefined) dbUpdates.is_pinned = updates.isPinned;
+    if (updates.isArchived !== undefined) dbUpdates.is_archived = updates.isArchived;
+    if (updates.isTrashed !== undefined) dbUpdates.is_trashed = updates.isTrashed;
+    if (updates.isPrivate !== undefined) dbUpdates.is_private = updates.isPrivate;
+
+    const { error } = await supabase.from("notes").update(dbUpdates).eq("id", id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      await fetchNotes();
+    }
+  }, [fetchNotes]);
 
   const deleteNote = useCallback((id: string) => {
-    setNotes((prev) => prev.filter((n) => n.id !== id));
-  }, []);
+    supabase.from("notes").delete().eq("id", id).then(() => fetchNotes());
+  }, [fetchNotes]);
 
   const trashNote = useCallback((id: string) => {
-    setNotes((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isTrashed: true, isPinned: false, isArchived: false, updatedAt: new Date().toISOString() } : n))
-    );
-  }, []);
+    supabase.from("notes").update({ is_trashed: true, is_pinned: false, is_archived: false }).eq("id", id).then(() => fetchNotes());
+  }, [fetchNotes]);
 
   const restoreNote = useCallback((id: string) => {
-    setNotes((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isTrashed: false, updatedAt: new Date().toISOString() } : n))
-    );
-  }, []);
+    supabase.from("notes").update({ is_trashed: false }).eq("id", id).then(() => fetchNotes());
+  }, [fetchNotes]);
 
   const permanentlyDelete = useCallback((id: string) => {
-    setNotes((prev) => prev.filter((n) => n.id !== id));
-  }, []);
+    supabase.from("notes").delete().eq("id", id).then(() => fetchNotes());
+  }, [fetchNotes]);
 
   const togglePin = useCallback((id: string) => {
-    setNotes((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isPinned: !n.isPinned, updatedAt: new Date().toISOString() } : n))
-    );
-  }, []);
+    const note = notes.find((n) => n.id === id);
+    if (note) supabase.from("notes").update({ is_pinned: !note.isPinned }).eq("id", id).then(() => fetchNotes());
+  }, [notes, fetchNotes]);
 
   const toggleArchive = useCallback((id: string) => {
-    setNotes((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isArchived: !n.isArchived, isPinned: false, updatedAt: new Date().toISOString() } : n))
-    );
-  }, []);
+    const note = notes.find((n) => n.id === id);
+    if (note) supabase.from("notes").update({ is_archived: !note.isArchived, is_pinned: false }).eq("id", id).then(() => fetchNotes());
+  }, [notes, fetchNotes]);
+
+  const togglePrivate = useCallback((id: string) => {
+    const note = notes.find((n) => n.id === id);
+    if (note) supabase.from("notes").update({ is_private: !note.isPrivate }).eq("id", id).then(() => fetchNotes());
+  }, [notes, fetchNotes]);
+
+  const uploadAttachment = useCallback(async (noteId: string, file: File): Promise<string | null> => {
+    if (!user) return null;
+    const filePath = `${user.id}/${noteId}/${Date.now()}_${file.name}`;
+    const { error } = await supabase.storage.from("note-attachments").upload(filePath, file);
+    if (error) {
+      toast({ title: "Upload Error", description: error.message, variant: "destructive" });
+      return null;
+    }
+    const { data: urlData } = supabase.storage.from("note-attachments").getPublicUrl(filePath);
+    return urlData.publicUrl;
+  }, [user]);
 
   return (
     <NotesContext.Provider
-      value={{ notes, addNote, updateNote, deleteNote, trashNote, restoreNote, permanentlyDelete, togglePin, toggleArchive }}
+      value={{ notes, loading, addNote, updateNote, deleteNote, trashNote, restoreNote, permanentlyDelete, togglePin, toggleArchive, togglePrivate, uploadAttachment }}
     >
       {children}
     </NotesContext.Provider>

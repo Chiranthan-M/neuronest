@@ -9,14 +9,16 @@ import {
   Plus,
   Moon,
   Sun,
-  Brain,
+  BookOpen,
   ChevronLeft,
   Globe,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Language, languageNames } from "@/i18n/translations";
 import {
   DropdownMenu,
@@ -34,6 +36,7 @@ export function AppSidebar() {
     return false;
   });
   const { t, language, setLanguage } = useLanguage();
+  const { signOut, user } = useAuth();
 
   const navItems = [
     { title: t("dashboard"), url: "/", icon: LayoutDashboard },
@@ -61,7 +64,7 @@ export function AppSidebar() {
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 h-16 border-b border-border/50">
         <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
-          <Brain className="w-4 h-4 text-primary-foreground" />
+          <BookOpen className="w-4 h-4 text-primary-foreground" />
         </div>
         {!collapsed && (
           <div className="animate-fade-in">
@@ -115,6 +118,13 @@ export function AppSidebar() {
 
       {/* Footer */}
       <div className="px-3 pb-4 space-y-1">
+        {/* User info */}
+        {!collapsed && user && (
+          <div className="px-3 py-2 text-xs text-muted-foreground truncate">
+            {user.email}
+          </div>
+        )}
+
         {/* Language Switcher */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -152,6 +162,18 @@ export function AppSidebar() {
         >
           {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           {!collapsed && <span>{darkMode ? t("lightMode") : t("darkMode")}</span>}
+        </button>
+
+        <button
+          onClick={signOut}
+          className={cn(
+            "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200",
+            "text-destructive hover:bg-destructive/10",
+            collapsed && "justify-center px-0"
+          )}
+        >
+          <LogOut className="w-4 h-4" />
+          {!collapsed && <span>{t("signOut")}</span>}
         </button>
       </div>
     </aside>

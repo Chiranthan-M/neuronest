@@ -8,6 +8,7 @@ export interface Note {
   isArchived: boolean;
   isTrashed: boolean;
   isPrivate?: boolean;
+  attachments?: string[];
   createdAt: string;
   updatedAt: string;
 }

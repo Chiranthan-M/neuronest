@@ -12,7 +12,8 @@ type ToolType =
   | "change_tone"
   | "plagiarism_check"
   | "smart_tags"
-  | "productivity_analytics";
+  | "productivity_analytics"
+  | "translate";
 
 const systemPrompts: Record<ToolType, string> = {
   summarize:
@@ -24,9 +25,11 @@ const systemPrompts: Record<ToolType, string> = {
   plagiarism_check:
     "You are an originality analyst. Analyze the following text and provide: 1) An originality score from 0-100 (100 = fully original), 2) Any phrases that seem commonly used or potentially unoriginal, 3) Suggestions for making the text more unique. Format as: Score: X/100 then Analysis then Suggestions.",
   smart_tags:
-    "You are a tag generator. Analyze the following text and suggest 3-6 relevant tags. Return ONLY a JSON array of tag strings like [\"tag1\",\"tag2\"]. No other text.",
+    'You are a tag generator. Analyze the following text and suggest 3-6 relevant tags. Return ONLY a JSON array of tag strings like ["tag1","tag2"]. No other text.',
   productivity_analytics:
     "You are a productivity analyst. Given the following note data (JSON with titles, categories, dates, counts), provide a brief productivity analysis: 1) Writing patterns, 2) Most productive times/categories, 3) One actionable tip. Keep it under 150 words.",
+  translate:
+    "You are a professional translator. Translate the following text to the requested target language. Auto-detect the source language. Return ONLY the translated text, no explanations or preamble.",
 };
 
 serve(async (req) => {
@@ -35,7 +38,7 @@ serve(async (req) => {
   }
 
   try {
-    const { tool, content, tone, notesData } = await req.json();
+    const { tool, content, tone, notesData, targetLang } = await req.json();
 
     if (!tool || !systemPrompts[tool as ToolType]) {
       return new Response(JSON.stringify({ error: "Invalid tool type" }), {
@@ -52,6 +55,9 @@ serve(async (req) => {
     let userMessage = content || "";
     if (tool === "change_tone" && tone) {
       userMessage = `Tone: ${tone}\n\nText: ${content}`;
+    }
+    if (tool === "translate" && targetLang) {
+      userMessage = `Target language: ${targetLang}\n\nText: ${content}`;
     }
     if (tool === "productivity_analytics" && notesData) {
       userMessage = JSON.stringify(notesData);
