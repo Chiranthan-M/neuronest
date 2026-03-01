@@ -114,6 +114,11 @@ export const translations: Record<Language, Record<string, string>> = {
     moveToPublic: "Move to Public",
     // Attachments
     attachFile: "Attach file",
+    profileSettings: "Profile Settings",
+    clickToChangeAvatar: "Click to change avatar",
+    bio: "Bio",
+    bioPlaceholder: "Tell us about yourself...",
+    profileSaved: "Profile saved!",
   },
   hi: {
     dashboard: "डैशबोर्ड",
