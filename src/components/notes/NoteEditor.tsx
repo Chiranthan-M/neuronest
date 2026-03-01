@@ -12,8 +12,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Plus, Mic, MicOff, Paperclip, Loader2 } from "lucide-react";
+import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText } from "lucide-react";
 import { AIToolsPanel } from "./AIToolsPanel";
+import { DrawingCanvas } from "./DrawingCanvas";
+import { OCRPanel, processCanvasOCR } from "./OCRPanel";
+import { toast } from "@/hooks/use-toast";
 
 interface NoteEditorProps {
   note?: Note | null;
