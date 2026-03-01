@@ -220,6 +220,11 @@ export const translations: Record<Language, Record<string, string>> = {
     moveToPrivate: "निजी में ले जाएं",
     moveToPublic: "सार्वजनिक में ले जाएं",
     attachFile: "फ़ाइल संलग्न करें",
+    profileSettings: "प्रोफ़ाइल सेटिंग्स",
+    clickToChangeAvatar: "अवतार बदलने के लिए क्लिक करें",
+    bio: "बायो",
+    bioPlaceholder: "अपने बारे में बताएं...",
+    profileSaved: "प्रोफ़ाइल सहेजा गया!",
   },
   kn: {
     dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
