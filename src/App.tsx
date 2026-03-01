@@ -13,6 +13,7 @@ import Notes from "./pages/Notes";
 import ArchivePage from "./pages/Archive";
 import TrashPage from "./pages/Trash";
 import PrivatePage from "./pages/Private";
+import ProfilePage from "./pages/Profile";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { Loader2 } from "lucide-react";
@@ -51,6 +52,7 @@ const App = () => (
                           <Route path="/archive" element={<ArchivePage />} />
                           <Route path="/trash" element={<TrashPage />} />
                           <Route path="/private" element={<PrivatePage />} />
+                          <Route path="/profile" element={<ProfilePage />} />
                           <Route path="*" element={<NotFound />} />
                         </Routes>
                       </AppLayout>

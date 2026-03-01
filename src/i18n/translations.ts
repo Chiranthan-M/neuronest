@@ -114,6 +114,11 @@ export const translations: Record<Language, Record<string, string>> = {
     moveToPublic: "Move to Public",
     // Attachments
     attachFile: "Attach file",
+    profileSettings: "Profile Settings",
+    clickToChangeAvatar: "Click to change avatar",
+    bio: "Bio",
+    bioPlaceholder: "Tell us about yourself...",
+    profileSaved: "Profile saved!",
   },
   hi: {
     dashboard: "डैशबोर्ड",
@@ -215,6 +220,11 @@ export const translations: Record<Language, Record<string, string>> = {
     moveToPrivate: "निजी में ले जाएं",
     moveToPublic: "सार्वजनिक में ले जाएं",
     attachFile: "फ़ाइल संलग्न करें",
+    profileSettings: "प्रोफ़ाइल सेटिंग्स",
+    clickToChangeAvatar: "अवतार बदलने के लिए क्लिक करें",
+    bio: "बायो",
+    bioPlaceholder: "अपने बारे में बताएं...",
+    profileSaved: "प्रोफ़ाइल सहेजा गया!",
   },
   kn: {
     dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
@@ -316,6 +326,11 @@ export const translations: Record<Language, Record<string, string>> = {
     moveToPrivate: "ಖಾಸಗಿಗೆ ಸರಿಸಿ",
     moveToPublic: "ಸಾರ್ವಜನಿಕಕ್ಕೆ ಸರಿಸಿ",
     attachFile: "ಫೈಲ್ ಲಗತ್ತಿಸಿ",
+    profileSettings: "ಪ್ರೊಫೈಲ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    clickToChangeAvatar: "ಅವತಾರ್ ಬದಲಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ",
+    bio: "ಬಯೋ",
+    bioPlaceholder: "ನಿಮ್ಮ ಬಗ್ಗೆ ಹೇಳಿ...",
+    profileSaved: "ಪ್ರೊಫೈಲ್ ಉಳಿಸಲಾಗಿದೆ!",
   },
   te: {
     dashboard: "డాష్‌బోర్డ్",
@@ -417,6 +432,11 @@ export const translations: Record<Language, Record<string, string>> = {
     moveToPrivate: "ప్రైవేట్‌కు తరలించు",
     moveToPublic: "పబ్లిక్‌కు తరలించు",
     attachFile: "ఫైల్ జత చేయండి",
+    profileSettings: "ప్రొఫైల్ సెట్టింగ్‌లు",
+    clickToChangeAvatar: "అవతార్ మార్చడానికి క్లిక్ చేయండి",
+    bio: "బయో",
+    bioPlaceholder: "మీ గురించి చెప్పండి...",
+    profileSaved: "ప్రొఫైల్ సేవ్ చేయబడింది!",
   },
   ta: {
     dashboard: "டாஷ்போர்ட்",
@@ -518,5 +538,10 @@ export const translations: Record<Language, Record<string, string>> = {
     moveToPrivate: "தனிப்பட்டதாக நகர்த்து",
     moveToPublic: "பொதுவாக நகர்த்து",
     attachFile: "கோப்பு இணை",
+    profileSettings: "சுயவிவர அமைப்புகள்",
+    clickToChangeAvatar: "அவதாரை மாற்ற கிளிக் செய்யவும்",
+    bio: "பயோ",
+    bioPlaceholder: "உங்களைப் பற்றி சொல்லுங்கள்...",
+    profileSaved: "சுயவிவரம் சேமிக்கப்பட்டது!",
   },
 };

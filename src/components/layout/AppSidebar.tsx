@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   Globe,
   LogOut,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
@@ -163,6 +164,19 @@ export function AppSidebar() {
           {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           {!collapsed && <span>{darkMode ? t("lightMode") : t("darkMode")}</span>}
         </button>
+
+        <Link to="/profile">
+          <button
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200",
+              "text-muted-foreground hover:text-foreground hover:bg-secondary/80",
+              collapsed && "justify-center px-0"
+            )}
+          >
+            <User className="w-4 h-4" />
+            {!collapsed && <span>{t("profileSettings")}</span>}
+          </button>
+        </Link>
 
         <button
           onClick={signOut}
