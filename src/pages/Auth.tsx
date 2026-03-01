@@ -105,6 +105,15 @@ export default function Auth() {
               minLength={6}
               className="bg-secondary/30 border-border/50"
             />
+            {isLogin && (
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="text-xs text-primary hover:underline"
+              >
+                {t("forgotPassword")}
+              </button>
+            )}
             <Button type="submit" className="w-full gradient-primary text-primary-foreground" disabled={submitting}>
               {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               {isLogin ? t("signIn") : t("signUp")}
