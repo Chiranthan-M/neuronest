@@ -66,6 +66,24 @@ serve(async (req) => {
       userMessage = JSON.stringify(notesData);
     }
 
+    // For OCR, use vision-capable model with image
+    const isOCR = tool === "ocr" && content && content.startsWith("data:image");
+    const messages: any[] = [
+      { role: "system", content: systemPrompts[tool as ToolType] },
+    ];
+
+    if (isOCR) {
+      messages.push({
+        role: "user",
+        content: [
+          { type: "text", text: "Extract all text from this image, including handwritten text in any language." },
+          { type: "image_url", image_url: { url: content } },
+        ],
+      });
+    } else {
+      messages.push({ role: "user", content: userMessage });
+    }
+
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
@@ -75,11 +93,8 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
-          messages: [
-            { role: "system", content: systemPrompts[tool as ToolType] },
-            { role: "user", content: userMessage },
-          ],
+          model: isOCR ? "google/gemini-2.5-flash" : "google/gemini-3-flash-preview",
+          messages,
         }),
       }
     );

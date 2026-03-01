@@ -27,6 +27,23 @@ export default function Auth() {
 
   if (user) return <Navigate to="/" replace />;
 
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      toast({ title: t("error"), description: t("enterEmailFirst"), variant: "destructive" });
+      return;
+    }
+    setSubmitting(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) {
+      toast({ title: t("error"), description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: t("checkEmail"), description: t("resetLinkSent") });
+    }
+    setSubmitting(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
