@@ -209,6 +209,61 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             />
           )}
 
+          {/* Drawing & OCR Tools */}
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="text-xs border-border/50"
+              onClick={() => setShowDrawing(true)}
+            >
+              <PenTool className="w-3.5 h-3.5 mr-1" /> {t("drawingCanvas")}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="text-xs border-border/50"
+              onClick={() => setShowOCR(!showOCR)}
+            >
+              <ScanText className="w-3.5 h-3.5 mr-1" /> {showOCR ? t("hideOCR") : t("ocrTitle")}
+            </Button>
+          </div>
+
+          {showOCR && (
+            <OCRPanel onApplyText={(text) => setContent((prev) => (prev ? prev + "\n\n" : "") + text)} />
+          )}
+
+          <DrawingCanvas
+            open={showDrawing}
+            onClose={() => setShowDrawing(false)}
+            onSaveAsImage={async (dataUrl) => {
+              // Convert to blob and upload as attachment
+              if (note) {
+                const res = await fetch(dataUrl);
+                const blob = await res.blob();
+                const file = new File([blob], `drawing_${Date.now()}.png`, { type: "image/png" });
+                setUploading(true);
+                const url = await uploadAttachment(note.id, file);
+                if (url) setAttachments((prev) => [...prev, url]);
+                setUploading(false);
+              }
+              setShowDrawing(false);
+              toast({ title: t("drawingSaved") });
+            }}
+            onExtractText={async (dataUrl) => {
+              setShowDrawing(false);
+              try {
+                const text = await processCanvasOCR(dataUrl);
+                setContent((prev) => (prev ? prev + "\n\n" : "") + text);
+                toast({ title: t("textExtracted") });
+              } catch (e: any) {
+                toast({ title: t("error"), description: e.message, variant: "destructive" });
+              }
+            }}
+          />
+
           <div>
             <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("category")}</label>
             <div className="flex flex-wrap gap-1.5">
