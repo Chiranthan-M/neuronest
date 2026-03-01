@@ -13,7 +13,8 @@ type ToolType =
   | "plagiarism_check"
   | "smart_tags"
   | "productivity_analytics"
-  | "translate";
+  | "translate"
+  | "ocr";
 
 const systemPrompts: Record<ToolType, string> = {
   summarize:
@@ -30,6 +31,8 @@ const systemPrompts: Record<ToolType, string> = {
     "You are a productivity analyst. Given the following note data (JSON with titles, categories, dates, counts), provide a brief productivity analysis: 1) Writing patterns, 2) Most productive times/categories, 3) One actionable tip. Keep it under 150 words.",
   translate:
     "You are a professional translator. Translate the following text to the requested target language. Auto-detect the source language. Return ONLY the translated text, no explanations or preamble.",
+  ocr:
+    "You are an OCR and handwriting recognition specialist. Extract ALL text visible in this image, including handwritten text, printed text, scribbles, and text in any language. Preserve the original structure and formatting as much as possible. If text is in multiple languages, extract all of them. Return ONLY the extracted text, no explanations.",
 };
 
 serve(async (req) => {
