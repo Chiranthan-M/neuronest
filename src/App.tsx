@@ -32,6 +32,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 const App = () => (
+  // App root
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <LanguageProvider>
