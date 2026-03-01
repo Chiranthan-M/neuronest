@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   Globe,
   LogOut,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
