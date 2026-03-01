@@ -60,6 +60,8 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
       setAttachments([]);
     }
     setShowAI(false);
+    setShowDrawing(false);
+    setShowOCR(false);
   }, [note, open]);
 
   const handleSave = async () => {
