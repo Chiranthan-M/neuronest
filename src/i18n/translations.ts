@@ -326,6 +326,11 @@ export const translations: Record<Language, Record<string, string>> = {
     moveToPrivate: "ಖಾಸಗಿಗೆ ಸರಿಸಿ",
     moveToPublic: "ಸಾರ್ವಜನಿಕಕ್ಕೆ ಸರಿಸಿ",
     attachFile: "ಫೈಲ್ ಲಗತ್ತಿಸಿ",
+    profileSettings: "ಪ್ರೊಫೈಲ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    clickToChangeAvatar: "ಅವತಾರ್ ಬದಲಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ",
+    bio: "ಬಯೋ",
+    bioPlaceholder: "ನಿಮ್ಮ ಬಗ್ಗೆ ಹೇಳಿ...",
+    profileSaved: "ಪ್ರೊಫೈಲ್ ಉಳಿಸಲಾಗಿದೆ!",
   },
   te: {
     dashboard: "డాష్‌బోర్డ్",
