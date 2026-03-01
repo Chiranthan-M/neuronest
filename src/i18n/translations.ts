@@ -432,6 +432,11 @@ export const translations: Record<Language, Record<string, string>> = {
     moveToPrivate: "ప్రైవేట్‌కు తరలించు",
     moveToPublic: "పబ్లిక్‌కు తరలించు",
     attachFile: "ఫైల్ జత చేయండి",
+    profileSettings: "ప్రొఫైల్ సెట్టింగ్‌లు",
+    clickToChangeAvatar: "అవతార్ మార్చడానికి క్లిక్ చేయండి",
+    bio: "బయో",
+    bioPlaceholder: "మీ గురించి చెప్పండి...",
+    profileSaved: "ప్రొఫైల్ సేవ్ చేయబడింది!",
   },
   ta: {
     dashboard: "டாஷ்போர்ட்",
