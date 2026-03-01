@@ -538,5 +538,10 @@ export const translations: Record<Language, Record<string, string>> = {
     moveToPrivate: "தனிப்பட்டதாக நகர்த்து",
     moveToPublic: "பொதுவாக நகர்த்து",
     attachFile: "கோப்பு இணை",
+    profileSettings: "சுயவிவர அமைப்புகள்",
+    clickToChangeAvatar: "அவதாரை மாற்ற கிளிக் செய்யவும்",
+    bio: "பயோ",
+    bioPlaceholder: "உங்களைப் பற்றி சொல்லுங்கள்...",
+    profileSaved: "சுயவிவரம் சேமிக்கப்பட்டது!",
   },
 };
