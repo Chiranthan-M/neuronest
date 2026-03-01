@@ -41,6 +41,8 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
   const [showAI, setShowAI] = useState(false);
   const [attachments, setAttachments] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [showDrawing, setShowDrawing] = useState(false);
+  const [showOCR, setShowOCR] = useState(false);
 
   useEffect(() => {
     if (note) {
