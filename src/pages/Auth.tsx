@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BookOpen, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Auth() {
   const { user, loading, signIn, signUp } = useAuth();
@@ -25,6 +26,23 @@ export default function Auth() {
   }
 
   if (user) return <Navigate to="/" replace />;
+
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      toast({ title: t("error"), description: t("enterEmailFirst"), variant: "destructive" });
+      return;
+    }
+    setSubmitting(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) {
+      toast({ title: t("error"), description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: t("checkEmail"), description: t("resetLinkSent") });
+    }
+    setSubmitting(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,6 +123,15 @@ export default function Auth() {
               minLength={6}
               className="bg-secondary/30 border-border/50"
             />
+            {isLogin && (
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="text-xs text-primary hover:underline"
+              >
+                {t("forgotPassword")}
+              </button>
+            )}
             <Button type="submit" className="w-full gradient-primary text-primary-foreground" disabled={submitting}>
               {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               {isLogin ? t("signIn") : t("signUp")}

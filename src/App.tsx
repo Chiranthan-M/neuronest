@@ -15,6 +15,7 @@ import TrashPage from "./pages/Trash";
 import PrivatePage from "./pages/Private";
 import ProfilePage from "./pages/Profile";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import { Loader2 } from "lucide-react";
 
@@ -44,6 +45,7 @@ const App = () => (
               <BrowserRouter>
                 <Routes>
                   <Route path="/auth" element={<Auth />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="*" element={
                     <ProtectedRoute>
                       <AppLayout>
