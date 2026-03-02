@@ -14,6 +14,7 @@ import {
   Globe,
   LogOut,
   User,
+  UserRound,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
@@ -37,7 +38,7 @@ export function AppSidebar() {
     return false;
   });
   const { t, language, setLanguage } = useLanguage();
-  const { signOut, user } = useAuth();
+  const { signOut, user, isGuest } = useAuth();
 
   const navItems = [
     { title: t("dashboard"), url: "/", icon: LayoutDashboard },
@@ -120,10 +121,29 @@ export function AppSidebar() {
       {/* Footer */}
       <div className="px-3 pb-4 space-y-1">
         {/* User info */}
-        {!collapsed && user && (
-          <div className="px-3 py-2 text-xs text-muted-foreground truncate">
-            {user.email}
+        {!collapsed && (
+          <div className="px-3 py-2 text-xs text-muted-foreground truncate flex items-center gap-2">
+            {isGuest ? (
+              <>
+                <UserRound className="w-3 h-3" />
+                {t("guest") || "Guest"}
+              </>
+            ) : (
+              user?.email
+            )}
           </div>
+        )}
+
+        {/* Guest sign-up prompt */}
+        {isGuest && !collapsed && (
+          <Link to="/auth">
+            <button
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200 text-primary hover:bg-primary/10"
+            >
+              <User className="w-4 h-4" />
+              <span>{t("signUpForMore") || "Sign up for more"}</span>
+            </button>
+          </Link>
         )}
 
         {/* Language Switcher */}
@@ -165,18 +185,20 @@ export function AppSidebar() {
           {!collapsed && <span>{darkMode ? t("lightMode") : t("darkMode")}</span>}
         </button>
 
-        <Link to="/profile">
-          <button
-            className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200",
-              "text-muted-foreground hover:text-foreground hover:bg-secondary/80",
-              collapsed && "justify-center px-0"
-            )}
-          >
-            <User className="w-4 h-4" />
-            {!collapsed && <span>{t("profileSettings")}</span>}
-          </button>
-        </Link>
+        {!isGuest && (
+          <Link to="/profile">
+            <button
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200",
+                "text-muted-foreground hover:text-foreground hover:bg-secondary/80",
+                collapsed && "justify-center px-0"
+              )}
+            >
+              <User className="w-4 h-4" />
+              {!collapsed && <span>{t("profileSettings")}</span>}
+            </button>
+          </Link>
+        )}
 
         <button
           onClick={signOut}
@@ -187,7 +209,7 @@ export function AppSidebar() {
           )}
         >
           <LogOut className="w-4 h-4" />
-          {!collapsed && <span>{t("signOut")}</span>}
+          {!collapsed && <span>{isGuest ? (t("exitGuest") || "Exit Guest") : t("signOut")}</span>}
         </button>
       </div>
     </aside>

@@ -22,18 +22,17 @@ import { Loader2 } from "lucide-react";
 const queryClient = new QueryClient();
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, isGuest } = useAuth();
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center app-bg">
       <Loader2 className="w-8 h-8 animate-spin text-primary" />
     </div>
   );
-  if (!user) return <Navigate to="/auth" replace />;
+  if (!user && !isGuest) return <Navigate to="/auth" replace />;
   return <>{children}</>;
 }
 
 const App = () => (
-  // App root
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <LanguageProvider>
