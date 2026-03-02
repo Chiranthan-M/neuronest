@@ -285,6 +285,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ocrTitle: "OCR / हस्तलेख", hideOCR: "OCR छुपाएं", uploadImageForOCR: "टेक्स्ट निकालने के लिए छवि अपलोड करें",
     extractingText: "टेक्स्ट निकाला जा रहा है...", copied: "कॉपी हुआ!", copy: "कॉपी",
     drawingSaved: "ड्राइंग सहेजा गया!", textExtracted: "टेक्स्ट सफलतापूर्वक निकाला गया!",
+    or: "या", continueAsGuest: "अतिथि के रूप में जारी रखें", guest: "अतिथि", signUpForMore: "और अधिक के लिए साइन अप करें", exitGuest: "अतिथि मोड से बाहर",
   },
   kn: {
     dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
