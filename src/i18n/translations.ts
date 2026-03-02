@@ -663,5 +663,6 @@ export const translations: Record<Language, Record<string, string>> = {
     ocrTitle: "OCR / கையெழுத்து", hideOCR: "OCR மறை", uploadImageForOCR: "உரை பிரிக்க படம் பதிவேற்றவும்",
     extractingText: "உரை பிரிக்கப்படுகிறது...", copied: "நகலெடுக்கப்பட்டது!", copy: "நகலெடு",
     drawingSaved: "வரைதல் சேமிக்கப்பட்டது!", textExtracted: "உரை வெற்றிகரமாக பிரிக்கப்பட்டது!",
+    or: "அல்லது", continueAsGuest: "விருந்தினராக தொடரவும்", guest: "விருந்தினர்", signUpForMore: "மேலும் பதிவு செய்யவும்", exitGuest: "விருந்தினர் பயன்முறையிலிருந்து வெளியேறு",
   },
 };
