@@ -10,7 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { Loader2, Camera, User } from "lucide-react";
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, isGuest } = useAuth();
   const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
