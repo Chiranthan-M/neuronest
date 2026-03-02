@@ -411,6 +411,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ocrTitle: "OCR / ಕೈಬರಹ", hideOCR: "OCR ಮರೆಮಾಡಿ", uploadImageForOCR: "ಪಠ್ಯ ಹೊರತೆಗೆಯಲು ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
     extractingText: "ಪಠ್ಯ ಹೊರತೆಗೆಯಲಾಗುತ್ತಿದೆ...", copied: "ನಕಲು!", copy: "ನಕಲು",
     drawingSaved: "ಡ್ರಾಯಿಂಗ್ ಉಳಿಸಲಾಗಿದೆ!", textExtracted: "ಪಠ್ಯ ಯಶಸ್ವಿಯಾಗಿ ಹೊರತೆಗೆಯಲಾಗಿದೆ!",
+    or: "ಅಥವಾ", continueAsGuest: "ಅತಿಥಿಯಾಗಿ ಮುಂದುವರಿಸಿ", guest: "ಅತಿಥಿ", signUpForMore: "ಹೆಚ್ಚಿನದಕ್ಕಾಗಿ ಸೈನ್ ಅಪ್", exitGuest: "ಅತಿಥಿ ಮೋಡ್ ನಿರ್ಗಮನ",
   },
   te: {
     dashboard: "డాష్‌బోర్డ్",
