@@ -155,6 +155,11 @@ export const translations: Record<Language, Record<string, string>> = {
     copy: "Copy",
     drawingSaved: "Drawing saved!",
     textExtracted: "Text extracted successfully!",
+    or: "or",
+    continueAsGuest: "Continue as Guest",
+    guest: "Guest",
+    signUpForMore: "Sign up for more",
+    exitGuest: "Exit Guest Mode",
   },
   hi: {
     dashboard: "डैशबोर्ड",
@@ -280,6 +285,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ocrTitle: "OCR / हस्तलेख", hideOCR: "OCR छुपाएं", uploadImageForOCR: "टेक्स्ट निकालने के लिए छवि अपलोड करें",
     extractingText: "टेक्स्ट निकाला जा रहा है...", copied: "कॉपी हुआ!", copy: "कॉपी",
     drawingSaved: "ड्राइंग सहेजा गया!", textExtracted: "टेक्स्ट सफलतापूर्वक निकाला गया!",
+    or: "या", continueAsGuest: "अतिथि के रूप में जारी रखें", guest: "अतिथि", signUpForMore: "और अधिक के लिए साइन अप करें", exitGuest: "अतिथि मोड से बाहर",
   },
   kn: {
     dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
@@ -405,6 +411,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ocrTitle: "OCR / ಕೈಬರಹ", hideOCR: "OCR ಮರೆಮಾಡಿ", uploadImageForOCR: "ಪಠ್ಯ ಹೊರತೆಗೆಯಲು ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
     extractingText: "ಪಠ್ಯ ಹೊರತೆಗೆಯಲಾಗುತ್ತಿದೆ...", copied: "ನಕಲು!", copy: "ನಕಲು",
     drawingSaved: "ಡ್ರಾಯಿಂಗ್ ಉಳಿಸಲಾಗಿದೆ!", textExtracted: "ಪಠ್ಯ ಯಶಸ್ವಿಯಾಗಿ ಹೊರತೆಗೆಯಲಾಗಿದೆ!",
+    or: "ಅಥವಾ", continueAsGuest: "ಅತಿಥಿಯಾಗಿ ಮುಂದುವರಿಸಿ", guest: "ಅತಿಥಿ", signUpForMore: "ಹೆಚ್ಚಿನದಕ್ಕಾಗಿ ಸೈನ್ ಅಪ್", exitGuest: "ಅತಿಥಿ ಮೋಡ್ ನಿರ್ಗಮನ",
   },
   te: {
     dashboard: "డాష్‌బోర్డ్",
@@ -530,6 +537,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ocrTitle: "OCR / చేతిరాత", hideOCR: "OCR దాచు", uploadImageForOCR: "టెక్స్ట్ సంగ్రహించడానికి చిత్రం అప్‌లోడ్",
     extractingText: "టెక్స్ట్ సంగ్రహిస్తోంది...", copied: "కాపీ అయింది!", copy: "కాపీ",
     drawingSaved: "డ్రాయింగ్ సేవ్ అయింది!", textExtracted: "టెక్స్ట్ విజయవంతంగా సంగ్రహించబడింది!",
+    or: "లేదా", continueAsGuest: "అతిథిగా కొనసాగించండి", guest: "అతిథి", signUpForMore: "మరింత కోసం సైన్ అప్", exitGuest: "అతిథి మోడ్ నుండి నిష్క్రమణ",
   },
   ta: {
     dashboard: "டாஷ்போர்ட்",
@@ -655,5 +663,6 @@ export const translations: Record<Language, Record<string, string>> = {
     ocrTitle: "OCR / கையெழுத்து", hideOCR: "OCR மறை", uploadImageForOCR: "உரை பிரிக்க படம் பதிவேற்றவும்",
     extractingText: "உரை பிரிக்கப்படுகிறது...", copied: "நகலெடுக்கப்பட்டது!", copy: "நகலெடு",
     drawingSaved: "வரைதல் சேமிக்கப்பட்டது!", textExtracted: "உரை வெற்றிகரமாக பிரிக்கப்பட்டது!",
+    or: "அல்லது", continueAsGuest: "விருந்தினராக தொடரவும்", guest: "விருந்தினர்", signUpForMore: "மேலும் பதிவு செய்யவும்", exitGuest: "விருந்தினர் பயன்முறையிலிருந்து வெளியேறு",
   },
 };

@@ -4,12 +4,12 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BookOpen, Loader2 } from "lucide-react";
+import { BookOpen, Loader2, UserRound } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function Auth() {
-  const { user, loading, signIn, signUp } = useAuth();
+  const { user, loading, isGuest, signIn, signUp, continueAsGuest } = useAuth();
   const { t } = useLanguage();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -25,7 +25,7 @@ export default function Auth() {
     );
   }
 
-  if (user) return <Navigate to="/" replace />;
+  if (user || isGuest) return <Navigate to="/" replace />;
 
   const handleForgotPassword = async () => {
     if (!email.trim()) {
@@ -33,13 +33,18 @@ export default function Auth() {
       return;
     }
     setSubmitting(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-    if (error) {
-      toast({ title: t("error"), description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: t("checkEmail"), description: t("resetLinkSent") });
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) {
+        toast({ title: t("error"), description: error.message, variant: "destructive" });
+      } else {
+        toast({ title: t("checkEmail"), description: t("resetLinkSent") });
+      }
+    } catch (err: any) {
+      console.error("[Auth] Reset password error:", err);
+      toast({ title: t("error"), description: err?.message || "Network error", variant: "destructive" });
     }
     setSubmitting(false);
   };
@@ -137,6 +142,25 @@ export default function Auth() {
               {isLogin ? t("signIn") : t("signUp")}
             </Button>
           </form>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border/50" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">{t("or") || "or"}</span>
+            </div>
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full border-border/50"
+            onClick={continueAsGuest}
+          >
+            <UserRound className="w-4 h-4 mr-2" />
+            {t("continueAsGuest") || "Continue as Guest"}
+          </Button>
         </div>
       </div>
     </div>
