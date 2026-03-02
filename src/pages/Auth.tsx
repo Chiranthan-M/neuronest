@@ -4,12 +4,12 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BookOpen, Loader2, UserRound } from "lucide-react";
+import { BookOpen, Loader2, UserRound, WifiOff } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function Auth() {
-  const { user, loading, isGuest, signIn, signUp, continueAsGuest } = useAuth();
+  const { user, loading, isGuest, connectionError, signIn, signUp, continueAsGuest } = useAuth();
   const { t } = useLanguage();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -84,6 +84,17 @@ export default function Auth() {
           <h1 className="text-2xl font-bold">NeuroNest</h1>
           <p className="text-sm text-muted-foreground mt-1">{t("smartKnowledgeHub")}</p>
         </div>
+
+        {connectionError && (
+          <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 flex items-start gap-3">
+            <WifiOff className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-destructive">Connection Issue</p>
+              <p className="text-xs text-muted-foreground mt-1">{connectionError}</p>
+              <p className="text-xs text-muted-foreground mt-2">You can still use the app in Guest Mode below.</p>
+            </div>
+          </div>
+        )}
 
         <div className="glass rounded-2xl p-6 space-y-5">
           <div className="flex rounded-lg bg-secondary/50 p-1">
