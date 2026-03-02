@@ -155,6 +155,11 @@ export const translations: Record<Language, Record<string, string>> = {
     copy: "Copy",
     drawingSaved: "Drawing saved!",
     textExtracted: "Text extracted successfully!",
+    or: "or",
+    continueAsGuest: "Continue as Guest",
+    guest: "Guest",
+    signUpForMore: "Sign up for more",
+    exitGuest: "Exit Guest Mode",
   },
   hi: {
     dashboard: "डैशबोर्ड",
