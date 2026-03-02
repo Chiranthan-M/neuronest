@@ -32,6 +32,46 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/" element={
+        <ProtectedRoute>
+          <AppLayout><Index /></AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/notes" element={
+        <ProtectedRoute>
+          <AppLayout><Notes /></AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/archive" element={
+        <ProtectedRoute>
+          <AppLayout><ArchivePage /></AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/trash" element={
+        <ProtectedRoute>
+          <AppLayout><TrashPage /></AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/private" element={
+        <ProtectedRoute>
+          <AppLayout><PrivatePage /></AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <AppLayout><ProfilePage /></AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -42,25 +82,7 @@ const App = () => (
               <Toaster />
               <Sonner />
               <BrowserRouter>
-                <Routes>
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/reset-password" element={<ResetPassword />} />
-                  <Route path="*" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <Routes>
-                          <Route path="/" element={<Index />} />
-                          <Route path="/notes" element={<Notes />} />
-                          <Route path="/archive" element={<ArchivePage />} />
-                          <Route path="/trash" element={<TrashPage />} />
-                          <Route path="/private" element={<PrivatePage />} />
-                          <Route path="/profile" element={<ProfilePage />} />
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                </Routes>
+                <AppRoutes />
               </BrowserRouter>
             </PrivacyProvider>
           </NotesProvider>
