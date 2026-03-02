@@ -537,6 +537,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ocrTitle: "OCR / చేతిరాత", hideOCR: "OCR దాచు", uploadImageForOCR: "టెక్స్ట్ సంగ్రహించడానికి చిత్రం అప్‌లోడ్",
     extractingText: "టెక్స్ట్ సంగ్రహిస్తోంది...", copied: "కాపీ అయింది!", copy: "కాపీ",
     drawingSaved: "డ్రాయింగ్ సేవ్ అయింది!", textExtracted: "టెక్స్ట్ విజయవంతంగా సంగ్రహించబడింది!",
+    or: "లేదా", continueAsGuest: "అతిథిగా కొనసాగించండి", guest: "అతిథి", signUpForMore: "మరింత కోసం సైన్ అప్", exitGuest: "అతిథి మోడ్ నుండి నిష్క్రమణ",
   },
   ta: {
     dashboard: "டாஷ்போர்ட்",
