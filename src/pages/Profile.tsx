@@ -20,13 +20,14 @@ export default function Profile() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || isGuest) { setLoading(false); return; }
     supabase
       .from("profiles")
       .select("display_name, bio, avatar_url")
       .eq("user_id", user.id)
       .single()
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) console.error("[Profile] Fetch error:", error);
         if (data) {
           setDisplayName(data.display_name ?? "");
           setBio(data.bio ?? "");
@@ -34,7 +35,7 @@ export default function Profile() {
         }
         setLoading(false);
       });
-  }, [user]);
+  }, [user, isGuest]);
 
   const handleSave = async () => {
     if (!user) return;
