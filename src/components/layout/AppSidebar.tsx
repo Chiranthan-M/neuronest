@@ -15,6 +15,7 @@ import {
   LogOut,
   User,
   UserRound,
+  Search,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
@@ -28,6 +29,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -49,87 +51,140 @@ export function AppSidebar() {
   ];
 
   useEffect(() => {
+    document.documentElement.classList.add("transitioning");
     if (darkMode) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
+    const timer = setTimeout(() => document.documentElement.classList.remove("transitioning"), 400);
+    return () => clearTimeout(timer);
   }, [darkMode]);
+
+  const SidebarButton = ({ icon: Icon, label, onClick, className, destructive }: {
+    icon: any; label: string; onClick?: () => void; className?: string; destructive?: boolean;
+  }) => {
+    const btn = (
+      <button
+        onClick={onClick}
+        className={cn(
+          "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium w-full transition-all duration-200",
+          destructive
+            ? "text-destructive hover:bg-destructive/10"
+            : "text-muted-foreground hover:text-foreground hover:bg-secondary/80",
+          collapsed && "justify-center px-0",
+          className
+        )}
+      >
+        <Icon className="w-[18px] h-[18px] flex-shrink-0" />
+        {!collapsed && <span>{label}</span>}
+      </button>
+    );
+
+    if (collapsed) {
+      return (
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>{btn}</TooltipTrigger>
+          <TooltipContent side="right" className="text-xs">{label}</TooltipContent>
+        </Tooltip>
+      );
+    }
+    return btn;
+  };
 
   return (
     <aside
       className={cn(
-        "h-screen sticky top-0 flex flex-col border-r border-border/50 glass transition-all duration-300 z-30",
-        collapsed ? "w-16" : "w-64"
+        "h-screen sticky top-0 flex flex-col border-r border-border/40 bg-sidebar transition-all duration-300 ease-out z-30 scrollbar-thin overflow-y-auto",
+        collapsed ? "w-[68px]" : "w-[260px]"
       )}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 h-16 border-b border-border/50">
-        <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
-          <BookOpen className="w-4 h-4 text-primary-foreground" />
+      <div className="flex items-center gap-3 px-4 h-16 border-b border-border/40 flex-shrink-0">
+        <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0 shadow-glass">
+          <BookOpen className="w-[18px] h-[18px] text-primary-foreground" />
         </div>
         {!collapsed && (
-          <div className="animate-fade-in">
-            <h1 className="font-bold text-sm tracking-tight">NeuroNest</h1>
-            <p className="text-[10px] text-muted-foreground">{t("smartKnowledgeHub")}</p>
+          <div className="animate-fade-in min-w-0">
+            <h1 className="font-bold text-sm tracking-tight truncate">NeuroNest</h1>
+            <p className="text-[10px] text-muted-foreground truncate">{t("smartKnowledgeHub")}</p>
           </div>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="ml-auto p-1.5 rounded-md hover:bg-secondary transition-colors"
+          className="ml-auto p-1.5 rounded-lg hover:bg-secondary/80 transition-colors flex-shrink-0"
         >
-          <ChevronLeft className={cn("w-4 h-4 text-muted-foreground transition-transform", collapsed && "rotate-180")} />
+          <ChevronLeft className={cn("w-4 h-4 text-muted-foreground transition-transform duration-300", collapsed && "rotate-180")} />
         </button>
       </div>
 
       {/* New Note Button */}
-      <div className="px-3 pt-4 pb-2">
+      <div className="px-3 pt-4 pb-1 flex-shrink-0">
         <Link to="/notes?new=true">
           <Button
             className={cn(
-              "w-full gradient-primary text-primary-foreground shadow-glass transition-all hover:opacity-90",
+              "w-full gradient-primary text-primary-foreground shadow-glass transition-all hover:opacity-90 rounded-xl ripple-btn h-10",
               collapsed ? "px-0" : ""
             )}
             size={collapsed ? "icon" : "default"}
           >
-            <Plus className="w-4 h-4" />
-            {!collapsed && <span className="ml-2">{t("newNote")}</span>}
+            <Plus className="w-[18px] h-[18px]" />
+            {!collapsed && <span className="ml-1.5 font-medium">{t("newNote")}</span>}
           </Button>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 space-y-1">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.url}
-            to={item.url}
-            end={item.url === "/"}
-            className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-              "text-muted-foreground hover:text-foreground hover:bg-secondary/80",
-              collapsed && "justify-center px-0"
-            )}
-            activeClassName="bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary"
-          >
-            <item.icon className="w-4 h-4 flex-shrink-0" />
-            {!collapsed && <span className="animate-fade-in">{item.title}</span>}
-          </NavLink>
-        ))}
+      <nav className="flex-1 px-3 py-3 space-y-0.5">
+        {navItems.map((item) => {
+          const link = (
+            <NavLink
+              key={item.url}
+              to={item.url}
+              end={item.url === "/"}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
+                "text-muted-foreground hover:text-foreground hover:bg-secondary/60",
+                collapsed && "justify-center px-0"
+              )}
+              activeClassName="bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary shadow-sm"
+            >
+              <item.icon className="w-[18px] h-[18px] flex-shrink-0" />
+              {!collapsed && <span className="animate-fade-in">{item.title}</span>}
+            </NavLink>
+          );
+
+          if (collapsed) {
+            return (
+              <Tooltip key={item.url} delayDuration={0}>
+                <TooltipTrigger asChild>{link}</TooltipTrigger>
+                <TooltipContent side="right" className="text-xs">{item.title}</TooltipContent>
+              </Tooltip>
+            );
+          }
+          return link;
+        })}
       </nav>
 
       {/* Footer */}
-      <div className="px-3 pb-4 space-y-1">
+      <div className="px-3 pb-4 space-y-0.5 flex-shrink-0 border-t border-border/40 pt-3">
         {/* User info */}
         {!collapsed && (
           <div className="px-3 py-2 text-xs text-muted-foreground truncate flex items-center gap-2">
             {isGuest ? (
               <>
-                <UserRound className="w-3 h-3" />
+                <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+                  <UserRound className="w-3 h-3" />
+                </div>
                 {t("guest") || "Guest"}
               </>
             ) : (
-              user?.email
+              <>
+                <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <User className="w-3 h-3 text-primary" />
+                </div>
+                <span className="truncate">{user?.email}</span>
+              </>
             )}
           </div>
         )}
@@ -137,10 +192,8 @@ export function AppSidebar() {
         {/* Guest sign-up prompt */}
         {isGuest && !collapsed && (
           <Link to="/auth">
-            <button
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200 text-primary hover:bg-primary/10"
-            >
-              <User className="w-4 h-4" />
+            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium w-full transition-all duration-200 text-primary hover:bg-primary/10">
+              <User className="w-[18px] h-[18px]" />
               <span>{t("signUpForMore") || "Sign up for more"}</span>
             </button>
           </Link>
@@ -149,23 +202,16 @@ export function AppSidebar() {
         {/* Language Switcher */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200",
-                "text-muted-foreground hover:text-foreground hover:bg-secondary/80",
-                collapsed && "justify-center px-0"
-              )}
-            >
-              <Globe className="w-4 h-4" />
-              {!collapsed && <span>{languageNames[language]}</span>}
-            </button>
+            <div>
+              <SidebarButton icon={Globe} label={languageNames[language]} />
+            </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="glass">
+          <DropdownMenuContent align="start" className="glass rounded-xl">
             {(Object.keys(languageNames) as Language[]).map((lang) => (
               <DropdownMenuItem
                 key={lang}
                 onClick={() => setLanguage(lang)}
-                className={language === lang ? "text-primary font-semibold" : ""}
+                className={cn("rounded-lg", language === lang && "text-primary font-semibold")}
               >
                 {languageNames[lang]}
               </DropdownMenuItem>
@@ -173,44 +219,24 @@ export function AppSidebar() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <button
+        <SidebarButton
+          icon={darkMode ? Sun : Moon}
+          label={darkMode ? t("lightMode") : t("darkMode")}
           onClick={() => setDarkMode(!darkMode)}
-          className={cn(
-            "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200",
-            "text-muted-foreground hover:text-foreground hover:bg-secondary/80",
-            collapsed && "justify-center px-0"
-          )}
-        >
-          {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          {!collapsed && <span>{darkMode ? t("lightMode") : t("darkMode")}</span>}
-        </button>
+        />
 
         {!isGuest && (
           <Link to="/profile">
-            <button
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200",
-                "text-muted-foreground hover:text-foreground hover:bg-secondary/80",
-                collapsed && "justify-center px-0"
-              )}
-            >
-              <User className="w-4 h-4" />
-              {!collapsed && <span>{t("profileSettings")}</span>}
-            </button>
+            <SidebarButton icon={User} label={t("profileSettings")} />
           </Link>
         )}
 
-        <button
+        <SidebarButton
+          icon={LogOut}
+          label={isGuest ? (t("exitGuest") || "Exit Guest") : t("signOut")}
           onClick={signOut}
-          className={cn(
-            "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200",
-            "text-destructive hover:bg-destructive/10",
-            collapsed && "justify-center px-0"
-          )}
-        >
-          <LogOut className="w-4 h-4" />
-          {!collapsed && <span>{isGuest ? (t("exitGuest") || "Exit Guest") : t("signOut")}</span>}
-        </button>
+          destructive
+        />
       </div>
     </aside>
   );

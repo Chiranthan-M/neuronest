@@ -4,7 +4,7 @@ import { NoteCard } from "@/components/notes/NoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { Note } from "@/types/note";
 import { useState } from "react";
-import { Archive as ArchiveIcon } from "lucide-react";
+import { Archive as ArchiveIcon, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ArchivePage() {
@@ -18,11 +18,13 @@ export default function ArchivePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-          <ArchiveIcon className="w-6 h-6 text-muted-foreground" />
+        <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+            <ArchiveIcon className="w-5 h-5 text-muted-foreground" />
+          </div>
           {t("archive")}
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">{archivedNotes.length} {t("archivedNotes")}</p>
+        <p className="text-sm text-muted-foreground mt-1.5 ml-[52px]">{archivedNotes.length} {t("archivedNotes")}</p>
       </div>
 
       <AnimatePresence mode="popLayout">
@@ -33,8 +35,11 @@ export default function ArchivePage() {
             ))}
           </motion.div>
         ) : (
-          <div className="text-center py-16">
-            <p className="text-muted-foreground text-sm">{t("noArchivedNotes")}</p>
+          <div className="empty-state">
+            <div className="empty-state-icon">
+              <ArchiveIcon className="w-7 h-7 text-muted-foreground/50" />
+            </div>
+            <p className="text-muted-foreground text-sm font-medium">{t("noArchivedNotes")}</p>
           </div>
         )}
       </AnimatePresence>

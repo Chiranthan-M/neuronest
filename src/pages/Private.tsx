@@ -8,13 +8,14 @@ import { NoteEditor } from "@/components/notes/NoteEditor";
 import { Note } from "@/types/note";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Lock, Plus, Search, LockOpen, Settings } from "lucide-react";
+import { Lock, Plus, Search, LockOpen, Settings, ShieldCheck } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { motion } from "framer-motion";
 
 export default function PrivatePage() {
   const { isUnlocked, lock, resetLock } = usePrivacy();
@@ -39,57 +40,67 @@ export default function PrivatePage() {
   }
 
   return (
-    <div className="animate-fade-in">
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+    >
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Lock className="w-5 h-5 text-primary" />
+          <h1 className="text-3xl font-bold flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Lock className="w-5 h-5 text-primary" />
+            </div>
             {t("privateFolder")}
           </h1>
-          <p className="text-sm text-muted-foreground">{privateNotes.length} {t("notes")}</p>
+          <p className="text-sm text-muted-foreground mt-1.5 ml-[52px]">{privateNotes.length} {t("notes")}</p>
         </div>
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="border-border/50">
+              <Button variant="outline" size="icon" className="border-border/60 rounded-xl">
                 <Settings className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="glass">
-              <DropdownMenuItem onClick={lock} className="text-sm">
+            <DropdownMenuContent align="end" className="glass rounded-xl">
+              <DropdownMenuItem onClick={lock} className="text-sm rounded-lg">
                 <Lock className="w-4 h-4 mr-2" />
                 {t("lockNow")}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={resetLock} className="text-sm text-destructive">
+              <DropdownMenuItem onClick={resetLock} className="text-sm text-destructive rounded-lg">
                 <LockOpen className="w-4 h-4 mr-2" />
                 {t("resetLock")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button
-            onClick={() => { setEditNote(null); setShowEditor(true); }}
-            className="gradient-primary text-primary-foreground"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            {t("newNote")}
-          </Button>
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+            <Button
+              onClick={() => { setEditNote(null); setShowEditor(true); }}
+              className="gradient-primary text-primary-foreground rounded-xl shadow-glass ripple-btn"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              {t("newNote")}
+            </Button>
+          </motion.div>
         </div>
       </div>
 
-      <div className="relative mb-4">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      <div className="relative mb-5">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           placeholder={t("searchNotes")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 border-border/50 bg-secondary/30"
+          className="pl-10 border-border/60 bg-card rounded-xl h-11 premium-input"
         />
       </div>
 
       {privateNotes.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <Lock className="w-12 h-12 text-muted-foreground/30 mb-4" />
-          <p className="text-muted-foreground">{t("noPrivateNotes")}</p>
+        <div className="empty-state">
+          <div className="empty-state-icon">
+            <ShieldCheck className="w-7 h-7 text-muted-foreground/50" />
+          </div>
+          <p className="text-muted-foreground font-medium text-sm">{t("noPrivateNotes")}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -109,6 +120,6 @@ export default function PrivatePage() {
         onClose={() => setShowEditor(false)}
         isPrivate
       />
-    </div>
+    </motion.div>
   );
 }

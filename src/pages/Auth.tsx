@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { BookOpen, Loader2, UserRound, WifiOff } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { motion } from "framer-motion";
 
 export default function Auth() {
   const { user, loading, isGuest, connectionError, signIn, signUp, continueAsGuest } = useAuth();
@@ -76,37 +77,51 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen flex items-center justify-center app-bg px-4">
-      <div className="w-full max-w-sm space-y-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+        className="w-full max-w-sm space-y-8"
+      >
         <div className="text-center">
-          <div className="w-14 h-14 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-4">
-            <BookOpen className="w-7 h-7 text-primary-foreground" />
-          </div>
-          <h1 className="text-2xl font-bold">NeuroNest</h1>
-          <p className="text-sm text-muted-foreground mt-1">{t("smartKnowledgeHub")}</p>
+          <motion.div
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+            className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-5 shadow-glass-lg"
+          >
+            <BookOpen className="w-8 h-8 text-primary-foreground" />
+          </motion.div>
+          <h1 className="text-3xl font-bold tracking-tight">NeuroNest</h1>
+          <p className="text-sm text-muted-foreground mt-1.5">{t("smartKnowledgeHub")}</p>
         </div>
 
         {connectionError && (
-          <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 flex items-start gap-3">
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            className="rounded-2xl border border-destructive/20 bg-destructive/5 p-4 flex items-start gap-3"
+          >
             <WifiOff className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-destructive">Connection Issue</p>
               <p className="text-xs text-muted-foreground mt-1">{connectionError}</p>
               <p className="text-xs text-muted-foreground mt-2">You can still use the app in Guest Mode below.</p>
             </div>
-          </div>
+          </motion.div>
         )}
 
-        <div className="glass rounded-2xl p-6 space-y-5">
-          <div className="flex rounded-lg bg-secondary/50 p-1">
+        <div className="bg-card rounded-2xl p-6 space-y-5 border border-border/60 shadow-premium">
+          <div className="flex rounded-xl bg-secondary/50 p-1">
             <button
               onClick={() => setIsLogin(true)}
-              className={`flex-1 text-sm font-medium py-2 rounded-md transition-all ${isLogin ? "bg-background shadow-sm" : "text-muted-foreground"}`}
+              className={`flex-1 text-sm font-medium py-2.5 rounded-lg transition-all duration-250 ${isLogin ? "bg-background shadow-sm" : "text-muted-foreground"}`}
             >
               {t("signIn")}
             </button>
             <button
               onClick={() => setIsLogin(false)}
-              className={`flex-1 text-sm font-medium py-2 rounded-md transition-all ${!isLogin ? "bg-background shadow-sm" : "text-muted-foreground"}`}
+              className={`flex-1 text-sm font-medium py-2.5 rounded-lg transition-all duration-250 ${!isLogin ? "bg-background shadow-sm" : "text-muted-foreground"}`}
             >
               {t("signUp")}
             </button>
@@ -119,7 +134,7 @@ export default function Auth() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 required
-                className="bg-secondary/30 border-border/50"
+                className="bg-secondary/20 border-border/40 rounded-xl h-11"
               />
             )}
             <Input
@@ -128,7 +143,7 @@ export default function Auth() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="bg-secondary/30 border-border/50"
+              className="bg-secondary/20 border-border/40 rounded-xl h-11"
             />
             <Input
               type="password"
@@ -137,7 +152,7 @@ export default function Auth() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="bg-secondary/30 border-border/50"
+              className="bg-secondary/20 border-border/40 rounded-xl h-11"
             />
             {isLogin && (
               <button
@@ -148,32 +163,34 @@ export default function Auth() {
                 {t("forgotPassword")}
               </button>
             )}
-            <Button type="submit" className="w-full gradient-primary text-primary-foreground" disabled={submitting}>
-              {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {isLogin ? t("signIn") : t("signUp")}
-            </Button>
+            <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+              <Button type="submit" className="w-full gradient-primary text-primary-foreground rounded-xl h-11 shadow-glass ripple-btn" disabled={submitting}>
+                {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                {isLogin ? t("signIn") : t("signUp")}
+              </Button>
+            </motion.div>
           </form>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border/50" />
+              <span className="w-full border-t border-border/40" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">{t("or") || "or"}</span>
+              <span className="bg-card px-3 text-muted-foreground">{t("or") || "or"}</span>
             </div>
           </div>
 
           <Button
             type="button"
             variant="outline"
-            className="w-full border-border/50"
+            className="w-full border-border/40 rounded-xl h-11"
             onClick={continueAsGuest}
           >
             <UserRound className="w-4 h-4 mr-2" />
             {t("continueAsGuest") || "Continue as Guest"}
           </Button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

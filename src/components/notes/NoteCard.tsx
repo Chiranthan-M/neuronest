@@ -17,6 +17,15 @@ interface NoteCardProps {
   showRestore?: boolean;
 }
 
+const categoryColors: Record<string, string> = {
+  General: "bg-muted",
+  Programming: "bg-primary/10",
+  "Computer Science": "bg-accent/10",
+  Projects: "bg-primary/8",
+  Personal: "bg-accent/8",
+  Work: "bg-muted",
+};
+
 export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
   const { togglePin, toggleArchive, trashNote, restoreNote, permanentlyDelete, togglePrivate } = useNotes();
   const { t } = useLanguage();
@@ -29,51 +38,54 @@ export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.2 }}
-      className={cn("note-card group relative", note.isPinned && "ring-1 ring-primary/20")}
+      transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+      className={cn("note-card group relative", note.isPinned && "ring-1 ring-primary/15 bg-primary/[0.02]")}
       onClick={onClick}
     >
-      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Category indicator strip */}
+      <div className={cn("absolute top-0 left-4 right-4 h-0.5 rounded-b-full opacity-40", categoryColors[note.category] || "bg-muted")} />
+
+      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <DropdownMenu>
           <DropdownMenuTrigger
             onClick={(e) => e.stopPropagation()}
-            className="p-1.5 rounded-md hover:bg-secondary transition-colors"
+            className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
           >
             <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="glass">
+          <DropdownMenuContent align="end" className="glass rounded-xl">
             {showRestore ? (
               <>
-                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); restoreNote(note.id); }}>
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); restoreNote(note.id); }} className="rounded-lg">
                   {t("restore")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={(e) => { e.stopPropagation(); permanentlyDelete(note.id); }}
-                  className="text-destructive"
+                  className="text-destructive rounded-lg"
                 >
                   {t("deleteForever")}
                 </DropdownMenuItem>
               </>
             ) : (
               <>
-                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); togglePin(note.id); }}>
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); togglePin(note.id); }} className="rounded-lg">
                   <Pin className="w-3.5 h-3.5 mr-2" />
                   {note.isPinned ? t("unpin") : t("pin")}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toggleArchive(note.id); }}>
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toggleArchive(note.id); }} className="rounded-lg">
                   <Archive className="w-3.5 h-3.5 mr-2" />
                   {note.isArchived ? t("unarchive") : t("archive")}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); togglePrivate(note.id); }}>
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); togglePrivate(note.id); }} className="rounded-lg">
                   {note.isPrivate ? <LockOpen className="w-3.5 h-3.5 mr-2" /> : <Lock className="w-3.5 h-3.5 mr-2" />}
                   {note.isPrivate ? t("moveToPublic") : t("moveToPrivate")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={(e) => { e.stopPropagation(); trashNote(note.id); }}
-                  className="text-destructive"
+                  className="text-destructive rounded-lg"
                 >
                   <Trash2 className="w-3.5 h-3.5 mr-2" />
                   {t("trash")}
@@ -84,23 +96,23 @@ export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
         </DropdownMenu>
       </div>
 
-      <div className="flex items-center gap-1.5 mb-1">
+      <div className="flex items-center gap-1.5 mb-2">
         {note.isPinned && <Pin className="w-3.5 h-3.5 text-primary" />}
         {note.isPrivate && <Lock className="w-3 h-3 text-muted-foreground" />}
         {note.attachments && note.attachments.length > 0 && <Paperclip className="w-3 h-3 text-muted-foreground" />}
       </div>
 
       <div>
-        <h3 className="font-semibold text-sm mb-1.5 line-clamp-1 pr-8">{note.title}</h3>
-        <p className="text-xs text-muted-foreground line-clamp-3 mb-3 leading-relaxed">
+        <h3 className="font-semibold text-sm mb-2 line-clamp-1 pr-8 group-hover:text-primary transition-colors duration-200">{note.title}</h3>
+        <p className="text-xs text-muted-foreground line-clamp-3 mb-4 leading-relaxed">
           {note.content}
         </p>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pt-3 border-t border-border/40">
         <div className="flex flex-wrap gap-1">
           {note.tags.slice(0, 2).map((tag) => (
-            <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
+            <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-primary/8 text-primary font-medium">
               {tag}
             </span>
           ))}
@@ -108,7 +120,7 @@ export function NoteCard({ note, onClick, showRestore }: NoteCardProps) {
             <span className="text-[10px] text-muted-foreground">+{note.tags.length - 2}</span>
           )}
         </div>
-        <span className="text-[10px] text-muted-foreground">{formatDate(note.updatedAt)}</span>
+        <span className="text-[10px] text-muted-foreground font-medium">{formatDate(note.updatedAt)}</span>
       </div>
     </motion.div>
   );
