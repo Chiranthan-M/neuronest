@@ -56,6 +56,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
+  // Migrate guest notes when a user signs in (covers email confirmation flow)
+  const migrateOnSignIn = useCallback(async (userId: string) => {
+    try {
+      const raw = localStorage.getItem("neuronest_guest_notes");
+      if (!raw) return;
+      const guestNotes = JSON.parse(raw) as any[];
+      if (guestNotes.length === 0) return;
+
+      console.log(`[Auth] Post-login migration of ${guestNotes.length} guest notes`);
+      const inserts = guestNotes.map(n => ({
+        user_id: userId,
+        title: n.title || "",
+        content: n.content || "",
+        tags: n.tags || [],
+        category: n.category || "General",
+        is_pinned: n.isPinned || false,
+        is_archived: n.isArchived || false,
+        is_private: n.isPrivate || false,
+        is_trashed: n.isTrashed || false,
+      }));
+
+      const { error } = await supabase.from("notes").insert(inserts);
+      if (!error) localStorage.removeItem("neuronest_guest_notes");
+      else console.error("[Auth] Post-login migration error:", error);
+    } catch (err) {
+      console.error("[Auth] Post-login migration failed:", err);
+    }
+  }, []);
+
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
@@ -64,6 +93,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (session?.user) {
         setIsGuest(false);
         try { localStorage.removeItem("neuronest_guest"); } catch {}
+        // Migrate any guest notes on sign in
+        migrateOnSignIn(session.user.id);
       }
       setLoading(false);
     });
