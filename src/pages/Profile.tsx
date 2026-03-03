@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "@/hooks/use-toast";
 import { Loader2, Camera, User } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Profile() {
   const { user, isGuest } = useAuth();
@@ -99,21 +100,26 @@ export default function Profile() {
     : "U";
 
   return (
-    <div className="max-w-lg mx-auto space-y-8">
-      <h1 className="text-2xl font-bold">{t("profileSettings")}</h1>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="max-w-lg mx-auto space-y-8"
+    >
+      <h1 className="text-3xl font-bold tracking-tight">{t("profileSettings")}</h1>
 
       {/* Avatar */}
       <div className="flex flex-col items-center gap-4">
         <div className="relative group">
-          <Avatar className="w-24 h-24 text-2xl">
+          <Avatar className="w-28 h-28 text-2xl border-4 border-background shadow-premium">
             <AvatarImage src={avatarUrl ?? undefined} />
-            <AvatarFallback className="bg-primary/10 text-primary text-xl">{initials}</AvatarFallback>
+            <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">{initials}</AvatarFallback>
           </Avatar>
-          <label className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+          <label className="absolute inset-0 flex items-center justify-center bg-foreground/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-250 cursor-pointer">
             {uploading ? (
-              <Loader2 className="w-5 h-5 animate-spin text-white" />
+              <Loader2 className="w-5 h-5 animate-spin text-background" />
             ) : (
-              <Camera className="w-5 h-5 text-white" />
+              <Camera className="w-5 h-5 text-background" />
             )}
             <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={uploading} />
           </label>
@@ -122,14 +128,14 @@ export default function Profile() {
       </div>
 
       {/* Fields */}
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div className="space-y-2">
           <label className="text-sm font-medium">{t("email")}</label>
-          <Input value={user?.email ?? ""} disabled className="bg-secondary/30" />
+          <Input value={user?.email ?? ""} disabled className="bg-secondary/20 rounded-xl h-11" />
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium">{t("displayName")}</label>
-          <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="bg-secondary/30 border-border/50" />
+          <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="bg-card border-border/60 rounded-xl h-11" />
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium">{t("bio")}</label>
@@ -137,15 +143,17 @@ export default function Profile() {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             placeholder={t("bioPlaceholder")}
-            className="bg-secondary/30 border-border/50 min-h-[100px]"
+            className="bg-card border-border/60 min-h-[120px] rounded-xl"
           />
         </div>
       </div>
 
-      <Button onClick={handleSave} disabled={saving} className="w-full gradient-primary text-primary-foreground">
-        {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-        {t("saveChanges")}
-      </Button>
-    </div>
+      <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+        <Button onClick={handleSave} disabled={saving} className="w-full gradient-primary text-primary-foreground rounded-xl h-11 shadow-glass ripple-btn">
+          {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+          {t("saveChanges")}
+        </Button>
+      </motion.div>
+    </motion.div>
   );
 }
