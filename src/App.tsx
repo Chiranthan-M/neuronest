@@ -4,10 +4,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import { NotesProvider } from "@/contexts/NotesContext";
+import { NotesProvider, useNotes } from "@/contexts/NotesContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { PrivacyProvider } from "@/contexts/PrivacyContext";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { OnlineStatusBanner } from "@/components/layout/OnlineStatusBanner";
 import Index from "./pages/Index";
 import Notes from "./pages/Notes";
 import ArchivePage from "./pages/Archive";
@@ -32,43 +33,51 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function SyncBanner() {
+  const { syncing } = useNotes();
+  return <OnlineStatusBanner syncing={syncing} />;
+}
+
 function AppRoutes() {
   return (
-    <Routes>
-      <Route path="/auth" element={<Auth />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/" element={
-        <ProtectedRoute>
-          <AppLayout><Index /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/notes" element={
-        <ProtectedRoute>
-          <AppLayout><Notes /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/archive" element={
-        <ProtectedRoute>
-          <AppLayout><ArchivePage /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/trash" element={
-        <ProtectedRoute>
-          <AppLayout><TrashPage /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/private" element={
-        <ProtectedRoute>
-          <AppLayout><PrivatePage /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/profile" element={
-        <ProtectedRoute>
-          <AppLayout><ProfilePage /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <>
+      <SyncBanner />
+      <Routes>
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <AppLayout><Index /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/notes" element={
+          <ProtectedRoute>
+            <AppLayout><Notes /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/archive" element={
+          <ProtectedRoute>
+            <AppLayout><ArchivePage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/trash" element={
+          <ProtectedRoute>
+            <AppLayout><TrashPage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/private" element={
+          <ProtectedRoute>
+            <AppLayout><PrivatePage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <AppLayout><ProfilePage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 
