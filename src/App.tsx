@@ -33,43 +33,51 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function SyncBanner() {
+  const { syncing } = useNotes();
+  return <OnlineStatusBanner syncing={syncing} />;
+}
+
 function AppRoutes() {
   return (
-    <Routes>
-      <Route path="/auth" element={<Auth />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/" element={
-        <ProtectedRoute>
-          <AppLayout><Index /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/notes" element={
-        <ProtectedRoute>
-          <AppLayout><Notes /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/archive" element={
-        <ProtectedRoute>
-          <AppLayout><ArchivePage /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/trash" element={
-        <ProtectedRoute>
-          <AppLayout><TrashPage /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/private" element={
-        <ProtectedRoute>
-          <AppLayout><PrivatePage /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/profile" element={
-        <ProtectedRoute>
-          <AppLayout><ProfilePage /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <>
+      <SyncBanner />
+      <Routes>
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <AppLayout><Index /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/notes" element={
+          <ProtectedRoute>
+            <AppLayout><Notes /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/archive" element={
+          <ProtectedRoute>
+            <AppLayout><ArchivePage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/trash" element={
+          <ProtectedRoute>
+            <AppLayout><TrashPage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/private" element={
+          <ProtectedRoute>
+            <AppLayout><PrivatePage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <AppLayout><ProfilePage /></AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 
