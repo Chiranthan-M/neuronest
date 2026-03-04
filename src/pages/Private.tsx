@@ -41,24 +41,24 @@ export default function PrivatePage() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
     >
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Lock className="w-5 h-5 text-primary" />
-            </div>
-            {t("privateFolder")}
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1.5 ml-[52px]">{privateNotes.length} {t("notes")}</p>
+        <div className="flex items-center gap-3">
+          <div className="section-header-icon">
+            <Lock className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">{t("privateFolder")}</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">{privateNotes.length} {t("notes")}</p>
+          </div>
         </div>
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="border-border/60 rounded-xl">
+              <Button variant="outline" size="icon" className="border-border/50 rounded-xl hover:bg-secondary/60">
                 <Settings className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -91,14 +91,14 @@ export default function PrivatePage() {
           placeholder={t("searchNotes")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 border-border/60 bg-card rounded-xl h-11 premium-input"
+          className="pl-10 border-border/50 bg-card rounded-xl h-11 premium-input"
         />
       </div>
 
       {privateNotes.length === 0 ? (
         <div className="empty-state">
           <div className="empty-state-icon">
-            <ShieldCheck className="w-7 h-7 text-muted-foreground/50" />
+            <ShieldCheck className="w-8 h-8 text-muted-foreground/40" />
           </div>
           <p className="text-muted-foreground font-medium text-sm">{t("noPrivateNotes")}</p>
         </div>

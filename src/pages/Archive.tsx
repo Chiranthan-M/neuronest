@@ -4,7 +4,7 @@ import { NoteCard } from "@/components/notes/NoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { Note } from "@/types/note";
 import { useState } from "react";
-import { Archive as ArchiveIcon, Sparkles } from "lucide-react";
+import { Archive as ArchiveIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ArchivePage() {
@@ -16,15 +16,20 @@ export default function ArchivePage() {
   const archivedNotes = notes.filter((n) => n.isArchived && !n.isTrashed);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-            <ArchiveIcon className="w-5 h-5 text-muted-foreground" />
-          </div>
-          {t("archive")}
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1.5 ml-[52px]">{archivedNotes.length} {t("archivedNotes")}</p>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-6"
+    >
+      <div className="flex items-center gap-3">
+        <div className="section-header-icon">
+          <ArchiveIcon className="w-5 h-5 text-muted-foreground" />
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{t("archive")}</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">{archivedNotes.length} {t("archivedNotes")}</p>
+        </div>
       </div>
 
       <AnimatePresence mode="popLayout">
@@ -37,7 +42,7 @@ export default function ArchivePage() {
         ) : (
           <div className="empty-state">
             <div className="empty-state-icon">
-              <ArchiveIcon className="w-7 h-7 text-muted-foreground/50" />
+              <ArchiveIcon className="w-8 h-8 text-muted-foreground/40" />
             </div>
             <p className="text-muted-foreground text-sm font-medium">{t("noArchivedNotes")}</p>
           </div>
@@ -45,6 +50,6 @@ export default function ArchivePage() {
       </AnimatePresence>
 
       <NoteEditor note={editingNote} open={editorOpen} onClose={() => { setEditorOpen(false); setEditingNote(null); }} />
-    </div>
+    </motion.div>
   );
 }
