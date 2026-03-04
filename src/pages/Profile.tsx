@@ -101,17 +101,22 @@ export default function Profile() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
       className="max-w-lg mx-auto space-y-8"
     >
-      <h1 className="text-3xl font-bold tracking-tight">{t("profileSettings")}</h1>
+      <div className="flex items-center gap-3">
+        <div className="section-header-icon">
+          <User className="w-5 h-5 text-primary" />
+        </div>
+        <h1 className="text-3xl font-bold tracking-tight">{t("profileSettings")}</h1>
+      </div>
 
       {/* Avatar */}
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 py-4">
         <div className="relative group">
-          <Avatar className="w-28 h-28 text-2xl border-4 border-background shadow-premium">
+          <Avatar className="w-28 h-28 text-2xl border-4 border-background shadow-elevated">
             <AvatarImage src={avatarUrl ?? undefined} />
             <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">{initials}</AvatarFallback>
           </Avatar>
@@ -128,14 +133,14 @@ export default function Profile() {
       </div>
 
       {/* Fields */}
-      <div className="space-y-5">
+      <div className="space-y-5 bg-card rounded-2xl p-6 border border-border/50 shadow-premium">
         <div className="space-y-2">
           <label className="text-sm font-medium">{t("email")}</label>
           <Input value={user?.email ?? ""} disabled className="bg-secondary/20 rounded-xl h-11" />
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium">{t("displayName")}</label>
-          <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="bg-card border-border/60 rounded-xl h-11" />
+          <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="bg-card border-border/50 rounded-xl h-11 premium-input" />
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium">{t("bio")}</label>
@@ -143,7 +148,7 @@ export default function Profile() {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             placeholder={t("bioPlaceholder")}
-            className="bg-card border-border/60 min-h-[120px] rounded-xl"
+            className="bg-card border-border/50 min-h-[120px] rounded-xl premium-input"
           />
         </div>
       </div>

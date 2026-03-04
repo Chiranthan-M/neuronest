@@ -15,7 +15,6 @@ import {
   LogOut,
   User,
   UserRound,
-  Search,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
@@ -70,8 +69,8 @@ export function AppSidebar() {
         className={cn(
           "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium w-full transition-all duration-200",
           destructive
-            ? "text-destructive hover:bg-destructive/10"
-            : "text-muted-foreground hover:text-foreground hover:bg-secondary/80",
+            ? "text-destructive hover:bg-destructive/8"
+            : "text-muted-foreground hover:text-foreground hover:bg-secondary/60",
           collapsed && "justify-center px-0",
           className
         )}
@@ -95,12 +94,12 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "h-screen sticky top-0 flex flex-col border-r border-border/40 bg-sidebar transition-all duration-300 ease-out z-30 scrollbar-thin overflow-y-auto",
+        "h-screen sticky top-0 flex flex-col border-r border-border/30 bg-sidebar transition-all duration-300 ease-out z-30 scrollbar-thin overflow-y-auto",
         collapsed ? "w-[68px]" : "w-[260px]"
       )}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 h-16 border-b border-border/40 flex-shrink-0">
+      <div className="flex items-center gap-3 px-4 h-16 border-b border-border/30 flex-shrink-0">
         <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0 shadow-glass">
           <BookOpen className="w-[18px] h-[18px] text-primary-foreground" />
         </div>
@@ -112,18 +111,18 @@ export function AppSidebar() {
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="ml-auto p-1.5 rounded-lg hover:bg-secondary/80 transition-colors flex-shrink-0"
+          className="ml-auto p-1.5 rounded-lg hover:bg-secondary/60 transition-colors flex-shrink-0"
         >
           <ChevronLeft className={cn("w-4 h-4 text-muted-foreground transition-transform duration-300", collapsed && "rotate-180")} />
         </button>
       </div>
 
-      {/* New Note Button */}
+      {/* New Note */}
       <div className="px-3 pt-4 pb-1 flex-shrink-0">
         <Link to="/notes?new=true">
           <Button
             className={cn(
-              "w-full gradient-primary text-primary-foreground shadow-glass transition-all hover:opacity-90 rounded-xl ripple-btn h-10",
+              "w-full gradient-primary text-primary-foreground shadow-glass transition-all hover:opacity-90 hover:shadow-glass-lg rounded-xl ripple-btn h-10",
               collapsed ? "px-0" : ""
             )}
             size={collapsed ? "icon" : "default"}
@@ -134,7 +133,7 @@ export function AppSidebar() {
         </Link>
       </div>
 
-      {/* Navigation */}
+      {/* Nav */}
       <nav className="flex-1 px-3 py-3 space-y-0.5">
         {navItems.map((item) => {
           const link = (
@@ -144,10 +143,10 @@ export function AppSidebar() {
               end={item.url === "/"}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
-                "text-muted-foreground hover:text-foreground hover:bg-secondary/60",
+                "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
                 collapsed && "justify-center px-0"
               )}
-              activeClassName="bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary shadow-sm"
+              activeClassName="nav-active-glow text-primary hover:text-primary"
             >
               <item.icon className="w-[18px] h-[18px] flex-shrink-0" />
               {!collapsed && <span className="animate-fade-in">{item.title}</span>}
@@ -167,39 +166,37 @@ export function AppSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-3 pb-4 space-y-0.5 flex-shrink-0 border-t border-border/40 pt-3">
+      <div className="px-3 pb-4 space-y-0.5 flex-shrink-0 border-t border-border/30 pt-3">
         {/* User info */}
         {!collapsed && (
-          <div className="px-3 py-2 text-xs text-muted-foreground truncate flex items-center gap-2">
+          <div className="px-3 py-2.5 text-xs text-muted-foreground truncate flex items-center gap-2.5 mb-1">
             {isGuest ? (
               <>
-                <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
-                  <UserRound className="w-3 h-3" />
+                <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+                  <UserRound className="w-3.5 h-3.5" />
                 </div>
                 {t("guest") || "Guest"}
               </>
             ) : (
               <>
-                <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <User className="w-3 h-3 text-primary" />
+                <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <User className="w-3.5 h-3.5 text-primary" />
                 </div>
-                <span className="truncate">{user?.email}</span>
+                <span className="truncate font-medium">{user?.email}</span>
               </>
             )}
           </div>
         )}
 
-        {/* Guest sign-up prompt */}
         {isGuest && !collapsed && (
           <Link to="/auth">
-            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium w-full transition-all duration-200 text-primary hover:bg-primary/10">
+            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium w-full transition-all duration-200 text-primary hover:bg-primary/8">
               <User className="w-[18px] h-[18px]" />
               <span>{t("signUpForMore") || "Sign up for more"}</span>
             </button>
           </Link>
         )}
 
-        {/* Language Switcher */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div>
