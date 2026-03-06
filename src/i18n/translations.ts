@@ -290,6 +290,7 @@ export const translations: Record<Language, Record<string, string>> = {
     extractingText: "टेक्स्ट निकाला जा रहा है...", copied: "कॉपी हुआ!", copy: "कॉपी",
     drawingSaved: "ड्राइंग सहेजा गया!", textExtracted: "टेक्स्ट सफलतापूर्वक निकाला गया!",
     or: "या", continueAsGuest: "अतिथि के रूप में जारी रखें", guest: "अतिथि", signUpForMore: "और अधिक के लिए साइन अप करें", exitGuest: "अतिथि मोड से बाहर",
+    notebooks: "नोटबुक्स", notebooksCount: "नोटबुक्स", noNotebooks: "अभी कोई नोटबुक नहीं", noNotebooksDesc: "श्रेणियों वाले नोट बनाएं",
   },
   kn: {
     dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
