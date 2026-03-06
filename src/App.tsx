@@ -56,6 +56,11 @@ function AppRoutes() {
             <AppLayout><Notes /></AppLayout>
           </ProtectedRoute>
         } />
+        <Route path="/notebooks" element={
+          <ProtectedRoute>
+            <AppLayout><NotebooksPage /></AppLayout>
+          </ProtectedRoute>
+        } />
         <Route path="/archive" element={
           <ProtectedRoute>
             <AppLayout><ArchivePage /></AppLayout>

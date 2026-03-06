@@ -44,6 +44,7 @@ export function AppSidebar() {
   const navItems = [
     { title: t("dashboard"), url: "/", icon: LayoutDashboard },
     { title: t("allNotes"), url: "/notes", icon: FileText },
+    { title: t("notebooks"), url: "/notebooks", icon: BookOpen },
     { title: t("privateFolder"), url: "/private", icon: Lock },
     { title: t("archive"), url: "/archive", icon: Archive },
     { title: t("trash"), url: "/trash", icon: Trash2 },
