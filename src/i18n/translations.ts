@@ -160,6 +160,10 @@ export const translations: Record<Language, Record<string, string>> = {
     guest: "Guest",
     signUpForMore: "Sign up for more",
     exitGuest: "Exit Guest Mode",
+    notebooks: "Notebooks",
+    notebooksCount: "notebooks",
+    noNotebooks: "No notebooks yet",
+    noNotebooksDesc: "Create notes with categories to see them organized here",
   },
   hi: {
     dashboard: "डैशबोर्ड",
