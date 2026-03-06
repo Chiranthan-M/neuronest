@@ -34,7 +34,7 @@ export default function ArchivePage() {
 
       <AnimatePresence mode="popLayout">
         {archivedNotes.length > 0 ? (
-          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {archivedNotes.map((note) => (
               <NoteCard key={note.id} note={note} onClick={() => { setEditingNote(note); setEditorOpen(true); }} />
             ))}

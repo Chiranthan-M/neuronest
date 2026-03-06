@@ -1,16 +1,21 @@
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { FileText, Pin, Archive, Tag, Clock, Loader2, Plus, Sparkles, TrendingUp, Zap } from "lucide-react";
+import { FileText, Pin, Archive, Tag, Clock, Plus, Sparkles, Zap, Star, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { NoteCard } from "@/components/notes/NoteCard";
+import { QuickCapture } from "@/components/notes/QuickCapture";
+import { useState } from "react";
+import { NoteEditor } from "@/components/notes/NoteEditor";
+import { Note } from "@/types/note";
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.06 } },
+  show: { transition: { staggerChildren: 0.05 } },
 };
 const item = {
-  hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] } },
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] } },
 };
 
 function getGreeting() {
@@ -24,10 +29,10 @@ function AnimatedCounter({ value }: { value: number }) {
   return (
     <motion.span
       key={value}
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="text-3xl font-bold tracking-tight"
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="text-2xl font-bold tracking-tight"
     >
       {value}
     </motion.span>
@@ -37,30 +42,31 @@ function AnimatedCounter({ value }: { value: number }) {
 export default function Dashboard() {
   const { notes, loading } = useNotes();
   const { t } = useLanguage();
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editingNote, setEditingNote] = useState<Note | null>(null);
 
   if (loading) {
     return (
       <div className="space-y-8">
         <div className="space-y-2">
-          <div className="h-9 w-48 rounded-xl bg-muted animate-pulse" />
+          <div className="h-8 w-48 rounded-xl bg-muted animate-pulse" />
           <div className="h-4 w-32 rounded-lg bg-muted animate-pulse" />
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="skeleton-card p-6 space-y-4">
-              <div className="h-10 w-10 rounded-xl bg-muted animate-pulse" />
-              <div className="h-8 w-12 rounded bg-muted animate-pulse" />
-              <div className="h-3 w-20 rounded bg-muted animate-pulse" />
+            <div key={i} className="skeleton-card p-5 space-y-3">
+              <div className="h-9 w-9 rounded-xl bg-muted animate-pulse" />
+              <div className="h-7 w-10 rounded bg-muted animate-pulse" />
+              <div className="h-3 w-16 rounded bg-muted animate-pulse" />
             </div>
           ))}
         </div>
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="skeleton-card p-4 flex gap-4">
-              <div className="flex-1 space-y-2">
-                <div className="h-4 w-3/4 rounded bg-muted animate-pulse" />
-                <div className="h-3 w-1/2 rounded bg-muted animate-pulse" />
-              </div>
+            <div key={i} className="skeleton-card p-5 space-y-3">
+              <div className="h-4 w-3/4 rounded bg-muted animate-pulse" />
+              <div className="h-3 w-full rounded bg-muted animate-pulse" />
+              <div className="h-3 w-1/2 rounded bg-muted animate-pulse" />
             </div>
           ))}
         </div>
@@ -69,7 +75,7 @@ export default function Dashboard() {
   }
 
   const activeNotes = notes.filter((n) => !n.isTrashed);
-  const pinnedCount = activeNotes.filter((n) => n.isPinned).length;
+  const pinnedNotes = activeNotes.filter((n) => n.isPinned && !n.isArchived);
   const archivedCount = activeNotes.filter((n) => n.isArchived).length;
   const allTags = [...new Set(activeNotes.flatMap((n) => n.tags))];
   const recentNotes = [...activeNotes]
@@ -78,42 +84,35 @@ export default function Dashboard() {
     .slice(0, 6);
 
   const stats = [
-    { label: t("totalNotes"), value: activeNotes.length, icon: FileText, color: "text-primary", bg: "from-primary/12 to-accent/8" },
-    { label: t("pinned"), value: pinnedCount, icon: Pin, color: "text-accent", bg: "from-accent/12 to-primary/8" },
-    { label: t("archived"), value: archivedCount, icon: Archive, color: "text-muted-foreground", bg: "from-muted to-secondary" },
-    { label: t("tagsUsed"), value: allTags.length, icon: Tag, color: "text-primary", bg: "from-primary/8 to-accent/12" },
+    { label: t("totalNotes"), value: activeNotes.length, icon: FileText, bg: "from-primary/12 to-accent/8", color: "text-primary" },
+    { label: t("pinned"), value: pinnedNotes.length, icon: Pin, bg: "from-accent/12 to-primary/8", color: "text-accent" },
+    { label: t("archived"), value: archivedCount, icon: Archive, bg: "from-muted to-secondary", color: "text-muted-foreground" },
+    { label: t("tagsUsed"), value: allTags.length, icon: Tag, bg: "from-primary/8 to-accent/12", color: "text-primary" },
   ];
 
-  const formatDate = (d: string) =>
-    new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
-
-  // Activity indicator: notes edited today
-  const todayCount = activeNotes.filter(n => {
-    const d = new Date(n.updatedAt);
-    const today = new Date();
-    return d.toDateString() === today.toDateString();
-  }).length;
+  const todayCount = activeNotes.filter(n => new Date(n.updatedAt).toDateString() === new Date().toDateString()).length;
 
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-10">
+    <motion.div variants={container} initial="hidden" animate="show" className="space-y-8">
       {/* Header */}
-      <motion.div variants={item} className="flex items-end justify-between gap-4">
+      <motion.div variants={item} className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-balance">{getGreeting()} 👋</h1>
-          <p className="text-sm text-muted-foreground mt-1.5">{t("welcomeBack")}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-balance">{getGreeting()} 👋</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("welcomeBack")}</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 flex-wrap">
           {todayCount > 0 && (
-            <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-success/10 text-success text-xs font-medium">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-success/10 text-success text-xs font-medium">
               <Zap className="w-3.5 h-3.5" />
               {todayCount} edited today
             </div>
           )}
+          <QuickCapture />
           <Link to="/notes?new=true">
             <motion.button
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl gradient-primary text-primary-foreground text-sm font-medium shadow-glass ripple-btn"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl gradient-primary text-primary-foreground text-sm font-medium shadow-glass ripple-btn"
             >
               <Plus className="w-4 h-4" />
               {t("newNote")}
@@ -123,87 +122,82 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Stats */}
-      <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((s, i) => (
+      <motion.div variants={item} className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {stats.map((s) => (
           <motion.div
             key={s.label}
-            whileHover={{ y: -4, scale: 1.01 }}
+            whileHover={{ y: -3 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             className="stat-card group"
           >
-            <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${s.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-              <s.icon className={`w-5 h-5 ${s.color}`} />
+            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.bg} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300`}>
+              <s.icon className={`w-4.5 h-4.5 ${s.color}`} />
             </div>
             <AnimatedCounter value={s.value} />
-            <p className="text-xs text-muted-foreground mt-1.5 font-medium tracking-wide uppercase">{s.label}</p>
+            <p className="text-[10px] text-muted-foreground mt-1 font-medium tracking-wider uppercase">{s.label}</p>
           </motion.div>
         ))}
       </motion.div>
 
-      {/* Recent Notes */}
-      <motion.div variants={item}>
-        <div className="flex items-center justify-between mb-5">
-          <div className="section-header mb-0">
-            <div className="section-header-icon">
-              <Clock className="w-4.5 h-4.5 text-primary" />
-            </div>
-            <div>
-              <h2 className="font-semibold text-base">{t("recentlyEdited")}</h2>
-              <p className="text-xs text-muted-foreground">{recentNotes.length} recent notes</p>
+      {/* Pinned / Favorites */}
+      {pinnedNotes.length > 0 && (
+        <motion.div variants={item}>
+          <div className="flex items-center justify-between mb-4">
+            <div className="section-header mb-0">
+              <div className="section-header-icon">
+                <Star className="w-4 h-4 text-accent" />
+              </div>
+              <h2 className="font-semibold text-sm">{t("pinned")} / Favorites</h2>
             </div>
           </div>
-          <Link to="/notes" className="text-xs text-primary font-medium px-3.5 py-2 rounded-xl hover:bg-primary/5 transition-colors">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {pinnedNotes.slice(0, 4).map((note) => (
+              <NoteCard
+                key={note.id}
+                note={note}
+                onClick={() => { setEditingNote(note); setEditorOpen(true); }}
+              />
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Recent Notes */}
+      <motion.div variants={item}>
+        <div className="flex items-center justify-between mb-4">
+          <div className="section-header mb-0">
+            <div className="section-header-icon">
+              <Clock className="w-4 h-4 text-primary" />
+            </div>
+            <h2 className="font-semibold text-sm">{t("recentlyEdited")}</h2>
+          </div>
+          <Link to="/notes" className="text-xs text-primary font-medium px-3 py-1.5 rounded-xl hover:bg-primary/5 transition-colors">
             {t("viewAll")} →
           </Link>
         </div>
-        <div className="space-y-2">
-          {recentNotes.map((note, i) => (
-            <motion.div
-              key={note.id}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.04, duration: 0.3 }}
-            >
-              <Link
-                to="/notes"
-                className="flex items-center justify-between p-4 rounded-2xl bg-card border border-border/50 hover:shadow-elevated hover:border-primary/15 transition-all duration-300 group"
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    {note.isPinned && <Pin className="w-3.5 h-3.5 text-primary flex-shrink-0" />}
-                    <h3 className="text-sm font-semibold truncate group-hover:text-primary transition-colors duration-200">{note.title}</h3>
-                  </div>
-                  <p className="text-xs text-muted-foreground truncate mt-1.5 leading-relaxed">{note.content.slice(0, 120)}</p>
-                </div>
-                <div className="flex items-center gap-3 ml-4 flex-shrink-0">
-                  <div className="hidden sm:flex gap-1.5">
-                    {note.tags.slice(0, 2).map((tag) => (
-                      <span key={tag} className="tag-pill">{tag}</span>
-                    ))}
-                  </div>
-                  <span className="text-[10px] text-muted-foreground whitespace-nowrap font-medium">{formatDate(note.updatedAt)}</span>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-          {recentNotes.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="empty-state"
-            >
-              <div className="empty-state-icon">
-                <Sparkles className="w-8 h-8 text-muted-foreground/40" />
-              </div>
-              <p className="text-sm text-muted-foreground font-medium">{t("noNotesYet")}</p>
-              <p className="text-xs text-muted-foreground/70 mt-1">Start by creating your first note</p>
-              <Link to="/notes?new=true" className="mt-5 inline-flex items-center gap-2 text-xs text-primary font-medium px-4 py-2 rounded-xl bg-primary/5 hover:bg-primary/10 transition-colors">
-                <Plus className="w-3.5 h-3.5" />
-                {t("createNote")}
-              </Link>
-            </motion.div>
-          )}
-        </div>
+        {recentNotes.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {recentNotes.map((note) => (
+              <NoteCard
+                key={note.id}
+                note={note}
+                onClick={() => { setEditingNote(note); setEditorOpen(true); }}
+              />
+            ))}
+          </div>
+        ) : (
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="empty-state">
+            <div className="empty-state-icon">
+              <Sparkles className="w-8 h-8 text-muted-foreground/40" />
+            </div>
+            <p className="text-sm text-muted-foreground font-medium">{t("noNotesYet")}</p>
+            <p className="text-xs text-muted-foreground/70 mt-1">Start by creating your first note</p>
+            <Link to="/notes?new=true" className="mt-4 inline-flex items-center gap-2 text-xs text-primary font-medium px-4 py-2 rounded-xl bg-primary/5 hover:bg-primary/10 transition-colors">
+              <Plus className="w-3.5 h-3.5" />
+              {t("createNote")}
+            </Link>
+          </motion.div>
+        )}
       </motion.div>
 
       {/* Tags Cloud */}
@@ -211,9 +205,9 @@ export default function Dashboard() {
         <motion.div variants={item}>
           <div className="section-header">
             <div className="section-header-icon">
-              <Tag className="w-4.5 h-4.5 text-accent" />
+              <Tag className="w-4 h-4 text-accent" />
             </div>
-            <h2 className="font-semibold text-base">{t("yourTags")}</h2>
+            <h2 className="font-semibold text-sm">{t("yourTags")}</h2>
           </div>
           <div className="flex flex-wrap gap-2">
             {allTags.map((tag, i) => (
@@ -222,7 +216,7 @@ export default function Dashboard() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.02 }}
-                className="text-xs px-4 py-2.5 rounded-xl bg-card border border-border/50 font-medium text-muted-foreground hover:text-primary hover:border-primary/20 hover:shadow-sm transition-all duration-250 cursor-default"
+                className="tag-pill cursor-default"
               >
                 #{tag}
               </motion.span>
@@ -244,6 +238,8 @@ export default function Dashboard() {
           <Plus className="w-6 h-6" />
         </motion.div>
       </Link>
+
+      <NoteEditor note={editingNote} open={editorOpen} onClose={() => { setEditorOpen(false); setEditingNote(null); }} />
     </motion.div>
   );
 }
