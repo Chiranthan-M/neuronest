@@ -78,7 +78,7 @@ export default function Notebooks() {
                 variants={container}
                 initial="hidden"
                 animate="show"
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-2"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pt-2"
               >
                 {notebookNames.map(name => (
                   <motion.div key={name} variants={item}>
@@ -146,7 +146,7 @@ export default function Notebooks() {
             {/* Notes in notebook */}
             <AnimatePresence mode="popLayout">
               {currentNotes.length > 0 ? (
-                <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                   {currentNotes.map(note => (
                     <NoteCard
                       key={note.id}
