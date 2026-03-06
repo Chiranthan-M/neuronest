@@ -160,6 +160,10 @@ export const translations: Record<Language, Record<string, string>> = {
     guest: "Guest",
     signUpForMore: "Sign up for more",
     exitGuest: "Exit Guest Mode",
+    notebooks: "Notebooks",
+    notebooksCount: "notebooks",
+    noNotebooks: "No notebooks yet",
+    noNotebooksDesc: "Create notes with categories to see them organized here",
   },
   hi: {
     dashboard: "डैशबोर्ड",
@@ -286,6 +290,7 @@ export const translations: Record<Language, Record<string, string>> = {
     extractingText: "टेक्स्ट निकाला जा रहा है...", copied: "कॉपी हुआ!", copy: "कॉपी",
     drawingSaved: "ड्राइंग सहेजा गया!", textExtracted: "टेक्स्ट सफलतापूर्वक निकाला गया!",
     or: "या", continueAsGuest: "अतिथि के रूप में जारी रखें", guest: "अतिथि", signUpForMore: "और अधिक के लिए साइन अप करें", exitGuest: "अतिथि मोड से बाहर",
+    notebooks: "नोटबुक्स", notebooksCount: "नोटबुक्स", noNotebooks: "अभी कोई नोटबुक नहीं", noNotebooksDesc: "श्रेणियों वाले नोट बनाएं",
   },
   kn: {
     dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
@@ -412,6 +417,7 @@ export const translations: Record<Language, Record<string, string>> = {
     extractingText: "ಪಠ್ಯ ಹೊರತೆಗೆಯಲಾಗುತ್ತಿದೆ...", copied: "ನಕಲು!", copy: "ನಕಲು",
     drawingSaved: "ಡ್ರಾಯಿಂಗ್ ಉಳಿಸಲಾಗಿದೆ!", textExtracted: "ಪಠ್ಯ ಯಶಸ್ವಿಯಾಗಿ ಹೊರತೆಗೆಯಲಾಗಿದೆ!",
     or: "ಅಥವಾ", continueAsGuest: "ಅತಿಥಿಯಾಗಿ ಮುಂದುವರಿಸಿ", guest: "ಅತಿಥಿ", signUpForMore: "ಹೆಚ್ಚಿನದಕ್ಕಾಗಿ ಸೈನ್ ಅಪ್", exitGuest: "ಅತಿಥಿ ಮೋಡ್ ನಿರ್ಗಮನ",
+    notebooks: "ನೋಟ್‌ಬುಕ್‌ಗಳು", notebooksCount: "ನೋಟ್‌ಬುಕ್‌ಗಳು", noNotebooks: "ಇನ್ನೂ ನೋಟ್‌ಬುಕ್ ಇಲ್ಲ", noNotebooksDesc: "ವರ್ಗಗಳೊಂದಿಗೆ ಟಿಪ್ಪಣಿಗಳನ್ನು ರಚಿಸಿ",
   },
   te: {
     dashboard: "డాష్‌బోర్డ్",
@@ -538,6 +544,7 @@ export const translations: Record<Language, Record<string, string>> = {
     extractingText: "టెక్స్ట్ సంగ్రహిస్తోంది...", copied: "కాపీ అయింది!", copy: "కాపీ",
     drawingSaved: "డ్రాయింగ్ సేవ్ అయింది!", textExtracted: "టెక్స్ట్ విజయవంతంగా సంగ్రహించబడింది!",
     or: "లేదా", continueAsGuest: "అతిథిగా కొనసాగించండి", guest: "అతిథి", signUpForMore: "మరింత కోసం సైన్ అప్", exitGuest: "అతిథి మోడ్ నుండి నిష్క్రమణ",
+    notebooks: "నోట్‌బుక్‌లు", notebooksCount: "నోట్‌బుక్‌లు", noNotebooks: "ఇంకా నోట్‌బుక్ లేదు", noNotebooksDesc: "వర్గాలతో నోట్లు సృష్టించండి",
   },
   ta: {
     dashboard: "டாஷ்போர்ட்",
@@ -664,5 +671,6 @@ export const translations: Record<Language, Record<string, string>> = {
     extractingText: "உரை பிரிக்கப்படுகிறது...", copied: "நகலெடுக்கப்பட்டது!", copy: "நகலெடு",
     drawingSaved: "வரைதல் சேமிக்கப்பட்டது!", textExtracted: "உரை வெற்றிகரமாக பிரிக்கப்பட்டது!",
     or: "அல்லது", continueAsGuest: "விருந்தினராக தொடரவும்", guest: "விருந்தினர்", signUpForMore: "மேலும் பதிவு செய்யவும்", exitGuest: "விருந்தினர் பயன்முறையிலிருந்து வெளியேறு",
+    notebooks: "நோட்புக்குகள்", notebooksCount: "நோட்புக்குகள்", noNotebooks: "இன்னும் நோட்புக் இல்லை", noNotebooksDesc: "வகைகளுடன் குறிப்புகளை உருவாக்கவும்",
   },
 };
