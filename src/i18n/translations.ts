@@ -544,6 +544,7 @@ export const translations: Record<Language, Record<string, string>> = {
     extractingText: "టెక్స్ట్ సంగ్రహిస్తోంది...", copied: "కాపీ అయింది!", copy: "కాపీ",
     drawingSaved: "డ్రాయింగ్ సేవ్ అయింది!", textExtracted: "టెక్స్ట్ విజయవంతంగా సంగ్రహించబడింది!",
     or: "లేదా", continueAsGuest: "అతిథిగా కొనసాగించండి", guest: "అతిథి", signUpForMore: "మరింత కోసం సైన్ అప్", exitGuest: "అతిథి మోడ్ నుండి నిష్క్రమణ",
+    notebooks: "నోట్‌బుక్‌లు", notebooksCount: "నోట్‌బుక్‌లు", noNotebooks: "ఇంకా నోట్‌బుక్ లేదు", noNotebooksDesc: "వర్గాలతో నోట్లు సృష్టించండి",
   },
   ta: {
     dashboard: "டாஷ்போர்ட்",
