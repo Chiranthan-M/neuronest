@@ -671,5 +671,6 @@ export const translations: Record<Language, Record<string, string>> = {
     extractingText: "உரை பிரிக்கப்படுகிறது...", copied: "நகலெடுக்கப்பட்டது!", copy: "நகலெடு",
     drawingSaved: "வரைதல் சேமிக்கப்பட்டது!", textExtracted: "உரை வெற்றிகரமாக பிரிக்கப்பட்டது!",
     or: "அல்லது", continueAsGuest: "விருந்தினராக தொடரவும்", guest: "விருந்தினர்", signUpForMore: "மேலும் பதிவு செய்யவும்", exitGuest: "விருந்தினர் பயன்முறையிலிருந்து வெளியேறு",
+    notebooks: "நோட்புக்குகள்", notebooksCount: "நோட்புக்குகள்", noNotebooks: "இன்னும் நோட்புக் இல்லை", noNotebooksDesc: "வகைகளுடன் குறிப்புகளை உருவாக்கவும்",
   },
 };
