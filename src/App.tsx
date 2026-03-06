@@ -11,6 +11,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { OnlineStatusBanner } from "@/components/layout/OnlineStatusBanner";
 import Index from "./pages/Index";
 import Notes from "./pages/Notes";
+import NotebooksPage from "./pages/Notebooks";
 import ArchivePage from "./pages/Archive";
 import TrashPage from "./pages/Trash";
 import PrivatePage from "./pages/Private";
