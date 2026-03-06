@@ -417,6 +417,7 @@ export const translations: Record<Language, Record<string, string>> = {
     extractingText: "ಪಠ್ಯ ಹೊರತೆಗೆಯಲಾಗುತ್ತಿದೆ...", copied: "ನಕಲು!", copy: "ನಕಲು",
     drawingSaved: "ಡ್ರಾಯಿಂಗ್ ಉಳಿಸಲಾಗಿದೆ!", textExtracted: "ಪಠ್ಯ ಯಶಸ್ವಿಯಾಗಿ ಹೊರತೆಗೆಯಲಾಗಿದೆ!",
     or: "ಅಥವಾ", continueAsGuest: "ಅತಿಥಿಯಾಗಿ ಮುಂದುವರಿಸಿ", guest: "ಅತಿಥಿ", signUpForMore: "ಹೆಚ್ಚಿನದಕ್ಕಾಗಿ ಸೈನ್ ಅಪ್", exitGuest: "ಅತಿಥಿ ಮೋಡ್ ನಿರ್ಗಮನ",
+    notebooks: "ನೋಟ್‌ಬುಕ್‌ಗಳು", notebooksCount: "ನೋಟ್‌ಬುಕ್‌ಗಳು", noNotebooks: "ಇನ್ನೂ ನೋಟ್‌ಬುಕ್ ಇಲ್ಲ", noNotebooksDesc: "ವರ್ಗಗಳೊಂದಿಗೆ ಟಿಪ್ಪಣಿಗಳನ್ನು ರಚಿಸಿ",
   },
   te: {
     dashboard: "డాష్‌బోర్డ్",
