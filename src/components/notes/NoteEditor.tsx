@@ -359,6 +359,11 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             </div>
           </div>
 
+          {/* Voice waveform */}
+          <AnimatePresence>
+            <VoiceWaveform isActive={isListening} />
+          </AnimatePresence>
+
           {/* Auto-correct suggestions */}
           {corrections.length > 0 && (
             <AutoCorrectBanner
