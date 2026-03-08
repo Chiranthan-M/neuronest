@@ -425,6 +425,7 @@
     background: hsl(var(--glass-bg));
     backdrop-filter: blur(12px);
     border: 1px solid hsl(var(--glass-border));
+    animation: scale-bounce 0.4s ease-out;
   }
 
   .skeleton-shine {
@@ -433,9 +434,19 @@
     animation: shimmer 1.5s ease-in-out infinite;
   }
 
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+  /* Enhanced skeleton pulse */
+  .skeleton-pulse {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skeleton-pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 25%, hsl(var(--muted-foreground) / 0.06) 50%, transparent 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
   }
 
   /* ---- Section header ---- */
