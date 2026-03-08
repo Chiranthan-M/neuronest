@@ -270,13 +270,33 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
           />
 
           <div className="relative">
+            {/* Ghost text overlay for autocomplete */}
+            {ghostText && content && (
+              <div
+                aria-hidden
+                className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl px-3 py-2 text-sm leading-relaxed"
+                style={{
+                  backgroundImage: focusMode ? 'repeating-linear-gradient(transparent, transparent 31px, transparent 31px, transparent 32px)' : 'none',
+                  lineHeight: focusMode ? '32px' : undefined,
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
+                <span className="invisible">{content}</span>
+                <span className="text-muted-foreground/40 italic">{ghostText}</span>
+              </div>
+            )}
+
             <Textarea
-              placeholder={t("startWriting")}
+              ref={textareaRef}
+              placeholder={t("startWriting") + " — type / for AI commands"}
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={handleContentChange}
+              onKeyDown={handleTextareaKeyDown}
               className={cn(
                 "resize-none border-border/40 bg-secondary/20 rounded-xl focus-visible:ring-primary/20 leading-relaxed pr-12",
-                focusMode ? "min-h-[400px]" : "min-h-[200px]"
+                focusMode ? "min-h-[400px]" : "min-h-[200px]",
+                ghostText && "caret-primary"
               )}
               style={{
                 backgroundImage: focusMode ? 'repeating-linear-gradient(transparent, transparent 31px, hsl(var(--border) / 0.3) 31px, hsl(var(--border) / 0.3) 32px)' : 'none',
@@ -284,6 +304,25 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
                 lineHeight: focusMode ? '32px' : undefined,
               }}
             />
+
+            {/* Ghost text hint */}
+            {ghostText && (
+              <div className="absolute bottom-2 left-3">
+                <span className="text-[10px] text-muted-foreground/50 bg-secondary/60 px-1.5 py-0.5 rounded">
+                  Tab ↹ to accept
+                </span>
+              </div>
+            )}
+
+            {/* Slash command menu */}
+            <SlashCommandMenu
+              show={slashCmd.show}
+              position={{ top: -8, left: 0 }}
+              filter={slashCmd.filter}
+              onSelect={handleSlashCommand}
+              onClose={() => setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } })}
+            />
+
             {/* Floating toolbar */}
             <div className="absolute bottom-3 right-3 flex gap-1">
               {note && (
@@ -314,6 +353,15 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               )}
             </div>
           </div>
+
+          {/* Auto-correct suggestions */}
+          {corrections.length > 0 && (
+            <AutoCorrectBanner
+              corrections={corrections}
+              onAccept={(c) => setContent(applyCorrection(c, content))}
+              onDismiss={dismissCorrection}
+            />
+          )}
 
           <AnimatePresence>
             {isListening && (
