@@ -394,6 +394,15 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               type="button"
               variant="outline"
               size="sm"
+              className={cn("text-xs border-border/40 rounded-xl", showAssistant && "gradient-primary text-primary-foreground border-0")}
+              onClick={() => setShowAssistant(!showAssistant)}
+            >
+              <Sparkles className="w-3.5 h-3.5 mr-1" /> AI Assistant
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
               className="text-xs border-border/40 rounded-xl"
               onClick={() => setShowAI(!showAI)}
             >
@@ -418,6 +427,14 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               <ScanText className="w-3.5 h-3.5 mr-1" /> {showOCR ? t("hideOCR") : t("ocrTitle")}
             </Button>
           </div>
+
+          {/* Writing Assistant Bar */}
+          <WritingAssistantBar
+            content={content}
+            onApply={(text) => setContent(text)}
+            visible={showAssistant}
+            onToggle={() => setShowAssistant(false)}
+          />
 
           <AnimatePresence>
             {showAI && (
