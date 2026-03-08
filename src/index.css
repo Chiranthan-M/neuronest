@@ -106,11 +106,18 @@
     --glass-bg: 232 25% 11% / 0.5;
     --glass-bg-strong: 232 25% 13% / 0.65;
     --glass-border: 225 15% 25% / 0.35;
-    --glass-border-accent: 238 50% 55% / 0.2;
+    --glass-border-accent: 238 60% 62% / 0.3;
     --glass-highlight: 225 20% 30% / 0.3;
     --glass-shadow: 232 40% 3% / 0.25;
     --glass-blur: 28px;
     --glass-blur-heavy: 44px;
+
+    /* Neon glow tokens */
+    --neon-primary: 238 80% 68%;
+    --neon-accent: 262 80% 68%;
+    --neon-glow-sm: 0 0 8px hsl(238 80% 68% / 0.35), 0 0 2px hsl(238 80% 68% / 0.5);
+    --neon-glow-md: 0 0 12px hsl(238 80% 68% / 0.3), 0 0 4px hsl(238 80% 68% / 0.5), 0 0 24px hsl(238 80% 68% / 0.12);
+    --neon-glow-accent: 0 0 12px hsl(262 80% 68% / 0.3), 0 0 4px hsl(262 80% 68% / 0.5), 0 0 24px hsl(262 80% 68% / 0.12);
 
     --gradient-start: 238 80% 68%;
     --gradient-end: 262 80% 68%;
