@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useNotes } from "@/contexts/NotesContext";
-import { Search, Moon, Sun, Bell, X } from "lucide-react";
+import { Search, Moon, Sun, Bell, X, Settings as SettingsIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
@@ -166,6 +166,16 @@ export function TopBar() {
           </AnimatePresence>
         </motion.button>
 
+        {/* Settings (desktop) */}
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={() => navigate("/settings")}
+          className="p-2 rounded-xl hover:bg-secondary/60 transition-colors hidden sm:flex"
+          aria-label="Settings"
+        >
+          <SettingsIcon className="w-4 h-4 text-muted-foreground" />
+        </motion.button>
+
         {/* Profile */}
         <DropdownMenu>
           <DropdownMenuTrigger className="outline-none">
@@ -186,6 +196,9 @@ export function TopBar() {
                 {t("profileSettings")}
               </DropdownMenuItem>
             )}
+            <DropdownMenuItem onClick={() => navigate("/settings")} className="rounded-lg">
+              Settings
+            </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border/30" />
             <DropdownMenuItem onClick={signOut} className="text-destructive rounded-lg">
               {isGuest ? (t("exitGuest") || "Exit Guest") : t("signOut")}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -14,12 +14,16 @@ import {
   User,
   UserRound,
   Star,
+  Clock,
+  Tag,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNotes } from "@/contexts/NotesContext";
 import { Language, languageNames } from "@/i18n/translations";
 import {
   DropdownMenu,
@@ -36,11 +40,28 @@ export function AppSidebar() {
   });
   const { t, language, setLanguage } = useLanguage();
   const { signOut, user, isGuest } = useAuth();
+  const { notes } = useNotes();
 
-  const navItems = [
+  // Compute favorites count and recent count
+  const favoritesCount = useMemo(() => notes.filter(n => n.isPinned && !n.isTrashed).length, [notes]);
+  const recentCount = useMemo(() => {
+    const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+    return notes.filter(n => !n.isTrashed && new Date(n.updatedAt).getTime() > oneDayAgo).length;
+  }, [notes]);
+  const allTags = useMemo(() => [...new Set(notes.filter(n => !n.isTrashed).flatMap(n => n.tags))], [notes]);
+
+  const mainNav = [
     { title: t("dashboard"), url: "/", icon: LayoutDashboard },
     { title: t("allNotes"), url: "/notes", icon: FileText },
     { title: t("notebooks"), url: "/notebooks", icon: BookOpen },
+  ];
+
+  const smartNav = [
+    { title: t("favorites") || "Favorites", url: "/notes?filter=favorites", icon: Star, badge: favoritesCount },
+    { title: t("recentlyOpened") || "Recent", url: "/notes?filter=recent", icon: Clock, badge: recentCount },
+  ];
+
+  const organizeNav = [
     { title: t("privateFolder"), url: "/private", icon: Lock },
     { title: t("archive"), url: "/archive", icon: Archive },
     { title: t("trash"), url: "/trash", icon: Trash2 },
@@ -75,6 +96,51 @@ export function AppSidebar() {
       );
     }
     return btn;
+  };
+
+  const renderNavItem = (item: { title: string; url: string; icon: any; badge?: number }) => {
+    const link = (
+      <NavLink
+        key={item.url}
+        to={item.url}
+        end={item.url === "/"}
+        className={cn(
+          "flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200",
+          "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+          collapsed && "justify-center px-0"
+        )}
+        activeClassName="nav-active-glow text-primary hover:text-primary"
+      >
+        <item.icon className="w-[18px] h-[18px] flex-shrink-0" />
+        {!collapsed && (
+          <span className="animate-fade-in flex-1">{item.title}</span>
+        )}
+        {!collapsed && item.badge !== undefined && item.badge > 0 && (
+          <span className="text-[10px] font-semibold bg-primary/10 text-primary px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+            {item.badge}
+          </span>
+        )}
+      </NavLink>
+    );
+
+    if (collapsed) {
+      return (
+        <Tooltip key={item.url} delayDuration={0}>
+          <TooltipTrigger asChild>{link}</TooltipTrigger>
+          <TooltipContent side="right" className="text-xs">{item.title}</TooltipContent>
+        </Tooltip>
+      );
+    }
+    return link;
+  };
+
+  const SectionLabel = ({ label }: { label: string }) => {
+    if (collapsed) return null;
+    return (
+      <p className="px-3 pt-4 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+        {label}
+      </p>
+    );
   };
 
   return (
@@ -125,36 +191,37 @@ export function AppSidebar() {
         </Link>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-3 space-y-0.5">
-        {navItems.map((item) => {
-          const link = (
-            <NavLink
-              key={item.url}
-              to={item.url}
-              end={item.url === "/"}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200",
-                "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
-                collapsed && "justify-center px-0"
-              )}
-              activeClassName="nav-active-glow text-primary hover:text-primary"
-            >
-              <item.icon className="w-[18px] h-[18px] flex-shrink-0" />
-              {!collapsed && <span className="animate-fade-in">{item.title}</span>}
-            </NavLink>
-          );
+      {/* Main nav */}
+      <nav className="flex-1 px-3 py-1 space-y-0.5 overflow-y-auto scrollbar-thin">
+        <SectionLabel label="Main" />
+        {mainNav.map(renderNavItem)}
 
-          if (collapsed) {
-            return (
-              <Tooltip key={item.url} delayDuration={0}>
-                <TooltipTrigger asChild>{link}</TooltipTrigger>
-                <TooltipContent side="right" className="text-xs">{item.title}</TooltipContent>
-              </Tooltip>
-            );
-          }
-          return link;
-        })}
+        <SectionLabel label="Smart Views" />
+        {smartNav.map(renderNavItem)}
+
+        {/* Tags section */}
+        {!collapsed && allTags.length > 0 && (
+          <>
+            <SectionLabel label="Tags" />
+            <div className="px-3 flex flex-wrap gap-1 pb-2">
+              {allTags.slice(0, 8).map(tag => (
+                <Link
+                  key={tag}
+                  to={`/notes?tag=${encodeURIComponent(tag)}`}
+                  className="tag-pill text-[10px] hover:bg-primary/15 transition-colors"
+                >
+                  #{tag}
+                </Link>
+              ))}
+              {allTags.length > 8 && (
+                <span className="text-[10px] text-muted-foreground/60 px-1 py-0.5">+{allTags.length - 8}</span>
+              )}
+            </div>
+          </>
+        )}
+
+        <SectionLabel label="Organize" />
+        {organizeNav.map(renderNavItem)}
       </nav>
 
       {/* Footer */}
@@ -187,6 +254,8 @@ export function AppSidebar() {
             </button>
           </Link>
         )}
+
+        {renderNavItem({ title: t("settings") || "Settings", url: "/settings", icon: Settings })}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
