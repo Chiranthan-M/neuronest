@@ -4,6 +4,7 @@ import { FileText, Pin, Archive, Tag, Clock, Plus, Sparkles, Zap, Star, Trending
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { SwipeableNoteCard } from "@/components/notes/SwipeableNoteCard";
 import { QuickCapture } from "@/components/notes/QuickCapture";
 import { useState } from "react";
 import { NoteEditor } from "@/components/notes/NoteEditor";
