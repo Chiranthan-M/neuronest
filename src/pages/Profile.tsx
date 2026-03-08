@@ -104,13 +104,13 @@ export default function Profile() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="max-w-lg mx-auto space-y-6 sm:space-y-8"
+      className="max-w-lg mx-auto space-y-6 sm:space-y-6 sm:space-y-8"
     >
       <div className="flex items-center gap-3">
         <div className="section-header-icon">
           <User className="w-5 h-5 text-primary" />
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">{t("profileSettings")}</h1>
+        <h1 cla2xl sm:text-ssName="text-3xl font-bold tracking-tight">{t("profileSettings")}</h1>
       </div>
 
       {/* Avatar */}

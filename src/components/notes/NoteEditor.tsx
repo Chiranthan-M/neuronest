@@ -135,7 +135,7 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className={cn(
-        "glass sm:max-w-[700px] max-h-[90vh] overflow-auto rounded-2xl border-border/40",
+        "glass max-w-[calc(100vw-2rem)] sm:max-w-[700px] max-h-[90vh] sm:max-h-[85vh] overflow-auto rounded-2xl border-border/40 p-4 sm:p-6",
         focusMode && "sm:max-w-[900px]"
       )}>
         <DialogHeader className="pb-3 border-b border-border/40">

@@ -9,7 +9,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <TopBar />
         <main className="flex-1 overflow-auto scrollbar-thin pb-20 md:pb-0">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-8 page-enter">{children}</div>
+          <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-8 page-enter">{children}</div>
         </main>
       </div>
       <MobileBottomNav />

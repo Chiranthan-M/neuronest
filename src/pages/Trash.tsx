@@ -27,7 +27,7 @@ export default function TrashPage() {
             <Trash2 className="w-5 h-5 text-destructive" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{t("trash")}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("trash")}</h1>
             <p className="text-sm text-muted-foreground mt-0.5">{trashedNotes.length} {t("itemsInTrash")}</p>
           </div>
         </div>

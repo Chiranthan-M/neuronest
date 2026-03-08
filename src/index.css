@@ -226,7 +226,7 @@
 
   /* ---- Note Card ---- */
   .note-card {
-    @apply rounded-2xl p-5 transition-all duration-300 cursor-pointer relative overflow-hidden;
+    @apply rounded-2xl p-4 sm:p-5 transition-all duration-300 cursor-pointer relative overflow-hidden;
     background: hsl(var(--card));
     border: 1px solid hsl(var(--border));
     box-shadow: 0 1px 3px hsl(232 30% 10% / 0.03), 0 1px 2px hsl(232 30% 10% / 0.02);
