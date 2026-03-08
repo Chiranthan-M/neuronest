@@ -442,6 +442,73 @@
     background: hsl(var(--primary) / 0.1);
     box-shadow: inset 3px 0 0 hsl(var(--primary)), 0 0 12px -4px hsl(var(--primary) / 0.2);
   }
+
+  .dark .nav-active-glow {
+    background: hsl(var(--primary) / 0.08);
+    border-color: hsl(var(--neon-primary) / 0.35);
+    box-shadow:
+      inset 3px 0 0 hsl(var(--neon-primary)),
+      var(--neon-glow-sm);
+  }
+
+  /* ---- Dark mode neon note card ---- */
+  .dark .note-card:hover {
+    border-color: hsl(var(--neon-primary) / 0.35);
+    box-shadow:
+      var(--neon-glow-md),
+      0 24px 56px -16px hsl(var(--primary) / 0.12),
+      inset 0 1px 0 hsl(var(--glass-highlight));
+  }
+
+  .dark .note-card.ring-1 {
+    border-color: hsl(var(--neon-primary) / 0.25);
+    box-shadow:
+      var(--neon-glow-sm),
+      inset 0 1px 0 hsl(var(--glass-highlight));
+  }
+
+  /* ---- Dark mode neon stat card ---- */
+  .dark .stat-card:hover {
+    border-color: hsl(var(--neon-accent) / 0.3);
+    box-shadow:
+      var(--neon-glow-accent),
+      0 16px 48px -12px hsl(var(--primary) / 0.1),
+      inset 0 1px 0 hsl(var(--glass-highlight));
+  }
+
+  /* ---- Dark mode neon tag pill ---- */
+  .dark .tag-pill {
+    background: hsl(var(--neon-primary) / 0.1);
+    border: 1px solid hsl(var(--neon-primary) / 0.15);
+  }
+
+  .dark .tag-pill:hover {
+    background: hsl(var(--neon-primary) / 0.18);
+    border-color: hsl(var(--neon-primary) / 0.3);
+    box-shadow: var(--neon-glow-sm);
+  }
+
+  /* ---- Dark mode neon FAB ---- */
+  .dark .fab {
+    box-shadow:
+      0 8px 32px -4px hsl(var(--primary) / 0.5),
+      var(--neon-glow-md);
+  }
+
+  .dark .fab:hover {
+    box-shadow:
+      0 14px 44px -4px hsl(var(--primary) / 0.6),
+      0 0 20px hsl(var(--neon-primary) / 0.4),
+      0 0 40px hsl(var(--neon-primary) / 0.15);
+  }
+
+  /* ---- Dark mode neon focus ring ---- */
+  .dark .premium-input:focus-within {
+    box-shadow:
+      0 0 0 2px hsl(var(--neon-primary) / 0.2),
+      var(--neon-glow-sm);
+    border-color: hsl(var(--neon-primary) / 0.4);
+  }
 }
 
 @layer utilities {
