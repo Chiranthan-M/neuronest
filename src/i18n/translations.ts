@@ -491,6 +491,7 @@ export const translations: Record<Language, Record<string, string>> = {
     aiPlagiarism: "కాపీ పరీక్ష",
     aiSmartTags: "స్మార్ట్ ట్యాగ్‌లు",
     aiTranslate: "అనువాదం",
+    liveMode: "లైవ్", liveActive: "లైవ్ అనువాదం", translateNow: "అనువదించు", translating: "అనువదిస్తోంది...", translateInputPlaceholder: "అనువదించడానికి టెక్స్ట్ టైప్ చేయండి...", translateOutputPlaceholder: "అనువాదం ఇక్కడ కనిపిస్తుంది",
     aiProductivity: "AI అంతర్దృష్టులు",
     aiResult: "AI ఫలితం",
     aiApply: "నోట్‌కు వర్తింపజేయండి",
