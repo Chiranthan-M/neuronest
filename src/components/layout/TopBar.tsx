@@ -73,7 +73,15 @@ export function TopBar() {
     : isGuest ? "G" : "U";
 
   return (
-    <header className="sticky top-0 z-20 h-14 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 lg:px-8 border-b border-border/30 bg-background/80 backdrop-blur-xl">
+    <header
+      className="sticky top-0 z-20 h-14 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 lg:px-8 border-b border-border/20"
+      style={{
+        background: 'hsl(var(--glass-bg))',
+        backdropFilter: 'blur(var(--glass-blur-heavy)) saturate(1.6)',
+        WebkitBackdropFilter: 'blur(var(--glass-blur-heavy)) saturate(1.6)',
+        boxShadow: '0 4px 24px -2px hsl(var(--glass-shadow)), inset 0 -1px 0 hsl(var(--glass-border))',
+      }}
+    >
       {/* Search */}
       <div className="flex-1 flex items-center gap-2 sm:gap-3 min-w-0">
         <div className="relative max-w-md w-full">
