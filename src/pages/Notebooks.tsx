@@ -3,6 +3,7 @@ import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { NotebookCard } from "@/components/notes/NotebookCard";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { SwipeableNoteCard } from "@/components/notes/SwipeableNoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { Note } from "@/types/note";
 import { BookOpen, ArrowLeft, Plus, Sparkles } from "lucide-react";

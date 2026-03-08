@@ -4,6 +4,7 @@ import { usePrivacy } from "@/contexts/PrivacyContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PrivacyLockScreen } from "@/components/privacy/PrivacyLockScreen";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { SwipeableNoteCard } from "@/components/notes/SwipeableNoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { Note } from "@/types/note";
 import { Button } from "@/components/ui/button";
