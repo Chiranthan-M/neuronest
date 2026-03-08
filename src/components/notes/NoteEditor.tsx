@@ -137,6 +137,89 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  // Handle content change with slash command detection
+  const handleContentChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setContent(val);
+
+    // Detect slash commands
+    const cursorPos = e.target.selectionStart;
+    const textBeforeCursor = val.substring(0, cursorPos);
+    const lastNewline = textBeforeCursor.lastIndexOf("\n");
+    const currentLine = textBeforeCursor.substring(lastNewline + 1);
+
+    if (currentLine.startsWith("/") && currentLine.length >= 1) {
+      const filter = currentLine.substring(1);
+      setSlashCmd({ show: true, filter, pos: { top: 0, left: 0 } });
+    } else {
+      if (slashCmd.show) setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } });
+    }
+  }, [slashCmd.show]);
+
+  // Handle slash command selection
+  const handleSlashCommand = useCallback(async (commandId: string) => {
+    // Remove the slash command text from content
+    const cursorPos = textareaRef.current?.selectionStart || content.length;
+    const textBeforeCursor = content.substring(0, cursorPos);
+    const lastNewline = textBeforeCursor.lastIndexOf("\n");
+    const beforeSlash = content.substring(0, lastNewline + 1);
+    const afterCursor = content.substring(cursorPos);
+    const cleanContent = (beforeSlash + afterCursor).trim();
+
+    setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } });
+
+    if (!cleanContent) {
+      toast({ title: "No content to process", variant: "destructive" });
+      return;
+    }
+
+    if (commandId === "translate") {
+      setContent(cleanContent);
+      setShowAI(true);
+      return;
+    }
+
+    const res = await runTool(commandId as any, cleanContent);
+    if (res) {
+      if (commandId === "autocorrect") {
+        // Grammar fix returns JSON, apply corrections
+        try {
+          let jsonStr = res.trim();
+          if (jsonStr.startsWith("```")) jsonStr = jsonStr.replace(/```(?:json)?\n?/g, "").trim();
+          const parsed = JSON.parse(jsonStr);
+          if (parsed?.corrections) {
+            let fixed = cleanContent;
+            for (const c of parsed.corrections) {
+              fixed = fixed.replace(c.original, c.corrected);
+            }
+            setContent(fixed);
+            toast({ title: `Fixed ${parsed.corrections.length} issue(s)` });
+          }
+        } catch {
+          setContent(cleanContent);
+        }
+      } else {
+        setContent(res);
+      }
+    } else {
+      setContent(cleanContent);
+    }
+  }, [content, runTool, toast]);
+
+  // Handle Tab key to accept ghost completion
+  const handleTextareaKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Tab" && ghostText) {
+      e.preventDefault();
+      const completion = acceptCompletion();
+      if (completion) {
+        setContent((prev) => prev + completion);
+      }
+    }
+    if (e.key === "Escape" && slashCmd.show) {
+      setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } });
+    }
+  }, [ghostText, acceptCompletion, slashCmd.show]);
+
   const ToolbarButton = ({ icon: Icon, label, onClick, active, variant }: {
     icon: any; label: string; onClick: () => void; active?: boolean; variant?: "destructive";
   }) => (
