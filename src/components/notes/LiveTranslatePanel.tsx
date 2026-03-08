@@ -197,6 +197,24 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
         </Select>
       </div>
 
+      {/* Translation style selector */}
+      <div className="flex flex-wrap gap-1">
+        {(["Standard", "Formal", "Casual", "Professional", "Academic"] as const).map((s) => (
+          <button
+            key={s}
+            onClick={() => { setStyle(s); lastTranslatedRef.current = ""; }}
+            className={cn(
+              "text-[10px] px-2.5 py-1 rounded-full font-medium transition-all duration-200",
+              style === s
+                ? "gradient-primary text-primary-foreground shadow-sm"
+                : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
+            )}
+          >
+            {s}
+          </button>
+        ))}
+      </div>
+
       {/* Input/Output panels */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {/* Source */}
