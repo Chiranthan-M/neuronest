@@ -593,6 +593,13 @@
       min-height: 44px;
       min-width: 44px;
     }
+
+    /* Larger tap targets for tag pills on touch */
+    .tag-pill {
+      min-height: 36px;
+      padding-left: 14px;
+      padding-right: 14px;
+    }
   }
 
   /* Smooth layout transitions on resize */
@@ -603,6 +610,11 @@
     nav,
     header {
       transition: width 0.3s ease, transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Smooth grid reflow */
+    .responsive-grid {
+      transition: grid-template-columns 0.3s ease;
     }
   }
 
@@ -632,6 +644,35 @@
     .stat-card:active {
       transform: scale(0.97);
       transition: transform 0.1s ease;
+    }
+  }
+
+  /* Tablet landscape - optimize spacing */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .note-card {
+      min-height: 140px;
+    }
+  }
+
+  /* iOS Safari safe areas for landscape */
+  @supports (padding: max(0px)) {
+    .app-layout-main {
+      padding-left: max(env(safe-area-inset-left), 0px);
+      padding-right: max(env(safe-area-inset-right), 0px);
+    }
+  }
+
+  /* Prevent content jump when scrollbar appears/disappears */
+  @supports (scrollbar-gutter: stable) {
+    .app-layout-main {
+      scrollbar-gutter: stable;
+    }
+  }
+
+  /* Orientation change smoothness */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      transition: font-size 0.2s ease;
     }
   }
 }
