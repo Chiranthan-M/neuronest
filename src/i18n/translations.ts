@@ -362,6 +362,7 @@ export const translations: Record<Language, Record<string, string>> = {
     aiPlagiarism: "ಕೃತಿಚೌರ್ಯ ಪರಿಶೀಲನೆ",
     aiSmartTags: "ಸ್ಮಾರ್ಟ್ ಟ್ಯಾಗ್",
     aiTranslate: "ಅನುವಾದ",
+    liveMode: "ಲೈವ್", liveActive: "ಲೈವ್ ಅನುವಾದ", translateNow: "ಅನುವಾದಿಸಿ", translating: "ಅನುವಾದಿಸಲಾಗುತ್ತಿದೆ...", translateInputPlaceholder: "ಅನುವಾದಿಸಲು ಪಠ್ಯ ಟೈಪ್ ಮಾಡಿ...", translateOutputPlaceholder: "ಅನುವಾದ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ",
     aiProductivity: "AI ಒಳನೋಟಗಳು",
     aiResult: "AI ಫಲಿತಾಂಶ",
     aiApply: "ಟಿಪ್ಪಣಿಗೆ ಅನ್ವಯಿಸಿ",
