@@ -73,7 +73,15 @@ export function TopBar() {
     : isGuest ? "G" : "U";
 
   return (
-    <header className="sticky top-0 z-20 h-14 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 lg:px-8 border-b border-border/30 bg-background/80 backdrop-blur-xl">
+    <header
+      className="sticky top-0 z-20 h-14 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 lg:px-8 border-b border-border/20"
+      style={{
+        background: 'hsl(var(--glass-bg))',
+        backdropFilter: 'blur(var(--glass-blur-heavy)) saturate(1.6)',
+        WebkitBackdropFilter: 'blur(var(--glass-blur-heavy)) saturate(1.6)',
+        boxShadow: '0 4px 24px -2px hsl(var(--glass-shadow)), inset 0 -1px 0 hsl(var(--glass-border))',
+      }}
+    >
       {/* Search */}
       <div className="flex-1 flex items-center gap-2 sm:gap-3 min-w-0">
         <div className="relative max-w-md w-full">
@@ -91,7 +99,7 @@ export function TopBar() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setSearchOpen(true)}
               onBlur={() => setTimeout(() => setSearchOpen(false), 200)}
-              className="pl-9 h-9 bg-secondary/40 border-0 rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:bg-card transition-all"
+              className="pl-9 h-9 bg-background/40 border border-border/20 rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:bg-background/60 transition-all backdrop-blur-sm"
             />
             {searchQuery && (
               <button
@@ -111,7 +119,7 @@ export function TopBar() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 4 }}
                 transition={{ duration: 0.15 }}
-                className="absolute top-full mt-2 left-0 right-0 bg-card border border-border/50 rounded-xl shadow-elevated overflow-hidden z-50"
+                className="absolute top-full mt-2 left-0 right-0 glass-strong rounded-2xl shadow-elevated overflow-hidden z-50"
               >
                 {searchResults.length > 0 ? (
                   searchResults.map((note) => (

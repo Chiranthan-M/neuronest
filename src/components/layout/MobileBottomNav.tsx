@@ -16,7 +16,16 @@ export function MobileBottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden">
-      <div className="bg-card/95 backdrop-blur-xl border-t border-border/30 px-2 shadow-[0_-4px_24px_-4px_hsl(var(--foreground)/0.06)]" style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 4px)' }}>
+        <div
+          className="border-t border-border/20 px-2"
+          style={{
+            paddingBottom: 'max(env(safe-area-inset-bottom), 4px)',
+            background: 'hsl(var(--glass-bg-strong))',
+            backdropFilter: 'blur(var(--glass-blur-heavy)) saturate(1.8)',
+            WebkitBackdropFilter: 'blur(var(--glass-blur-heavy)) saturate(1.8)',
+            boxShadow: '0 -4px 24px -4px hsl(var(--glass-shadow)), inset 0 1px 0 hsl(var(--glass-highlight))',
+          }}
+        >
         <div className="flex items-center justify-around h-14">
           {navItems.map((item) => {
             const isActive = item.path === "/" ? pathname === "/" : pathname.startsWith(item.path.split("?")[0]);
