@@ -85,12 +85,17 @@ export default function Auth() {
       >
         <div className="text-center">
           <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+            initial={{ scale: 0.5, rotate: -20 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ delay: 0.1, type: "spring", stiffness: 200, damping: 15 }}
             className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-5 shadow-glass-lg"
           >
-            <BookOpen className="w-8 h-8 text-primary-foreground" />
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <BookOpen className="w-8 h-8 text-primary-foreground" />
+            </motion.div>
           </motion.div>
           <h1 className="text-3xl font-bold tracking-tight">NeuroNest</h1>
           <p className="text-sm text-muted-foreground mt-1.5">{t("smartKnowledgeHub")}</p>
