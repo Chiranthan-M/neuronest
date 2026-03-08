@@ -27,7 +27,7 @@ export default function ArchivePage() {
           <ArchiveIcon className="w-5 h-5 text-muted-foreground" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("archive")}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("archive")}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">{archivedNotes.length} {t("archivedNotes")}</p>
         </div>
       </div>

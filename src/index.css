@@ -226,7 +226,7 @@
 
   /* ---- Note Card ---- */
   .note-card {
-    @apply rounded-2xl p-5 transition-all duration-300 cursor-pointer relative overflow-hidden;
+    @apply rounded-2xl p-4 sm:p-5 transition-all duration-300 cursor-pointer relative overflow-hidden;
     background: hsl(var(--card));
     border: 1px solid hsl(var(--border));
     box-shadow: 0 1px 3px hsl(232 30% 10% / 0.03), 0 1px 2px hsl(232 30% 10% / 0.02);
@@ -263,9 +263,15 @@
 
   /* ---- FAB ---- */
   .fab {
-    @apply fixed bottom-24 md:bottom-8 right-6 z-50 w-14 h-14 rounded-2xl gradient-primary text-primary-foreground flex items-center justify-center cursor-pointer;
+    @apply fixed bottom-20 right-5 z-50 w-14 h-14 rounded-2xl gradient-primary text-primary-foreground flex items-center justify-center cursor-pointer;
     box-shadow: 0 8px 32px -4px hsl(var(--primary) / 0.45);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (min-width: 768px) {
+    .fab {
+      @apply bottom-8 right-6;
+    }
   }
 
   .fab:hover {

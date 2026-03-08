@@ -45,13 +45,13 @@ export default function PrivatePage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-start sm:items-center justify-between mb-6 flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <div className="section-header-icon">
             <Lock className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{t("privateFolder")}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("privateFolder")}</h1>
             <p className="text-sm text-muted-foreground mt-0.5">{privateNotes.length} {t("notes")}</p>
           </div>
         </div>

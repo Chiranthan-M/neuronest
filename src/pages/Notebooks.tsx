@@ -65,7 +65,7 @@ export default function Notebooks() {
                 <BookOpen className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold tracking-tight">{t("notebooks")}</h1>
+                <h1 className="text-2xl sm:text-2xl sm:text-3xl font-bold tracking-tight">{t("notebooks")}</h1>
                 <p className="text-sm text-muted-foreground mt-0.5">
                   {notebookNames.length} {t("notebooksCount")}
                 </p>
@@ -126,7 +126,7 @@ export default function Notebooks() {
                   <BookOpen className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight">{openNotebook}</h1>
+                  <h1 clas2xl sm:text-sName="text-3xl font-bold tracking-tight">{openNotebook}</h1>
                   <p className="text-sm text-muted-foreground mt-0.5">
                     {currentNotes.length} {t("notes")}
                   </p>

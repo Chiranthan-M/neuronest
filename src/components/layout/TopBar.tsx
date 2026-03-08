@@ -73,9 +73,9 @@ export function TopBar() {
     : isGuest ? "G" : "U";
 
   return (
-    <header className="sticky top-0 z-20 h-14 flex items-center gap-3 px-4 lg:px-8 border-b border-border/30 bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-20 h-14 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 lg:px-8 border-b border-border/30 bg-background/80 backdrop-blur-xl">
       {/* Search */}
-      <div className="flex-1 flex items-center gap-3">
+      <div className="flex-1 flex items-center gap-2 sm:gap-3 min-w-0">
         <div className="relative max-w-md w-full">
           <motion.div
             className="relative"

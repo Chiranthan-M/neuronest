@@ -86,7 +86,7 @@ export function NoteCard({ note, onClick, showRestore, compact }: NoteCardProps)
       <div className={cn("absolute top-0 left-5 right-5 h-0.5 rounded-b-full opacity-50", categoryColors[note.category] || "bg-muted")} />
 
       {/* Menu */}
-      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200">
+      <div className="absolute top-3 right-3 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-200">
         <DropdownMenu>
           <DropdownMenuTrigger
             onClick={(e) => e.stopPropagation()}
