@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Note } from "@/types/note";
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useVoiceToText } from "@/hooks/useVoiceToText";
+import { useSmartEditor } from "@/hooks/useSmartEditor";
+import { useAITools } from "@/hooks/useAITools";
 import {
   Dialog,
   DialogContent,
@@ -12,10 +14,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText, Maximize2, Minimize2 } from "lucide-react";
+import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText, Maximize2, Minimize2, Sparkles } from "lucide-react";
 import { AIToolsPanel } from "./AIToolsPanel";
 import { DrawingCanvas } from "./DrawingCanvas";
 import { OCRPanel, processCanvasOCR } from "./OCRPanel";
+import { SlashCommandMenu } from "./SlashCommandMenu";
+import { WritingAssistantBar } from "./WritingAssistantBar";
+import { AutoCorrectBanner } from "./AutoCorrectBanner";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -35,7 +40,9 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
   const { addNote, updateNote, uploadAttachment } = useNotes();
   const { t } = useLanguage();
   const { isListening, startListening, stopListening, isSupported } = useVoiceToText();
+  const { runTool, loading: aiActionLoading } = useAITools();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -47,6 +54,21 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
   const [showDrawing, setShowDrawing] = useState(false);
   const [showOCR, setShowOCR] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
+  const [showAssistant, setShowAssistant] = useState(false);
+  const [smartEditorEnabled, setSmartEditorEnabled] = useState(true);
+
+  // Slash command state
+  const [slashCmd, setSlashCmd] = useState({ show: false, filter: "", pos: { top: 0, left: 0 } });
+
+  // Smart editor hook
+  const {
+    ghostText,
+    corrections,
+    acceptCompletion,
+    applyCorrection,
+    dismissCorrection,
+    setGhostText,
+  } = useSmartEditor({ content, enabled: smartEditorEnabled && open });
 
   useEffect(() => {
     if (note) {
@@ -67,6 +89,8 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
     setShowDrawing(false);
     setShowOCR(false);
     setFocusMode(false);
+    setShowAssistant(false);
+    setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } });
   }, [note, open]);
 
   const handleSave = async () => {
@@ -112,6 +136,89 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
     setUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+
+  // Handle content change with slash command detection
+  const handleContentChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setContent(val);
+
+    // Detect slash commands
+    const cursorPos = e.target.selectionStart;
+    const textBeforeCursor = val.substring(0, cursorPos);
+    const lastNewline = textBeforeCursor.lastIndexOf("\n");
+    const currentLine = textBeforeCursor.substring(lastNewline + 1);
+
+    if (currentLine.startsWith("/") && currentLine.length >= 1) {
+      const filter = currentLine.substring(1);
+      setSlashCmd({ show: true, filter, pos: { top: 0, left: 0 } });
+    } else {
+      if (slashCmd.show) setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } });
+    }
+  }, [slashCmd.show]);
+
+  // Handle slash command selection
+  const handleSlashCommand = useCallback(async (commandId: string) => {
+    // Remove the slash command text from content
+    const cursorPos = textareaRef.current?.selectionStart || content.length;
+    const textBeforeCursor = content.substring(0, cursorPos);
+    const lastNewline = textBeforeCursor.lastIndexOf("\n");
+    const beforeSlash = content.substring(0, lastNewline + 1);
+    const afterCursor = content.substring(cursorPos);
+    const cleanContent = (beforeSlash + afterCursor).trim();
+
+    setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } });
+
+    if (!cleanContent) {
+      toast({ title: "No content to process", variant: "destructive" });
+      return;
+    }
+
+    if (commandId === "translate") {
+      setContent(cleanContent);
+      setShowAI(true);
+      return;
+    }
+
+    const res = await runTool(commandId as any, cleanContent);
+    if (res) {
+      if (commandId === "autocorrect") {
+        // Grammar fix returns JSON, apply corrections
+        try {
+          let jsonStr = res.trim();
+          if (jsonStr.startsWith("```")) jsonStr = jsonStr.replace(/```(?:json)?\n?/g, "").trim();
+          const parsed = JSON.parse(jsonStr);
+          if (parsed?.corrections) {
+            let fixed = cleanContent;
+            for (const c of parsed.corrections) {
+              fixed = fixed.replace(c.original, c.corrected);
+            }
+            setContent(fixed);
+            toast({ title: `Fixed ${parsed.corrections.length} issue(s)` });
+          }
+        } catch {
+          setContent(cleanContent);
+        }
+      } else {
+        setContent(res);
+      }
+    } else {
+      setContent(cleanContent);
+    }
+  }, [content, runTool, toast]);
+
+  // Handle Tab key to accept ghost completion
+  const handleTextareaKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Tab" && ghostText) {
+      e.preventDefault();
+      const completion = acceptCompletion();
+      if (completion) {
+        setContent((prev) => prev + completion);
+      }
+    }
+    if (e.key === "Escape" && slashCmd.show) {
+      setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } });
+    }
+  }, [ghostText, acceptCompletion, slashCmd.show]);
 
   const ToolbarButton = ({ icon: Icon, label, onClick, active, variant }: {
     icon: any; label: string; onClick: () => void; active?: boolean; variant?: "destructive";
@@ -163,13 +270,33 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
           />
 
           <div className="relative">
+            {/* Ghost text overlay for autocomplete */}
+            {ghostText && content && (
+              <div
+                aria-hidden
+                className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl px-3 py-2 text-sm leading-relaxed"
+                style={{
+                  backgroundImage: focusMode ? 'repeating-linear-gradient(transparent, transparent 31px, transparent 31px, transparent 32px)' : 'none',
+                  lineHeight: focusMode ? '32px' : undefined,
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
+                <span className="invisible">{content}</span>
+                <span className="text-muted-foreground/40 italic">{ghostText}</span>
+              </div>
+            )}
+
             <Textarea
-              placeholder={t("startWriting")}
+              ref={textareaRef}
+              placeholder={t("startWriting") + " — type / for AI commands"}
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={handleContentChange}
+              onKeyDown={handleTextareaKeyDown}
               className={cn(
                 "resize-none border-border/40 bg-secondary/20 rounded-xl focus-visible:ring-primary/20 leading-relaxed pr-12",
-                focusMode ? "min-h-[400px]" : "min-h-[200px]"
+                focusMode ? "min-h-[400px]" : "min-h-[200px]",
+                ghostText && "caret-primary"
               )}
               style={{
                 backgroundImage: focusMode ? 'repeating-linear-gradient(transparent, transparent 31px, hsl(var(--border) / 0.3) 31px, hsl(var(--border) / 0.3) 32px)' : 'none',
@@ -177,6 +304,29 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
                 lineHeight: focusMode ? '32px' : undefined,
               }}
             />
+
+            {/* Ghost text hint */}
+            {ghostText && (
+              <div className="absolute bottom-2 left-3">
+                <span className="text-[10px] text-muted-foreground/50 bg-secondary/60 px-1.5 py-0.5 rounded">
+                  Tab ↹ to accept
+                </span>
+              </div>
+            )}
+
+            {/* Slash command menu - positioned above textarea */}
+            {slashCmd.show && (
+              <div className="absolute top-full left-0 mt-1 z-50">
+                <SlashCommandMenu
+                  show={slashCmd.show}
+                  position={{ top: 0, left: 0 }}
+                  filter={slashCmd.filter}
+                  onSelect={handleSlashCommand}
+                  onClose={() => setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } })}
+                />
+              </div>
+            )}
+
             {/* Floating toolbar */}
             <div className="absolute bottom-3 right-3 flex gap-1">
               {note && (
@@ -207,6 +357,15 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               )}
             </div>
           </div>
+
+          {/* Auto-correct suggestions */}
+          {corrections.length > 0 && (
+            <AutoCorrectBanner
+              corrections={corrections}
+              onAccept={(c) => setContent(applyCorrection(c, content))}
+              onDismiss={dismissCorrection}
+            />
+          )}
 
           <AnimatePresence>
             {isListening && (
@@ -239,6 +398,15 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               type="button"
               variant="outline"
               size="sm"
+              className={cn("text-xs border-border/40 rounded-xl", showAssistant && "gradient-primary text-primary-foreground border-0")}
+              onClick={() => setShowAssistant(!showAssistant)}
+            >
+              <Sparkles className="w-3.5 h-3.5 mr-1" /> AI Assistant
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
               className="text-xs border-border/40 rounded-xl"
               onClick={() => setShowAI(!showAI)}
             >
@@ -263,6 +431,14 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               <ScanText className="w-3.5 h-3.5 mr-1" /> {showOCR ? t("hideOCR") : t("ocrTitle")}
             </Button>
           </div>
+
+          {/* Writing Assistant Bar */}
+          <WritingAssistantBar
+            content={content}
+            onApply={(text) => setContent(text)}
+            visible={showAssistant}
+            onToggle={() => setShowAssistant(false)}
+          />
 
           <AnimatePresence>
             {showAI && (
