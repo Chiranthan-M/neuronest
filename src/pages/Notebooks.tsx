@@ -3,6 +3,7 @@ import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { NotebookCard } from "@/components/notes/NotebookCard";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { SwipeableNoteCard } from "@/components/notes/SwipeableNoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { Note } from "@/types/note";
 import { BookOpen, ArrowLeft, Plus, Sparkles } from "lucide-react";
@@ -148,7 +149,7 @@ export default function Notebooks() {
               {currentNotes.length > 0 ? (
                 <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                   {currentNotes.map(note => (
-                    <NoteCard
+                    <SwipeableNoteCard
                       key={note.id}
                       note={note}
                       onClick={() => { setEditingNote(note); setEditorOpen(true); }}

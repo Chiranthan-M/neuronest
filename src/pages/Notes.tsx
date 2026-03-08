@@ -3,6 +3,7 @@ import { useSearchParams, Link } from "react-router-dom";
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { SwipeableNoteCard } from "@/components/notes/SwipeableNoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { ProductivityAnalytics } from "@/components/notes/ProductivityAnalytics";
 import { Note, NoteSortBy } from "@/types/note";
@@ -210,7 +211,7 @@ export default function Notes() {
             }
           >
             {activeNotes.map((note) => (
-              <NoteCard key={note.id} note={note} onClick={() => { setEditingNote(note); setEditorOpen(true); }} compact={viewMode === "list"} />
+              <SwipeableNoteCard key={note.id} note={note} onClick={() => { setEditingNote(note); setEditorOpen(true); }} compact={viewMode === "list"} />
             ))}
           </motion.div>
         ) : (

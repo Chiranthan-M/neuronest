@@ -4,6 +4,7 @@ import { usePrivacy } from "@/contexts/PrivacyContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PrivacyLockScreen } from "@/components/privacy/PrivacyLockScreen";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { SwipeableNoteCard } from "@/components/notes/SwipeableNoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { Note } from "@/types/note";
 import { Button } from "@/components/ui/button";
@@ -105,7 +106,7 @@ export default function PrivatePage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {privateNotes.map((note) => (
-            <NoteCard
+            <SwipeableNoteCard
               key={note.id}
               note={note}
               onClick={() => { setEditNote(note); setShowEditor(true); }}

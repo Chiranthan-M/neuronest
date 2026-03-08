@@ -1,6 +1,7 @@
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { SwipeableNoteCard } from "@/components/notes/SwipeableNoteCard";
 import { Trash2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,7 +46,7 @@ export default function TrashPage() {
         {trashedNotes.length > 0 ? (
           <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {trashedNotes.map((note) => (
-              <NoteCard key={note.id} note={note} onClick={() => {}} showRestore />
+              <SwipeableNoteCard key={note.id} note={note} onClick={() => {}} showRestore />
             ))}
           </motion.div>
         ) : (

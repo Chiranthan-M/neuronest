@@ -4,6 +4,7 @@ import { FileText, Pin, Archive, Tag, Clock, Plus, Sparkles, Zap, Star, Trending
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { SwipeableNoteCard } from "@/components/notes/SwipeableNoteCard";
 import { QuickCapture } from "@/components/notes/QuickCapture";
 import { useState } from "react";
 import { NoteEditor } from "@/components/notes/NoteEditor";
@@ -152,7 +153,7 @@ export default function Dashboard() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {pinnedNotes.slice(0, 4).map((note) => (
-              <NoteCard
+              <SwipeableNoteCard
                 key={note.id}
                 note={note}
                 onClick={() => { setEditingNote(note); setEditorOpen(true); }}
@@ -178,7 +179,7 @@ export default function Dashboard() {
         {recentNotes.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {recentNotes.map((note) => (
-              <NoteCard
+              <SwipeableNoteCard
                 key={note.id}
                 note={note}
                 onClick={() => { setEditingNote(note); setEditorOpen(true); }}

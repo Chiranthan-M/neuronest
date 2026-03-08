@@ -1,6 +1,7 @@
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { SwipeableNoteCard } from "@/components/notes/SwipeableNoteCard";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { Note } from "@/types/note";
 import { useState } from "react";
@@ -36,7 +37,7 @@ export default function ArchivePage() {
         {archivedNotes.length > 0 ? (
           <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {archivedNotes.map((note) => (
-              <NoteCard key={note.id} note={note} onClick={() => { setEditingNote(note); setEditorOpen(true); }} />
+              <SwipeableNoteCard key={note.id} note={note} onClick={() => { setEditingNote(note); setEditorOpen(true); }} />
             ))}
           </motion.div>
         ) : (
