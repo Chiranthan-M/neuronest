@@ -58,6 +58,7 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
   const [translatedText, setTranslatedText] = useState("");
   const [sourceLang, setSourceLang] = useState("auto");
   const [targetLang, setTargetLang] = useState("en");
+  const [style, setStyle] = useState("Standard");
   const [liveMode, setLiveMode] = useState(false);
   const [copied, setCopied] = useState(false);
   const [swapAnim, setSwapAnim] = useState(false);
@@ -72,7 +73,7 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
     }
   }, [initialText]);
 
-  const doTranslate = useCallback(async (text: string, lang: string) => {
+  const doTranslate = useCallback(async (text: string, lang: string, translateStyle: string) => {
     if (!text.trim()) {
       setTranslatedText("");
       return;
@@ -80,7 +81,7 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
     if (text.trim() === lastTranslatedRef.current) return;
     lastTranslatedRef.current = text.trim();
 
-    const res = await runTool("translate", text, { targetLang: lang });
+    const res = await runTool("translate", text, { targetLang: lang, tone: translateStyle });
     if (res) setTranslatedText(res);
   }, [runTool]);
 
@@ -89,16 +90,16 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
     if (!liveMode) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      doTranslate(sourceText, targetLang);
+      doTranslate(sourceText, targetLang, style);
     }, 800);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [sourceText, targetLang, liveMode, doTranslate]);
+  }, [sourceText, targetLang, style, liveMode, doTranslate]);
 
   const handleManualTranslate = () => {
     lastTranslatedRef.current = "";
-    doTranslate(sourceText, targetLang);
+    doTranslate(sourceText, targetLang, style);
   };
 
   const handleSwapLanguages = () => {
@@ -194,6 +195,24 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      {/* Translation style selector */}
+      <div className="flex flex-wrap gap-1">
+        {(["Standard", "Formal", "Casual", "Professional", "Academic"] as const).map((s) => (
+          <button
+            key={s}
+            onClick={() => { setStyle(s); lastTranslatedRef.current = ""; }}
+            className={cn(
+              "text-[10px] px-2.5 py-1 rounded-full font-medium transition-all duration-200",
+              style === s
+                ? "gradient-primary text-primary-foreground shadow-sm"
+                : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
+            )}
+          >
+            {s}
+          </button>
+        ))}
       </div>
 
       {/* Input/Output panels */}
