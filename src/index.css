@@ -582,4 +582,56 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Touch-friendly targets */
+  @media (pointer: coarse) {
+    .note-card {
+      min-height: 120px;
+    }
+
+    button, a, [role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  /* Smooth layout transitions on resize */
+  @media (prefers-reduced-motion: no-preference) {
+    .note-card,
+    .stat-card,
+    aside,
+    nav,
+    header {
+      transition: width 0.3s ease, transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+    }
+  }
+
+  /* Desktop-only hover effects */
+  @media (hover: hover) {
+    .note-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+    }
+  }
+
+  /* Touch: no hover lift, use active feedback */
+  @media (hover: none) {
+    .note-card:hover,
+    .stat-card:hover {
+      transform: none;
+    }
+
+    .note-card:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+
+    .stat-card:active {
+      transform: scale(0.97);
+      transition: transform 0.1s ease;
+    }
+  }
 }
