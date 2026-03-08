@@ -1,7 +1,7 @@
 import { useLocation, Link } from "react-router-dom";
 import { LayoutDashboard, FileText, BookOpen, Plus, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { icon: LayoutDashboard, path: "/", label: "Home" },
@@ -15,7 +15,12 @@ export function MobileBottomNav() {
   const { pathname } = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden">
+    <motion.nav
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30, delay: 0.2 }}
+      className="fixed bottom-0 left-0 right-0 z-40 md:hidden"
+    >
       <div
         className="border-t border-border/20 px-1 sm:px-2"
         style={{
@@ -34,10 +39,18 @@ export function MobileBottomNav() {
               return (
                 <Link key={item.path} to={item.path}>
                   <motion.div
-                    whileTap={{ scale: 0.9 }}
-                    className="w-12 h-12 rounded-2xl gradient-primary flex items-center justify-center shadow-glass -mt-4"
+                    whileTap={{ scale: 0.85, rotate: 90 }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                    className="relative w-12 h-12 rounded-2xl gradient-primary flex items-center justify-center shadow-glass -mt-4"
                   >
                     <item.icon className="w-5 h-5 text-primary-foreground" />
+                    {/* Pulse ring */}
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl gradient-primary"
+                      animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0, 0.4] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    />
                   </motion.div>
                 </Link>
               );
@@ -52,7 +65,12 @@ export function MobileBottomNav() {
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
-                <item.icon className="w-5 h-5" />
+                <motion.div
+                  whileTap={{ scale: 0.85 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                >
+                  <item.icon className="w-5 h-5" />
+                </motion.div>
                 <span className="text-[10px] font-medium leading-none">{item.label}</span>
                 {isActive && (
                   <motion.div
@@ -66,6 +84,6 @@ export function MobileBottomNav() {
           })}
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
