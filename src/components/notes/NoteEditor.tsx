@@ -21,6 +21,7 @@ import { OCRPanel, processCanvasOCR } from "./OCRPanel";
 import { SlashCommandMenu } from "./SlashCommandMenu";
 import { WritingAssistantBar } from "./WritingAssistantBar";
 import { AutoCorrectBanner } from "./AutoCorrectBanner";
+import { VoiceWaveform } from "./VoiceWaveform";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -357,6 +358,11 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               )}
             </div>
           </div>
+
+          {/* Voice waveform */}
+          <AnimatePresence>
+            <VoiceWaveform isActive={isListening} />
+          </AnimatePresence>
 
           {/* Auto-correct suggestions */}
           {corrections.length > 0 && (
