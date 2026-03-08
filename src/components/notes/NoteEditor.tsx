@@ -120,8 +120,12 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
     if (isListening) {
       stopListening();
     } else {
-      startListening((text) => {
-        setContent((prev) => (prev ? prev + " " : "") + text);
+      startListening((newChunk) => {
+        // newChunk is ONLY the new final text, not cumulative
+        setContent((prev) => {
+          const needsSpace = prev.length > 0 && !prev.endsWith(" ") && !prev.endsWith("\n");
+          return prev + (needsSpace ? " " : "") + newChunk.trim();
+        });
       });
     }
   };
