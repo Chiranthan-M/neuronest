@@ -9,7 +9,12 @@ export type AITool =
   | "plagiarism_check"
   | "smart_tags"
   | "productivity_analytics"
-  | "translate";
+  | "translate"
+  | "autocomplete"
+  | "autocorrect"
+  | "rewrite"
+  | "expand"
+  | "simplify";
 
 export function useAITools() {
   const [loading, setLoading] = useState(false);
