@@ -60,7 +60,8 @@ serve(async (req) => {
       userMessage = `Tone: ${tone}\n\nText: ${content}`;
     }
     if (tool === "translate" && targetLang) {
-      userMessage = `Target language: ${targetLang}\n\nText: ${content}`;
+      const styleInstruction = tone ? `Translation style: ${tone}. ` : "";
+      userMessage = `${styleInstruction}Target language: ${targetLang}\n\nText: ${content}`;
     }
     if (tool === "productivity_analytics" && notesData) {
       userMessage = JSON.stringify(notesData);
