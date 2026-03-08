@@ -314,14 +314,18 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               </div>
             )}
 
-            {/* Slash command menu */}
-            <SlashCommandMenu
-              show={slashCmd.show}
-              position={{ top: -8, left: 0 }}
-              filter={slashCmd.filter}
-              onSelect={handleSlashCommand}
-              onClose={() => setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } })}
-            />
+            {/* Slash command menu - positioned above textarea */}
+            {slashCmd.show && (
+              <div className="absolute top-full left-0 mt-1 z-50">
+                <SlashCommandMenu
+                  show={slashCmd.show}
+                  position={{ top: 0, left: 0 }}
+                  filter={slashCmd.filter}
+                  onSelect={handleSlashCommand}
+                  onClose={() => setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } })}
+                />
+              </div>
+            )}
 
             {/* Floating toolbar */}
             <div className="absolute bottom-3 right-3 flex gap-1">
