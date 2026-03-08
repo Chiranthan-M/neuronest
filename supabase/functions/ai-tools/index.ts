@@ -100,6 +100,7 @@ serve(async (req) => {
       messages.push({ role: "user", content: userMessage });
     }
 
+    const useFastModel = tool === "autocomplete" || tool === "autocorrect";
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
@@ -109,7 +110,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: isOCR ? "google/gemini-2.5-flash" : "google/gemini-3-flash-preview",
+          model: isOCR ? "google/gemini-2.5-flash" : useFastModel ? "google/gemini-2.5-flash-lite" : "google/gemini-3-flash-preview",
           messages,
         }),
       }
