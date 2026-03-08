@@ -233,6 +233,7 @@ export const translations: Record<Language, Record<string, string>> = {
     aiPlagiarism: "साहित्यिक चोरी जांच",
     aiSmartTags: "स्मार्ट टैग",
     aiTranslate: "अनुवाद",
+    liveMode: "लाइव", liveActive: "लाइव अनुवाद", translateNow: "अनुवाद करें", translating: "अनुवाद हो रहा है...", translateInputPlaceholder: "अनुवाद के लिए टेक्स्ट टाइप करें...", translateOutputPlaceholder: "अनुवाद यहां दिखाई देगा",
     aiProductivity: "AI अंतर्दृष्टि",
     aiResult: "AI परिणाम",
     aiApply: "नोट पर लागू करें",
