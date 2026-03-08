@@ -104,7 +104,7 @@ export default function Profile() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="max-w-lg mx-auto space-y-8"
+      className="max-w-lg mx-auto space-y-6 sm:space-y-8"
     >
       <div className="flex items-center gap-3">
         <div className="section-header-icon">
