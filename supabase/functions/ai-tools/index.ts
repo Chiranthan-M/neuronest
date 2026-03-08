@@ -14,7 +14,12 @@ type ToolType =
   | "smart_tags"
   | "productivity_analytics"
   | "translate"
-  | "ocr";
+  | "ocr"
+  | "autocomplete"
+  | "autocorrect"
+  | "rewrite"
+  | "expand"
+  | "simplify";
 
 const systemPrompts: Record<ToolType, string> = {
   summarize:
