@@ -160,9 +160,14 @@ export function AppSidebar() {
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 h-14 border-b border-border/30 flex-shrink-0">
-        <div className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0 shadow-glass">
+        <motion.div
+          whileHover={{ scale: 1.08, rotate: 5 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0 shadow-glass"
+        >
           <BookOpen className="w-4 h-4 text-primary-foreground" />
-        </div>
+        </motion.div>
         {!collapsed && (
           <div className="animate-fade-in min-w-0">
             <h1 className="font-bold text-sm tracking-tight truncate">NeuroNest</h1>
