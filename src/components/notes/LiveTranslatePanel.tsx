@@ -99,7 +99,7 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
 
   const handleManualTranslate = () => {
     lastTranslatedRef.current = "";
-    doTranslate(sourceText, targetLang);
+    doTranslate(sourceText, targetLang, style);
   };
 
   const handleSwapLanguages = () => {
