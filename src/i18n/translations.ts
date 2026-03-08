@@ -620,6 +620,7 @@ export const translations: Record<Language, Record<string, string>> = {
     aiPlagiarism: "திருட்டு சோதனை",
     aiSmartTags: "ஸ்மார்ட் குறிச்சொல்",
     aiTranslate: "மொழிபெயர்",
+    liveMode: "நேரடி", liveActive: "நேரடி மொழிபெயர்ப்பு", translateNow: "மொழிபெயர்", translating: "மொழிபெயர்க்கப்படுகிறது...", translateInputPlaceholder: "மொழிபெயர்க்க உரை தட்டச்சு செய்யவும்...", translateOutputPlaceholder: "மொழிபெயர்ப்பு இங்கே தோன்றும்",
     aiProductivity: "AI நுண்ணறிவு",
     aiResult: "AI முடிவு",
     aiApply: "குறிப்பில் பயன்படுத்து",
