@@ -84,10 +84,10 @@ export function TopBar() {
     >
       {/* Search */}
       <div className="flex-1 flex items-center gap-2 sm:gap-3 min-w-0">
-        <div className="relative max-w-md w-full">
+        <div className="relative max-w-xs sm:max-w-sm md:max-w-md w-full">
           <motion.div
             className="relative"
-            animate={{ width: searchOpen ? "100%" : "100%" }}
+            animate={{ width: "100%" }}
           >
             <Search className={cn(
               "absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors",
