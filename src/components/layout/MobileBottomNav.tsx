@@ -1,5 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
-import { LayoutDashboard, FileText, BookOpen, Lock, Plus } from "lucide-react";
+import { LayoutDashboard, FileText, BookOpen, Plus, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -8,7 +8,7 @@ const navItems = [
   { icon: FileText, path: "/notes", label: "Notes" },
   { icon: Plus, path: "/notes?new=true", label: "New", isAction: true },
   { icon: BookOpen, path: "/notebooks", label: "Books" },
-  { icon: Lock, path: "/private", label: "Private" },
+  { icon: Settings, path: "/settings", label: "Settings" },
 ];
 
 export function MobileBottomNav() {

@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { NotesProvider, useNotes } from "@/contexts/NotesContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { PrivacyProvider } from "@/contexts/PrivacyContext";
+import { SettingsProvider } from "@/contexts/SettingsContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { OnlineStatusBanner } from "@/components/layout/OnlineStatusBanner";
 import Index from "./pages/Index";
@@ -16,6 +17,7 @@ import ArchivePage from "./pages/Archive";
 import TrashPage from "./pages/Trash";
 import PrivatePage from "./pages/Private";
 import ProfilePage from "./pages/Profile";
+import SettingsPage from "./pages/Settings";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
@@ -81,6 +83,11 @@ function AppRoutes() {
             <AppLayout><ProfilePage /></AppLayout>
           </ProtectedRoute>
         } />
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <AppLayout><SettingsPage /></AppLayout>
+          </ProtectedRoute>
+        } />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
@@ -94,11 +101,13 @@ const App = () => (
         <AuthProvider>
           <NotesProvider>
             <PrivacyProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <AppRoutes />
-              </BrowserRouter>
+              <SettingsProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <AppRoutes />
+                </BrowserRouter>
+              </SettingsProvider>
             </PrivacyProvider>
           </NotesProvider>
         </AuthProvider>
