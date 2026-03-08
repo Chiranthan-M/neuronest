@@ -77,8 +77,7 @@ export function SlashCommandMenu({ show, position, filter, onSelect, onClose }: 
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 8, scale: 0.95 }}
         transition={{ duration: 0.15 }}
-        className="absolute z-50 w-64 glass rounded-xl border border-border/50 shadow-lg overflow-hidden"
-        style={{ top: position.top, left: position.left }}
+        className="w-64 glass rounded-xl border border-border/50 shadow-lg overflow-hidden"
       >
         <div className="px-3 py-2 border-b border-border/30">
           <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
