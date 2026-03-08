@@ -30,7 +30,10 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function AppSidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window !== "undefined") return window.innerWidth < 1024;
+    return false;
+  });
   const { t, language, setLanguage } = useLanguage();
   const { signOut, user, isGuest } = useAuth();
 
