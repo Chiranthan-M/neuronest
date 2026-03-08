@@ -38,6 +38,16 @@ const systemPrompts: Record<ToolType, string> = {
     "You are a professional translator. Translate the following text to the requested target language. Auto-detect the source language. If a translation style is specified, adapt the register, vocabulary, and sentence structure accordingly: Standard = neutral balanced translation, Formal = polished respectful language, Casual = relaxed conversational tone, Professional = business-appropriate precise wording, Academic = scholarly precise terminology. Return ONLY the translated text, no explanations or preamble.",
   ocr:
     "You are an OCR and handwriting recognition specialist. Extract ALL text visible in this image, including handwritten text, printed text, scribbles, and text in any language. Preserve the original structure and formatting as much as possible. If text is in multiple languages, extract all of them. Return ONLY the extracted text, no explanations.",
+  autocomplete:
+    "You are a writing autocomplete assistant. Given the text so far, predict the most natural continuation. Return ONLY the completion text (the new words/sentence to append), NOT the original text. Keep it to 1 short sentence or a few words. Be contextually relevant. Return nothing if the text seems complete.",
+  autocorrect:
+    'You are a grammar and spelling checker. Analyze the text and return ONLY a valid JSON object: {"corrections":[{"original":"misspelled or wrong phrase","corrected":"fixed version","reason":"brief explanation"}]}. Only flag actual errors in spelling, grammar, or punctuation. If no errors found, return {"corrections":[]}. No markdown, no extra text.',
+  rewrite:
+    "You are a writing assistant. Rewrite the following text to be clearer and more polished while keeping the same meaning. Return ONLY the rewritten text.",
+  expand:
+    "You are a writing assistant. Expand the following text with more detail, examples, and elaboration while maintaining the original tone and meaning. Return ONLY the expanded text.",
+  simplify:
+    "You are a writing assistant. Simplify the following text to be easier to understand. Use shorter sentences and simpler words while keeping the meaning. Return ONLY the simplified text.",
 };
 
 serve(async (req) => {
