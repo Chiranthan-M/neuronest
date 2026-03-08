@@ -90,12 +90,12 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
     if (!liveMode) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      doTranslate(sourceText, targetLang);
+      doTranslate(sourceText, targetLang, style);
     }, 800);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [sourceText, targetLang, liveMode, doTranslate]);
+  }, [sourceText, targetLang, style, liveMode, doTranslate]);
 
   const handleManualTranslate = () => {
     lastTranslatedRef.current = "";
