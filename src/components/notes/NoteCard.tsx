@@ -51,7 +51,7 @@ export function NoteCard({ note, onClick, showRestore, compact }: NoteCardProps)
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.25 }}
-        className="flex items-center gap-4 p-3.5 rounded-xl bg-card border border-border/50 hover:shadow-elevated hover:border-primary/15 transition-all duration-250 cursor-pointer group"
+        className="flex items-center gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-xl bg-card border border-border/50 hover:shadow-elevated hover:border-primary/15 transition-all duration-250 cursor-pointer group active:scale-[0.99]"
         onClick={onClick}
       >
         <div className={cn("w-1 h-8 rounded-full flex-shrink-0", categoryColors[note.category] || "bg-muted")} />
