@@ -58,6 +58,7 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
   const [translatedText, setTranslatedText] = useState("");
   const [sourceLang, setSourceLang] = useState("auto");
   const [targetLang, setTargetLang] = useState("en");
+  const [style, setStyle] = useState("Standard");
   const [liveMode, setLiveMode] = useState(false);
   const [copied, setCopied] = useState(false);
   const [swapAnim, setSwapAnim] = useState(false);
