@@ -211,7 +211,7 @@ export default function Notes() {
             }
           >
             {activeNotes.map((note) => (
-              <NoteCard key={note.id} note={note} onClick={() => { setEditingNote(note); setEditorOpen(true); }} compact={viewMode === "list"} />
+              <SwipeableNoteCard key={note.id} note={note} onClick={() => { setEditingNote(note); setEditorOpen(true); }} compact={viewMode === "list"} />
             ))}
           </motion.div>
         ) : (
