@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Note } from "@/types/note";
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useVoiceToText } from "@/hooks/useVoiceToText";
+import { useSmartEditor } from "@/hooks/useSmartEditor";
+import { useAITools } from "@/hooks/useAITools";
 import {
   Dialog,
   DialogContent,
@@ -12,10 +14,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText, Maximize2, Minimize2 } from "lucide-react";
+import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText, Maximize2, Minimize2, Sparkles } from "lucide-react";
 import { AIToolsPanel } from "./AIToolsPanel";
 import { DrawingCanvas } from "./DrawingCanvas";
 import { OCRPanel, processCanvasOCR } from "./OCRPanel";
+import { SlashCommandMenu } from "./SlashCommandMenu";
+import { WritingAssistantBar } from "./WritingAssistantBar";
+import { AutoCorrectBanner } from "./AutoCorrectBanner";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -35,7 +40,9 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
   const { addNote, updateNote, uploadAttachment } = useNotes();
   const { t } = useLanguage();
   const { isListening, startListening, stopListening, isSupported } = useVoiceToText();
+  const { runTool, loading: aiActionLoading } = useAITools();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -47,6 +54,21 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
   const [showDrawing, setShowDrawing] = useState(false);
   const [showOCR, setShowOCR] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
+  const [showAssistant, setShowAssistant] = useState(false);
+  const [smartEditorEnabled, setSmartEditorEnabled] = useState(true);
+
+  // Slash command state
+  const [slashCmd, setSlashCmd] = useState({ show: false, filter: "", pos: { top: 0, left: 0 } });
+
+  // Smart editor hook
+  const {
+    ghostText,
+    corrections,
+    acceptCompletion,
+    applyCorrection,
+    dismissCorrection,
+    setGhostText,
+  } = useSmartEditor({ content, enabled: smartEditorEnabled && open });
 
   useEffect(() => {
     if (note) {
