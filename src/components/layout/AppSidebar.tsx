@@ -31,7 +31,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(() => {
-    if (typeof window !== "undefined") return window.innerWidth < 1024;
+    if (typeof window !== "undefined") return window.innerWidth < 1280;
     return false;
   });
   const { t, language, setLanguage } = useLanguage();

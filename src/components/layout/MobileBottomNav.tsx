@@ -48,7 +48,7 @@ export function MobileBottomNav() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-1 min-w-[3rem] px-3 py-2 rounded-xl transition-colors active:bg-secondary/40",
+                  "relative flex flex-col items-center justify-center gap-0.5 min-w-[3.5rem] px-2 py-2 rounded-xl transition-colors active:bg-secondary/40",
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
@@ -57,7 +57,7 @@ export function MobileBottomNav() {
                 {isActive && (
                   <motion.div
                     layoutId="bottomNavIndicator"
-                    className="absolute bottom-1.5 w-5 h-0.5 rounded-full bg-primary"
+                    className="absolute -bottom-0.5 w-5 h-0.5 rounded-full bg-primary"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
