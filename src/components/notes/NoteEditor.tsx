@@ -377,19 +377,6 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             />
           )}
 
-          <AnimatePresence>
-            {isListening && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="flex items-center gap-2 text-xs text-destructive overflow-hidden"
-              >
-                <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-                {t("voiceListening")}
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           {/* Attachments preview */}
           {attachments.length > 0 && (
