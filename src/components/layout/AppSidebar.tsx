@@ -77,9 +77,16 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "h-screen sticky top-0 flex-col border-r border-border/30 bg-sidebar transition-all duration-300 ease-out z-30 scrollbar-thin overflow-y-auto hidden md:flex",
+        "h-screen sticky top-0 flex-col border-r border-border/20 transition-all duration-300 ease-out z-30 scrollbar-thin overflow-y-auto hidden md:flex",
         collapsed ? "w-[68px]" : "w-[240px]"
       )}
+      style={{
+        background: 'hsl(var(--glass-bg-strong))',
+        backdropFilter: 'blur(var(--glass-blur-heavy)) saturate(1.8)',
+        WebkitBackdropFilter: 'blur(var(--glass-blur-heavy)) saturate(1.8)',
+        borderRight: '1px solid hsl(var(--glass-border))',
+        boxShadow: '4px 0 24px -4px hsl(var(--glass-shadow)), inset -1px 0 0 hsl(var(--glass-highlight))',
+      }}
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 h-14 border-b border-border/30 flex-shrink-0">

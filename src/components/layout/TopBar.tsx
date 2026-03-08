@@ -119,7 +119,7 @@ export function TopBar() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 4 }}
                 transition={{ duration: 0.15 }}
-                className="absolute top-full mt-2 left-0 right-0 bg-card border border-border/50 rounded-xl shadow-elevated overflow-hidden z-50"
+                className="absolute top-full mt-2 left-0 right-0 glass-strong rounded-2xl shadow-elevated overflow-hidden z-50"
               >
                 {searchResults.length > 0 ? (
                   searchResults.map((note) => (
