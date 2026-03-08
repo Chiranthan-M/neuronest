@@ -73,7 +73,7 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
     }
   }, [initialText]);
 
-  const doTranslate = useCallback(async (text: string, lang: string) => {
+  const doTranslate = useCallback(async (text: string, lang: string, translateStyle: string) => {
     if (!text.trim()) {
       setTranslatedText("");
       return;
@@ -81,7 +81,7 @@ export function LiveTranslatePanel({ initialText = "", onApply, onClose }: LiveT
     if (text.trim() === lastTranslatedRef.current) return;
     lastTranslatedRef.current = text.trim();
 
-    const res = await runTool("translate", text, { targetLang: lang });
+    const res = await runTool("translate", text, { targetLang: lang, tone: translateStyle });
     if (res) setTranslatedText(res);
   }, [runTool]);
 
