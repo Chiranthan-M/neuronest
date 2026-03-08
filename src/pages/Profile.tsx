@@ -110,7 +110,7 @@ export default function Profile() {
         <div className="section-header-icon">
           <User className="w-5 h-5 text-primary" />
         </div>
-        <h1 cla2xl sm:text-ssName="text-3xl font-bold tracking-tight">{t("profileSettings")}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("profileSettings")}</h1>
       </div>
 
       {/* Avatar */}
