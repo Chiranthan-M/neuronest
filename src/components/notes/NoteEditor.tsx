@@ -356,8 +356,8 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               onChange={handleContentChange}
               onKeyDown={handleTextareaKeyDown}
               className={cn(
-                "resize-none border-border/40 bg-secondary/20 rounded-xl focus-visible:ring-primary/20 leading-relaxed pr-12",
-                focusMode ? "min-h-[400px]" : "min-h-[200px]",
+                "resize-none border-border/40 bg-secondary/20 rounded-xl focus-visible:ring-primary/20 leading-relaxed pr-12 p-5 sm:p-6 text-base",
+                focusMode ? "min-h-[50vh]" : "min-h-[200px] sm:min-h-[280px]",
                 ghostText && "caret-primary"
               )}
               style={{
