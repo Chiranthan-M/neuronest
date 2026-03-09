@@ -59,7 +59,6 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
   const [showOCR, setShowOCR] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
-  const [smartEditorEnabled, setSmartEditorEnabled] = useState(true);
   const [aiToolbarExpanded, setAiToolbarExpanded] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [smartEditorEnabled, setSmartEditorEnabled] = useState(true);
