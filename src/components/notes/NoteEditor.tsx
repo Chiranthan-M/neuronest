@@ -252,25 +252,49 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
     </Tooltip>
   );
 
+  const wordCount = useMemo(() => content.trim() ? content.trim().split(/\s+/).length : 0, [content]);
+  const lastEdited = note?.updatedAt ? new Date(note.updatedAt).toLocaleString() : null;
+
+  const handleTemplateSelect = (template: NoteTemplate) => {
+    setTitle(template.title);
+    setContent(template.content);
+    setCategory(template.category);
+    setTags(template.tags);
+    setShowTemplates(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className={cn(
-        "glass max-w-[calc(100vw-2rem)] sm:max-w-[700px] max-h-[90vh] sm:max-h-[85vh] overflow-auto rounded-2xl border-border/40 p-4 sm:p-6",
-        focusMode && "sm:max-w-[900px]"
+        "glass max-w-[calc(100vw-2rem)] sm:max-w-[80vw] sm:max-w-[min(80vw,1200px)] max-h-[90vh] sm:max-h-[85vh] overflow-auto rounded-2xl border-border/40 p-0",
+        focusMode && "sm:max-w-[95vw] sm:max-h-[95vh]"
       )}>
-        <DialogHeader className="pb-3 border-b border-border/40">
+        {/* Header zone */}
+        <DialogHeader className="px-5 sm:px-6 pt-5 pb-3 border-b border-border/40 sticky top-0 z-10 bg-card/80 backdrop-blur-sm rounded-t-2xl">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-lg font-semibold">
               {note ? t("editNote") : t("createNote")}
             </DialogTitle>
-            <Tooltip delayDuration={300}>
-              <TooltipTrigger asChild>
-                <button onClick={() => setFocusMode(!focusMode)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
-                  {focusMode ? <Minimize2 className="w-4 h-4 text-muted-foreground" /> : <Maximize2 className="w-4 h-4 text-muted-foreground" />}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent className="text-xs">Focus Mode</TooltipContent>
-            </Tooltip>
+            <div className="flex items-center gap-2">
+              {/* Word count + last edited */}
+              <div className="hidden sm:flex items-center gap-3 text-[10px] text-muted-foreground mr-2">
+                <span>{wordCount} words</span>
+                {lastEdited && (
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {lastEdited}
+                  </span>
+                )}
+              </div>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <button onClick={() => setFocusMode(!focusMode)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
+                    {focusMode ? <Minimize2 className="w-4 h-4 text-muted-foreground" /> : <Maximize2 className="w-4 h-4 text-muted-foreground" />}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent className="text-xs">{focusMode ? "Exit Fullscreen" : "Fullscreen"}</TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         </DialogHeader>
 
