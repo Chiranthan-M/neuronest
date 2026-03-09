@@ -298,12 +298,37 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
           </div>
         </DialogHeader>
 
-        <div className="space-y-4 pt-3">
+        {/* Content zone */}
+        <div className="space-y-4 px-5 sm:px-6 py-4">
+          {/* Templates for new notes */}
+          {!note && !title && !content && (
+            <AnimatePresence>
+              {!showTemplates ? (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs rounded-xl border-dashed border-border/60"
+                    onClick={() => setShowTemplates(true)}
+                  >
+                    <FileText className="w-3.5 h-3.5 mr-1" />
+                    Start from Template
+                  </Button>
+                </motion.div>
+              ) : (
+                <NoteTemplates
+                  onSelect={handleTemplateSelect}
+                  onClose={() => setShowTemplates(false)}
+                />
+              )}
+            </AnimatePresence>
+          )}
+
           <Input
             placeholder={t("noteTitle")}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-lg font-semibold border-0 bg-transparent px-0 h-auto focus-visible:ring-0 placeholder:text-muted-foreground/40"
+            className="text-xl sm:text-2xl font-semibold border-0 bg-transparent px-0 h-auto focus-visible:ring-0 placeholder:text-muted-foreground/40"
           />
 
           <div className="relative">
