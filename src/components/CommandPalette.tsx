@@ -69,7 +69,7 @@ export function CommandPalette({ onNewNote, onOpenNote }: CommandPaletteProps) {
         <CommandEmpty>No results found.</CommandEmpty>
 
         <CommandGroup heading="Quick Actions">
-          <CommandItem onSelect={() => runAction(() => onNewNote?.() || navigate("/notes?new=true"))}>
+          <CommandItem onSelect={() => runAction(() => { if (onNewNote) onNewNote(); else navigate("/notes?new=true"); })}>
             <Plus className="mr-2 h-4 w-4" />
             {t("newNote")}
             <CommandShortcut>⌘N</CommandShortcut>

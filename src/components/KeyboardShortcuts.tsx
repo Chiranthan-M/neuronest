@@ -35,7 +35,7 @@ export function KeyboardShortcuts({ onNewNote }: KeyboardShortcutsProps) {
       // ⌘+N / Ctrl+N → New note
       if (e.key === "n" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        onNewNote?.() || navigate("/notes?new=true");
+        if (onNewNote) onNewNote(); else navigate("/notes?new=true");
       }
 
       // ? → cheatsheet (only when not in input)
