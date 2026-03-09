@@ -675,16 +675,18 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             </>
           )}
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-border/40">
-            <Button variant="ghost" onClick={onClose} className="rounded-xl">
-              {t("cancel")}
+        </div>
+
+        {/* Footer zone */}
+        <div className="flex justify-end gap-2 px-5 sm:px-6 py-4 border-t border-border/40 sticky bottom-0 bg-card/80 backdrop-blur-sm rounded-b-2xl">
+          <Button variant="ghost" onClick={onClose} className="rounded-xl">
+            {t("cancel")}
+          </Button>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button onClick={handleSave} className="gradient-primary text-primary-foreground rounded-xl shadow-glass ripple-btn">
+              {note ? t("saveChanges") : t("createNote")}
             </Button>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button onClick={handleSave} className="gradient-primary text-primary-foreground rounded-xl shadow-glass ripple-btn">
-                {note ? t("saveChanges") : t("createNote")}
-              </Button>
-            </motion.div>
-          </div>
+          </motion.div>
         </div>
       </DialogContent>
     </Dialog>
