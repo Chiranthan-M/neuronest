@@ -97,6 +97,8 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
     setShowOCR(false);
     setFocusMode(false);
     setShowAssistant(false);
+    setAiToolbarExpanded(false);
+    setShowTemplates(false);
     setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } });
   }, [note, open]);
 
