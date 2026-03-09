@@ -351,7 +351,7 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
 
             <Textarea
               ref={textareaRef}
-              placeholder={t("startWriting") + " — type / for AI commands"}
+              placeholder={"Start writing... Use @ for AI commands"}
               value={content}
               onChange={handleContentChange}
               onKeyDown={handleTextareaKeyDown}
