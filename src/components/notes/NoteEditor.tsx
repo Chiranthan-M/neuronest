@@ -476,6 +476,7 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             )}
           </AnimatePresence>
 
+          <AnimatePresence>
             {showOCR && (
               <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
                 <OCRPanel onApplyText={(text) => setContent((prev) => (prev ? prev + "\n\n" : "") + text)} />
