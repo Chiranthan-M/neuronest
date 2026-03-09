@@ -89,6 +89,7 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
       setAttachments([]);
     }
     setShowAI(false);
+    setShowVisualAI(false);
     setShowDrawing(false);
     setShowOCR(false);
     setFocusMode(false);
