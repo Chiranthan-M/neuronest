@@ -446,53 +446,108 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             </div>
           )}
 
-          {/* Tools Bar */}
-          <div className="flex gap-2 flex-wrap">
-            <Button
+          {/* AI Toolbar — Collapsible */}
+          <div className="border border-border/40 rounded-xl overflow-hidden bg-card/30">
+            <button
               type="button"
-              variant="outline"
-              size="sm"
-              className={cn("text-xs border-border/40 rounded-xl", showAssistant && "gradient-primary text-primary-foreground border-0")}
-              onClick={() => setShowAssistant(!showAssistant)}
+              onClick={() => setAiToolbarExpanded(!aiToolbarExpanded)}
+              className="w-full flex items-center justify-between px-3 py-2 hover:bg-secondary/30 transition-colors"
             >
-              <Sparkles className="w-3.5 h-3.5 mr-1" /> AI Assistant
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs border-border/40 rounded-xl"
-              onClick={() => setShowAI(!showAI)}
-            >
-              ✨ {showAI ? t("hideAITools") : t("showAITools")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs border-border/40 rounded-xl"
-              onClick={() => setShowDrawing(true)}
-            >
-              <PenTool className="w-3.5 h-3.5 mr-1" /> {t("drawingCanvas")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs border-border/40 rounded-xl"
-              onClick={() => setShowOCR(!showOCR)}
-            >
-              <ScanText className="w-3.5 h-3.5 mr-1" /> {showOCR ? t("hideOCR") : t("ocrTitle")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className={cn("text-xs border-border/40 rounded-xl", showVisualAI && "gradient-primary text-primary-foreground border-0")}
-              onClick={() => setShowVisualAI(!showVisualAI)}
-            >
-              <Wand2 className="w-3.5 h-3.5 mr-1" /> Visual AI
-            </Button>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-medium">AI Tools</span>
+              </div>
+              {aiToolbarExpanded ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
+            </button>
+
+            {/* Always-visible: Ask AI + toggle */}
+            <div className="flex items-center gap-1.5 px-3 pb-2">
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className={cn("text-xs border-border/40 rounded-xl", showAssistant && "gradient-primary text-primary-foreground border-0")}
+                    onClick={() => setShowAssistant(!showAssistant)}
+                  >
+                    <Sparkles className="w-3.5 h-3.5 mr-1" /> Ask AI
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="text-xs">AI writing assistant for your content</TooltipContent>
+              </Tooltip>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="text-xs border-border/40 rounded-xl"
+                    onClick={() => setShowAI(!showAI)}
+                  >
+                    ✨ AI Actions
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="text-xs">Summarize, improve, change tone, and more</TooltipContent>
+              </Tooltip>
+            </div>
+
+            {/* Expanded: More AI tools */}
+            <AnimatePresence>
+              {aiToolbarExpanded && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="flex gap-1.5 px-3 pb-3 flex-wrap sm:flex-nowrap overflow-x-auto">
+                    <Tooltip delayDuration={300}>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className={cn("text-xs border-border/40 rounded-xl whitespace-nowrap", showVisualAI && "gradient-primary text-primary-foreground border-0")}
+                          onClick={() => setShowVisualAI(!showVisualAI)}
+                        >
+                          <Wand2 className="w-3.5 h-3.5 mr-1" /> Create Image
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="text-xs">Generate images from text or sketches</TooltipContent>
+                    </Tooltip>
+                    <Tooltip delayDuration={300}>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="text-xs border-border/40 rounded-xl whitespace-nowrap"
+                          onClick={() => setShowOCR(!showOCR)}
+                        >
+                          <ScanText className="w-3.5 h-3.5 mr-1" /> Scan Text
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="text-xs">Extract text from images using OCR</TooltipContent>
+                    </Tooltip>
+                    <Tooltip delayDuration={300}>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="text-xs border-border/40 rounded-xl whitespace-nowrap"
+                          onClick={() => setShowDrawing(true)}
+                        >
+                          <PenTool className="w-3.5 h-3.5 mr-1" /> Sketch
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="text-xs">Open freehand drawing canvas</TooltipContent>
+                    </Tooltip>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Writing Assistant Bar */}
