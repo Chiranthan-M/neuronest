@@ -94,12 +94,12 @@ export function TopBar() {
               searchOpen ? "text-primary" : "text-muted-foreground"
             )} />
             <Input
-              placeholder={t("searchNotes") + "..."}
+              placeholder={`${t("searchNotes")}... ⌘K`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setSearchOpen(true)}
               onBlur={() => setTimeout(() => setSearchOpen(false), 200)}
-              className="pl-9 h-9 bg-background/40 border border-border/20 rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:bg-background/60 transition-all backdrop-blur-sm"
+              className="pl-9 pr-14 h-9 bg-background/40 border border-border/20 rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:bg-background/60 transition-all backdrop-blur-sm"
             />
             {searchQuery && (
               <button
