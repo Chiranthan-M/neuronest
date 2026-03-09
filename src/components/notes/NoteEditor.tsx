@@ -430,6 +430,15 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             >
               <ScanText className="w-3.5 h-3.5 mr-1" /> {showOCR ? t("hideOCR") : t("ocrTitle")}
             </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className={cn("text-xs border-border/40 rounded-xl", showVisualAI && "gradient-primary text-primary-foreground border-0")}
+              onClick={() => setShowVisualAI(!showVisualAI)}
+            >
+              <Wand2 className="w-3.5 h-3.5 mr-1" /> Visual AI
+            </Button>
           </div>
 
           {/* Writing Assistant Bar */}
