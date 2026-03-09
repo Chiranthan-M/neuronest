@@ -47,6 +47,8 @@ function AppRoutes() {
   return (
     <>
       <SyncBanner />
+      <CommandPalette />
+      <KeyboardShortcuts />
       <Routes>
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
