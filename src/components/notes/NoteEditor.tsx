@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Note } from "@/types/note";
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText, Maximize2, Minimize2, Sparkles, Wand2 } from "lucide-react";
+import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText, Maximize2, Minimize2, Sparkles, Wand2, ChevronDown, ChevronUp, FileText, Clock } from "lucide-react";
 import { AIToolsPanel } from "./AIToolsPanel";
 import { AIVisualToolsPanel } from "./AIVisualToolsPanel";
 import { DrawingCanvas } from "./DrawingCanvas";
@@ -23,6 +23,7 @@ import { SlashCommandMenu } from "./SlashCommandMenu";
 import { WritingAssistantBar } from "./WritingAssistantBar";
 import { AutoCorrectBanner } from "./AutoCorrectBanner";
 import { VoiceWaveform } from "./VoiceWaveform";
+import { NoteTemplates, NoteTemplate } from "./NoteTemplates";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
