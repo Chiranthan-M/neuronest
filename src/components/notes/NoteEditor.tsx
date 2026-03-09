@@ -51,6 +51,7 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
   const [tagInput, setTagInput] = useState("");
   const [category, setCategory] = useState("General");
   const [showAI, setShowAI] = useState(false);
+  const [showVisualAI, setShowVisualAI] = useState(false);
   const [attachments, setAttachments] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [showDrawing, setShowDrawing] = useState(false);
