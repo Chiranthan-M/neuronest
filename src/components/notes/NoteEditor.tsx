@@ -14,8 +14,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText, Maximize2, Minimize2, Sparkles } from "lucide-react";
+import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText, Maximize2, Minimize2, Sparkles, Wand2 } from "lucide-react";
 import { AIToolsPanel } from "./AIToolsPanel";
+import { AIVisualToolsPanel } from "./AIVisualToolsPanel";
 import { DrawingCanvas } from "./DrawingCanvas";
 import { OCRPanel, processCanvasOCR } from "./OCRPanel";
 import { SlashCommandMenu } from "./SlashCommandMenu";
@@ -50,6 +51,7 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
   const [tagInput, setTagInput] = useState("");
   const [category, setCategory] = useState("General");
   const [showAI, setShowAI] = useState(false);
+  const [showVisualAI, setShowVisualAI] = useState(false);
   const [attachments, setAttachments] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [showDrawing, setShowDrawing] = useState(false);
@@ -87,6 +89,7 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
       setAttachments([]);
     }
     setShowAI(false);
+    setShowVisualAI(false);
     setShowDrawing(false);
     setShowOCR(false);
     setFocusMode(false);
@@ -427,6 +430,15 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             >
               <ScanText className="w-3.5 h-3.5 mr-1" /> {showOCR ? t("hideOCR") : t("ocrTitle")}
             </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className={cn("text-xs border-border/40 rounded-xl", showVisualAI && "gradient-primary text-primary-foreground border-0")}
+              onClick={() => setShowVisualAI(!showVisualAI)}
+            >
+              <Wand2 className="w-3.5 h-3.5 mr-1" /> Visual AI
+            </Button>
           </div>
 
           {/* Writing Assistant Bar */}
@@ -445,6 +457,19 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
                   onApply={(text) => setContent(text)}
                   onApplyTags={(newTags) => {
                     setTags((prev) => [...new Set([...prev, ...newTags.map((t) => t.toLowerCase())])]);
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {showVisualAI && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                <AIVisualToolsPanel
+                  noteContent={content}
+                  onInsertImage={(dataUrl) => {
+                    setContent((prev) => prev + `\n\n![AI Generated Image](${dataUrl})\n`);
                   }}
                 />
               </motion.div>
