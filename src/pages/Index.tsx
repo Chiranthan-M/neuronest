@@ -187,16 +187,25 @@ export default function Dashboard() {
             ))}
           </div>
         ) : (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="empty-state">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="empty-state py-12">
             <div className="empty-state-icon">
               <Sparkles className="w-8 h-8 text-muted-foreground/40" />
             </div>
-            <p className="text-sm text-muted-foreground font-medium">{t("noNotesYet")}</p>
-            <p className="text-xs text-muted-foreground/70 mt-1">Start by creating your first note</p>
-            <Link to="/notes?new=true" className="mt-4 inline-flex items-center gap-2 text-xs text-primary font-medium px-4 py-2 rounded-xl bg-primary/5 hover:bg-primary/10 transition-colors">
-              <Plus className="w-3.5 h-3.5" />
-              {t("createNote")}
-            </Link>
+            <p className="text-base font-semibold text-foreground">{t("noNotesYet")}</p>
+            <p className="text-sm text-muted-foreground/70 mt-1 max-w-xs text-center">Capture your first idea — it only takes a second</p>
+            <div className="flex gap-2 mt-5">
+              <Link to="/notes?new=true" className="inline-flex items-center gap-2 text-xs text-primary-foreground font-medium px-4 py-2.5 rounded-xl gradient-primary shadow-glass ripple-btn transition-all hover:opacity-90">
+                <Plus className="w-3.5 h-3.5" />
+                {t("createNote")}
+              </Link>
+              <button
+                onClick={() => { setEditingNote(null); setEditorOpen(true); }}
+                className="inline-flex items-center gap-2 text-xs font-medium px-4 py-2.5 rounded-xl bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+              >
+                <Zap className="w-3.5 h-3.5" />
+                Quick Capture
+              </button>
+            </div>
           </motion.div>
         )}
       </motion.div>
