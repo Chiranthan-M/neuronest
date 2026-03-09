@@ -10,6 +10,8 @@ import { PrivacyProvider } from "@/contexts/PrivacyContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { OnlineStatusBanner } from "@/components/layout/OnlineStatusBanner";
+import { CommandPalette } from "@/components/CommandPalette";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import Index from "./pages/Index";
 import Notes from "./pages/Notes";
 import NotebooksPage from "./pages/Notebooks";
@@ -45,6 +47,8 @@ function AppRoutes() {
   return (
     <>
       <SyncBanner />
+      <CommandPalette />
+      <KeyboardShortcuts />
       <Routes>
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />

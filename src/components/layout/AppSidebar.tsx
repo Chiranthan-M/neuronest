@@ -183,18 +183,25 @@ export function AppSidebar() {
 
       {/* New Note */}
       <div className="px-3 pt-4 pb-1 flex-shrink-0">
-        <Link to="/notes?new=true">
-          <Button
-            className={cn(
-              "w-full gradient-primary text-primary-foreground shadow-glass transition-all hover:opacity-90 hover:shadow-glass-lg rounded-xl ripple-btn h-9 text-sm",
-              collapsed ? "px-0" : ""
-            )}
-            size={collapsed ? "icon" : "default"}
-          >
-            <Plus className="w-4 h-4" />
-            {!collapsed && <span className="ml-1.5 font-medium">{t("newNote")}</span>}
-          </Button>
-        </Link>
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>
+            <Link to="/notes?new=true">
+              <Button
+                className={cn(
+                  "w-full gradient-primary text-primary-foreground shadow-glass transition-all hover:opacity-90 hover:shadow-glass-lg rounded-xl ripple-btn h-9 text-sm",
+                  collapsed ? "px-0" : ""
+                )}
+                size={collapsed ? "icon" : "default"}
+              >
+                <Plus className="w-4 h-4" />
+                {!collapsed && <span className="ml-1.5 font-medium">{t("newNote")}</span>}
+              </Button>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side={collapsed ? "right" : "bottom"} className="text-xs">
+            {t("newNote")} <kbd className="ml-1 text-[10px] opacity-60">⌘N</kbd>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Main nav */}

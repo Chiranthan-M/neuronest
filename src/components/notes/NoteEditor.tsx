@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Note } from "@/types/note";
 import { useNotes } from "@/contexts/NotesContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText, Maximize2, Minimize2, Sparkles, Wand2 } from "lucide-react";
+import { X, Plus, Mic, MicOff, Paperclip, Loader2, PenTool, ScanText, Maximize2, Minimize2, Sparkles, Wand2, ChevronDown, ChevronUp, FileText, Clock } from "lucide-react";
 import { AIToolsPanel } from "./AIToolsPanel";
 import { AIVisualToolsPanel } from "./AIVisualToolsPanel";
 import { DrawingCanvas } from "./DrawingCanvas";
@@ -23,6 +23,7 @@ import { SlashCommandMenu } from "./SlashCommandMenu";
 import { WritingAssistantBar } from "./WritingAssistantBar";
 import { AutoCorrectBanner } from "./AutoCorrectBanner";
 import { VoiceWaveform } from "./VoiceWaveform";
+import { NoteTemplates, NoteTemplate } from "./NoteTemplates";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -58,6 +59,8 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
   const [showOCR, setShowOCR] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
+  const [aiToolbarExpanded, setAiToolbarExpanded] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
   const [smartEditorEnabled, setSmartEditorEnabled] = useState(true);
 
   // Slash command state
@@ -94,6 +97,8 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
     setShowOCR(false);
     setFocusMode(false);
     setShowAssistant(false);
+    setAiToolbarExpanded(false);
+    setShowTemplates(false);
     setSlashCmd({ show: false, filter: "", pos: { top: 0, left: 0 } });
   }, [note, open]);
 
@@ -247,34 +252,83 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
     </Tooltip>
   );
 
+  const wordCount = useMemo(() => content.trim() ? content.trim().split(/\s+/).length : 0, [content]);
+  const lastEdited = note?.updatedAt ? new Date(note.updatedAt).toLocaleString() : null;
+
+  const handleTemplateSelect = (template: NoteTemplate) => {
+    setTitle(template.title);
+    setContent(template.content);
+    setCategory(template.category);
+    setTags(template.tags);
+    setShowTemplates(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className={cn(
-        "glass max-w-[calc(100vw-2rem)] sm:max-w-[700px] max-h-[90vh] sm:max-h-[85vh] overflow-auto rounded-2xl border-border/40 p-4 sm:p-6",
-        focusMode && "sm:max-w-[900px]"
+        "glass max-w-[calc(100vw-2rem)] sm:max-w-[80vw] sm:max-w-[min(80vw,1200px)] max-h-[90vh] sm:max-h-[85vh] overflow-auto rounded-2xl border-border/40 p-0",
+        focusMode && "sm:max-w-[95vw] sm:max-h-[95vh]"
       )}>
-        <DialogHeader className="pb-3 border-b border-border/40">
+        {/* Header zone */}
+        <DialogHeader className="px-5 sm:px-6 pt-5 pb-3 border-b border-border/40 sticky top-0 z-10 bg-card/80 backdrop-blur-sm rounded-t-2xl">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-lg font-semibold">
               {note ? t("editNote") : t("createNote")}
             </DialogTitle>
-            <Tooltip delayDuration={300}>
-              <TooltipTrigger asChild>
-                <button onClick={() => setFocusMode(!focusMode)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
-                  {focusMode ? <Minimize2 className="w-4 h-4 text-muted-foreground" /> : <Maximize2 className="w-4 h-4 text-muted-foreground" />}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent className="text-xs">Focus Mode</TooltipContent>
-            </Tooltip>
+            <div className="flex items-center gap-2">
+              {/* Word count + last edited */}
+              <div className="hidden sm:flex items-center gap-3 text-[10px] text-muted-foreground mr-2">
+                <span>{wordCount} words</span>
+                {lastEdited && (
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {lastEdited}
+                  </span>
+                )}
+              </div>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <button onClick={() => setFocusMode(!focusMode)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
+                    {focusMode ? <Minimize2 className="w-4 h-4 text-muted-foreground" /> : <Maximize2 className="w-4 h-4 text-muted-foreground" />}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent className="text-xs">{focusMode ? "Exit Fullscreen" : "Fullscreen"}</TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         </DialogHeader>
 
-        <div className="space-y-4 pt-3">
+        {/* Content zone */}
+        <div className="space-y-4 px-5 sm:px-6 py-4">
+          {/* Templates for new notes */}
+          {!note && !title && !content && (
+            <AnimatePresence>
+              {!showTemplates ? (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs rounded-xl border-dashed border-border/60"
+                    onClick={() => setShowTemplates(true)}
+                  >
+                    <FileText className="w-3.5 h-3.5 mr-1" />
+                    Start from Template
+                  </Button>
+                </motion.div>
+              ) : (
+                <NoteTemplates
+                  onSelect={handleTemplateSelect}
+                  onClose={() => setShowTemplates(false)}
+                />
+              )}
+            </AnimatePresence>
+          )}
+
           <Input
             placeholder={t("noteTitle")}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-lg font-semibold border-0 bg-transparent px-0 h-auto focus-visible:ring-0 placeholder:text-muted-foreground/40"
+            className="text-xl sm:text-2xl font-semibold border-0 bg-transparent px-0 h-auto focus-visible:ring-0 placeholder:text-muted-foreground/40"
           />
 
           <div className="relative">
@@ -297,13 +351,13 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
 
             <Textarea
               ref={textareaRef}
-              placeholder={t("startWriting") + " — type / for AI commands"}
+              placeholder={"Start writing... Use @ for AI commands"}
               value={content}
               onChange={handleContentChange}
               onKeyDown={handleTextareaKeyDown}
               className={cn(
-                "resize-none border-border/40 bg-secondary/20 rounded-xl focus-visible:ring-primary/20 leading-relaxed pr-12",
-                focusMode ? "min-h-[400px]" : "min-h-[200px]",
+                "resize-none border-border/40 bg-secondary/20 rounded-xl focus-visible:ring-primary/20 leading-relaxed pr-12 p-5 sm:p-6 text-base",
+                focusMode ? "min-h-[50vh]" : "min-h-[200px] sm:min-h-[280px]",
                 ghostText && "caret-primary"
               )}
               style={{
@@ -392,53 +446,108 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             </div>
           )}
 
-          {/* Tools Bar */}
-          <div className="flex gap-2 flex-wrap">
-            <Button
+          {/* AI Toolbar — Collapsible */}
+          <div className="border border-border/40 rounded-xl overflow-hidden bg-card/30">
+            <button
               type="button"
-              variant="outline"
-              size="sm"
-              className={cn("text-xs border-border/40 rounded-xl", showAssistant && "gradient-primary text-primary-foreground border-0")}
-              onClick={() => setShowAssistant(!showAssistant)}
+              onClick={() => setAiToolbarExpanded(!aiToolbarExpanded)}
+              className="w-full flex items-center justify-between px-3 py-2 hover:bg-secondary/30 transition-colors"
             >
-              <Sparkles className="w-3.5 h-3.5 mr-1" /> AI Assistant
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs border-border/40 rounded-xl"
-              onClick={() => setShowAI(!showAI)}
-            >
-              ✨ {showAI ? t("hideAITools") : t("showAITools")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs border-border/40 rounded-xl"
-              onClick={() => setShowDrawing(true)}
-            >
-              <PenTool className="w-3.5 h-3.5 mr-1" /> {t("drawingCanvas")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs border-border/40 rounded-xl"
-              onClick={() => setShowOCR(!showOCR)}
-            >
-              <ScanText className="w-3.5 h-3.5 mr-1" /> {showOCR ? t("hideOCR") : t("ocrTitle")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className={cn("text-xs border-border/40 rounded-xl", showVisualAI && "gradient-primary text-primary-foreground border-0")}
-              onClick={() => setShowVisualAI(!showVisualAI)}
-            >
-              <Wand2 className="w-3.5 h-3.5 mr-1" /> Visual AI
-            </Button>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-medium">AI Tools</span>
+              </div>
+              {aiToolbarExpanded ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
+            </button>
+
+            {/* Always-visible: Ask AI + toggle */}
+            <div className="flex items-center gap-1.5 px-3 pb-2">
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className={cn("text-xs border-border/40 rounded-xl", showAssistant && "gradient-primary text-primary-foreground border-0")}
+                    onClick={() => setShowAssistant(!showAssistant)}
+                  >
+                    <Sparkles className="w-3.5 h-3.5 mr-1" /> Ask AI
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="text-xs">AI writing assistant for your content</TooltipContent>
+              </Tooltip>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="text-xs border-border/40 rounded-xl"
+                    onClick={() => setShowAI(!showAI)}
+                  >
+                    ✨ AI Actions
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="text-xs">Summarize, improve, change tone, and more</TooltipContent>
+              </Tooltip>
+            </div>
+
+            {/* Expanded: More AI tools */}
+            <AnimatePresence>
+              {aiToolbarExpanded && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="flex gap-1.5 px-3 pb-3 flex-wrap sm:flex-nowrap overflow-x-auto">
+                    <Tooltip delayDuration={300}>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className={cn("text-xs border-border/40 rounded-xl whitespace-nowrap", showVisualAI && "gradient-primary text-primary-foreground border-0")}
+                          onClick={() => setShowVisualAI(!showVisualAI)}
+                        >
+                          <Wand2 className="w-3.5 h-3.5 mr-1" /> Create Image
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="text-xs">Generate images from text or sketches</TooltipContent>
+                    </Tooltip>
+                    <Tooltip delayDuration={300}>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="text-xs border-border/40 rounded-xl whitespace-nowrap"
+                          onClick={() => setShowOCR(!showOCR)}
+                        >
+                          <ScanText className="w-3.5 h-3.5 mr-1" /> Scan Text
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="text-xs">Extract text from images using OCR</TooltipContent>
+                    </Tooltip>
+                    <Tooltip delayDuration={300}>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="text-xs border-border/40 rounded-xl whitespace-nowrap"
+                          onClick={() => setShowDrawing(true)}
+                        >
+                          <PenTool className="w-3.5 h-3.5 mr-1" /> Sketch
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="text-xs">Open freehand drawing canvas</TooltipContent>
+                    </Tooltip>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Writing Assistant Bar */}
@@ -566,16 +675,18 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             </>
           )}
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-border/40">
-            <Button variant="ghost" onClick={onClose} className="rounded-xl">
-              {t("cancel")}
+        </div>
+
+        {/* Footer zone */}
+        <div className="flex justify-end gap-2 px-5 sm:px-6 py-4 border-t border-border/40 sticky bottom-0 bg-card/80 backdrop-blur-sm rounded-b-2xl">
+          <Button variant="ghost" onClick={onClose} className="rounded-xl">
+            {t("cancel")}
+          </Button>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button onClick={handleSave} className="gradient-primary text-primary-foreground rounded-xl shadow-glass ripple-btn">
+              {note ? t("saveChanges") : t("createNote")}
             </Button>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button onClick={handleSave} className="gradient-primary text-primary-foreground rounded-xl shadow-glass ripple-btn">
-                {note ? t("saveChanges") : t("createNote")}
-              </Button>
-            </motion.div>
-          </div>
+          </motion.div>
         </div>
       </DialogContent>
     </Dialog>
