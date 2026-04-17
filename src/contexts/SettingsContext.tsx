@@ -90,12 +90,43 @@ function loadSettings(): AppSettings {
   return { ...defaultSettings };
 }
 
+function applyTheme(theme: AppSettings["theme"]) {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+  const resolved =
+    theme === "system"
+      ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+      : theme;
+  root.classList.remove("light", "dark");
+  root.classList.add(resolved);
+  root.style.colorScheme = resolved;
+}
+
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<AppSettings>(loadSettings);
 
+  // Persist
   useEffect(() => {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); } catch {}
   }, [settings]);
+
+  // Apply theme to <html>
+  useEffect(() => {
+    applyTheme(settings.theme);
+    if (settings.theme !== "system") return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = () => applyTheme("system");
+    mq.addEventListener?.("change", handler);
+    return () => mq.removeEventListener?.("change", handler);
+  }, [settings.theme]);
+
+  // Apply editor font + size as CSS variables (live updates)
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty("--editor-font-family", settings.fontFamily);
+    root.style.setProperty("--editor-font-size", `${settings.fontSize}px`);
+    root.style.setProperty("--editor-line-height", String(settings.lineSpacing));
+  }, [settings.fontFamily, settings.fontSize, settings.lineSpacing]);
 
   const updateSetting = useCallback(<K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
     setSettings(prev => ({ ...prev, [key]: value }));
