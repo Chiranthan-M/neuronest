@@ -22,6 +22,19 @@
   </head>
 
   <body>
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem("neuronest_settings");
+          var theme = raw ? (JSON.parse(raw).theme || "system") : "system";
+          var resolved = theme === "system"
+            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : theme;
+          document.documentElement.classList.add(resolved);
+          document.documentElement.style.colorScheme = resolved;
+        } catch (e) {}
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
