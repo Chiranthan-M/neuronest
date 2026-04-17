@@ -5,6 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useVoiceToText } from "@/hooks/useVoiceToText";
 import { useSmartEditor } from "@/hooks/useSmartEditor";
 import { useAITools } from "@/hooks/useAITools";
+import { useSettings } from "@/contexts/SettingsContext";
 import {
   Dialog,
   DialogContent,
@@ -42,6 +43,7 @@ const categoryValues = ["General", "Programming", "Computer Science", "Projects"
 export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEditorProps) {
   const { addNote, updateNote, uploadAttachment } = useNotes();
   const { t } = useLanguage();
+  const { settings } = useSettings();
   const { isListening, startListening, stopListening, isSupported } = useVoiceToText();
   const { runTool, loading: aiActionLoading } = useAITools();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -356,7 +358,7 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               value={content}
               onChange={handleContentChange}
               onKeyDown={handleTextareaKeyDown}
-              spellCheck={true}
+              spellCheck={settings.spellCheck}
               className={cn(
                 "resize-none border-border/40 bg-secondary/20 rounded-xl focus-visible:ring-primary/20 pr-12 p-5 sm:p-6",
                 focusMode ? "min-h-[50vh]" : "min-h-[200px] sm:min-h-[280px]",
