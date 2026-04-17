@@ -228,6 +228,22 @@ function SettingsContent({
           <SettingRow label="AI Privacy Mode" description="Process AI requests with enhanced privacy">
             <Switch checked={settings.aiPrivacyMode} onCheckedChange={(v) => updateSetting("aiPrivacyMode", v)} />
           </SettingRow>
+          <SettingRow label="Private Folder Auto-Lock" description="Automatically lock the private folder when you leave or after a period of inactivity">
+            <Select
+              value={settings.privacyAutoLock}
+              onValueChange={(v) => updateSetting("privacyAutoLock", v as AppSettings["privacyAutoLock"])}
+            >
+              <SelectTrigger className="w-[150px] h-9 rounded-xl text-sm"><SelectValue /></SelectTrigger>
+              <SelectContent className="rounded-xl">
+                <SelectItem value="immediate">Immediately on leave</SelectItem>
+                <SelectItem value="1">After 1 minute</SelectItem>
+                <SelectItem value="5">After 5 minutes</SelectItem>
+                <SelectItem value="15">After 15 minutes</SelectItem>
+                <SelectItem value="30">After 30 minutes</SelectItem>
+                <SelectItem value="never">Never</SelectItem>
+              </SelectContent>
+            </Select>
+          </SettingRow>
         </>
       );
   }
