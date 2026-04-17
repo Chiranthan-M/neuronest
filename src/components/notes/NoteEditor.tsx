@@ -5,6 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useVoiceToText } from "@/hooks/useVoiceToText";
 import { useSmartEditor } from "@/hooks/useSmartEditor";
 import { useAITools } from "@/hooks/useAITools";
+import { useSettings } from "@/contexts/SettingsContext";
 import {
   Dialog,
   DialogContent,
@@ -42,6 +43,7 @@ const categoryValues = ["General", "Programming", "Computer Science", "Projects"
 export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEditorProps) {
   const { addNote, updateNote, uploadAttachment } = useNotes();
   const { t } = useLanguage();
+  const { settings } = useSettings();
   const { isListening, startListening, stopListening, isSupported } = useVoiceToText();
   const { runTool, loading: aiActionLoading } = useAITools();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -329,6 +331,7 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="text-xl sm:text-2xl font-semibold border-0 bg-transparent px-0 h-auto focus-visible:ring-0 placeholder:text-muted-foreground/40"
+            style={{ fontFamily: "var(--editor-font-family, inherit)" }}
           />
 
           <div className="relative">
@@ -355,15 +358,18 @@ export function NoteEditor({ note, open, onClose, isPrivate = false }: NoteEdito
               value={content}
               onChange={handleContentChange}
               onKeyDown={handleTextareaKeyDown}
+              spellCheck={settings.spellCheck}
               className={cn(
-                "resize-none border-border/40 bg-secondary/20 rounded-xl focus-visible:ring-primary/20 leading-relaxed pr-12 p-5 sm:p-6 text-base",
+                "resize-none border-border/40 bg-secondary/20 rounded-xl focus-visible:ring-primary/20 pr-12 p-5 sm:p-6",
                 focusMode ? "min-h-[50vh]" : "min-h-[200px] sm:min-h-[280px]",
                 ghostText && "caret-primary"
               )}
               style={{
+                fontFamily: "var(--editor-font-family, inherit)",
+                fontSize: "var(--editor-font-size, 1rem)",
+                lineHeight: focusMode ? "32px" : "var(--editor-line-height, 1.6)",
                 backgroundImage: focusMode ? 'repeating-linear-gradient(transparent, transparent 31px, hsl(var(--border) / 0.3) 31px, hsl(var(--border) / 0.3) 32px)' : 'none',
                 backgroundPositionY: '8px',
-                lineHeight: focusMode ? '32px' : undefined,
               }}
             />
 

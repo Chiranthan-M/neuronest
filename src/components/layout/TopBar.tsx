@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useNotes } from "@/contexts/NotesContext";
+import { useSettings } from "@/contexts/SettingsContext";
 import { Search, Moon, Sun, Bell, X, Settings as SettingsIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -22,14 +23,19 @@ export function TopBar() {
   const { user, isGuest, signOut } = useAuth();
   const { t } = useLanguage();
   const { notes } = useNotes();
+  const { settings, updateSetting } = useSettings();
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [darkMode, setDarkMode] = useState(() =>
-    typeof window !== "undefined" ? document.documentElement.classList.contains("dark") : false
-  );
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState("");
+
+  // Effective theme (true = dark) — synced with global SettingsContext
+  const darkMode =
+    settings.theme === "dark" ||
+    (settings.theme === "system" &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   useEffect(() => {
     if (!user || isGuest) return;
@@ -48,11 +54,7 @@ export function TopBar() {
 
   const toggleDark = () => {
     document.documentElement.classList.add("transitioning");
-    setDarkMode((d) => {
-      if (!d) document.documentElement.classList.add("dark");
-      else document.documentElement.classList.remove("dark");
-      return !d;
-    });
+    updateSetting("theme", darkMode ? "light" : "dark");
     setTimeout(() => document.documentElement.classList.remove("transitioning"), 400);
   };
 
