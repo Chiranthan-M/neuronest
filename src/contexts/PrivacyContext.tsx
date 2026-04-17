@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import { useSettings } from "./SettingsContext";
 
 interface PrivacyContextType {
   isSetup: boolean;
@@ -71,9 +73,67 @@ export function PrivacyProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <PrivacyContext.Provider value={{ isSetup, isUnlocked, lockType, setupLock, unlock, lock, resetLock }}>
+      <PrivacyAutoLock isUnlocked={isUnlocked} lock={lock} />
       {children}
     </PrivacyContext.Provider>
   );
+}
+
+/**
+ * Watches route changes, tab visibility, and idle time to automatically
+ * re-lock the private folder based on the user's `privacyAutoLock` setting.
+ */
+function PrivacyAutoLock({ isUnlocked, lock }: { isUnlocked: boolean; lock: () => void }) {
+  const location = useLocation();
+  const { settings } = useSettings();
+  const lastPathRef = useRef<string>(location.pathname);
+  const idleTimerRef = useRef<number | null>(null);
+
+  // Lock immediately when leaving /private
+  useEffect(() => {
+    const wasOnPrivate = lastPathRef.current === "/private";
+    const isOnPrivate = location.pathname === "/private";
+    if (wasOnPrivate && !isOnPrivate && isUnlocked && settings.privacyAutoLock !== "never") {
+      lock();
+    }
+    lastPathRef.current = location.pathname;
+  }, [location.pathname, isUnlocked, lock, settings.privacyAutoLock]);
+
+  // Lock when tab becomes hidden (background / minimised)
+  useEffect(() => {
+    if (!isUnlocked || settings.privacyAutoLock === "never") return;
+    const onVis = () => {
+      if (document.visibilityState === "hidden") lock();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [isUnlocked, lock, settings.privacyAutoLock]);
+
+  // Idle-based auto-lock while on /private
+  useEffect(() => {
+    if (!isUnlocked) return;
+    if (settings.privacyAutoLock === "never" || settings.privacyAutoLock === "immediate") return;
+    if (location.pathname !== "/private") return;
+
+    const minutes = parseInt(settings.privacyAutoLock, 10);
+    if (!Number.isFinite(minutes) || minutes <= 0) return;
+    const ms = minutes * 60 * 1000;
+
+    const reset = () => {
+      if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = window.setTimeout(() => lock(), ms);
+    };
+    const events: (keyof DocumentEventMap)[] = ["mousemove", "keydown", "click", "touchstart", "scroll"];
+    events.forEach((e) => document.addEventListener(e, reset, { passive: true }));
+    reset();
+
+    return () => {
+      events.forEach((e) => document.removeEventListener(e, reset));
+      if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+    };
+  }, [isUnlocked, settings.privacyAutoLock, location.pathname, lock]);
+
+  return null;
 }
 
 export function usePrivacy() {

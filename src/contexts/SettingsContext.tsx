@@ -38,6 +38,8 @@ export interface AppSettings {
   // Privacy
   dataProtection: boolean;
   aiPrivacyMode: boolean;
+  /** When to automatically re-lock the private folder. */
+  privacyAutoLock: "immediate" | "1" | "5" | "15" | "30" | "never";
 }
 
 const defaultSettings: AppSettings = {
@@ -70,6 +72,7 @@ const defaultSettings: AppSettings = {
 
   dataProtection: true,
   aiPrivacyMode: false,
+  privacyAutoLock: "immediate",
 };
 
 const STORAGE_KEY = "neuronest_settings";
