@@ -104,15 +104,15 @@ const App = () => (
       <LanguageProvider>
         <AuthProvider>
           <NotesProvider>
-            <PrivacyProvider>
-              <SettingsProvider>
-                <Toaster />
-                <Sonner />
-                <BrowserRouter>
+            <SettingsProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <PrivacyProvider>
                   <AppRoutes />
-                </BrowserRouter>
-              </SettingsProvider>
-            </PrivacyProvider>
+                </PrivacyProvider>
+              </BrowserRouter>
+            </SettingsProvider>
           </NotesProvider>
         </AuthProvider>
       </LanguageProvider>
