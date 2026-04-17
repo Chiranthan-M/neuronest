@@ -260,11 +260,12 @@ export function AppSidebar() {
         )}
 
         {isGuest && !collapsed && (
-          <Link to="/auth">
-            <button className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium w-full transition-all duration-200 text-primary hover:bg-primary/8">
-              <User className="w-[18px] h-[18px]" />
-              <span>{t("signUpForMore") || "Sign up for more"}</span>
-            </button>
+          <Link
+            to="/auth"
+            className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium w-full transition-all duration-200 text-primary hover:bg-primary/8"
+          >
+            <User className="w-[18px] h-[18px]" />
+            <span>{t("signUpForMore") || "Sign up for more"}</span>
           </Link>
         )}
 
